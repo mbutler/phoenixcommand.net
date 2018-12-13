@@ -4,12 +4,12 @@ import * as firebaseui from 'firebaseui'
 let user
 
 function uniqueKey() {
-    return '_' + Math.random().toString(36).substr(2, 9)
-  }
+  return '_' + Math.random().toString(36).substr(2, 9)
+}
 
 if (localStorage.getItem('firebirdUserID') === null) {
-  localStorage.setItem('firebirdUserID', uniqueKey())
-  user = localStorage.getItem('firebirdUserID')
+    localStorage.setItem('firebirdUserID', uniqueKey())
+    user = localStorage.getItem('firebirdUserID')
 } else {
   user = localStorage.getItem('firebirdUserID')
 }
