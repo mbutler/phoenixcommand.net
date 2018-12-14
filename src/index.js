@@ -1,5 +1,15 @@
 import * as firebase from 'firebase'
 import * as firebaseui from 'firebaseui'
+import * as _ from 'lodash'
+import * as pf from 'phoenix-functions'
+import { codenames } from './codenames'
+
+window.formSubmit = formSubmit
+window.randomize = randomize
+//don't reload the page when form is submitted
+$('#character-form').on('submit', (e) => {
+    e.preventDefault()
+})
 
 let user
 
@@ -63,3 +73,55 @@ $('#signout').on('mousedown touchstart', () => {
         console.log('Sign out error.')
     })
 })
+
+function selectedCheckboxes(boxes) {
+    let selected = []
+    for (let i = 0; i < boxes.length; i++) {
+        if (boxes[i].checked) {
+            selected.push(boxes[i].defaultValue)
+        }
+    }
+    return selected
+}
+
+function threeD6() {
+    return _.random(1, 6) + _.random(1, 6) + _.random(1, 6)
+}
+
+function randomize() {
+    let name = _.sample(codenames)
+    let skill = _.random(1, 6)
+    $('#skill-level').val(skill)
+    $('#codename').val(name)
+    let str = threeD6()
+    $('#strength').val(str)
+    let int = threeD6()
+    $('#intelligence').val(int)
+    let will = threeD6()
+    $('#will').val(will)
+    let health = threeD6()
+    $('#health').val(health)
+    let agi = threeD6()
+    $('#agility').val(agi)
+}
+
+function formSubmit() {
+    let codename = $('#codename').val()
+    let skillLevel = _.clamp(_.toNumber($('#skill-level').val()), 3, 18)
+    let strength = _.clamp(_.toNumber($('#strength').val()), 3, 18)
+    let intelligence = _.clamp(_.toNumber($('#intelligence').val()), 3, 18)
+    let will = _.clamp(_.toNumber($('#will').val()), 3, 18)
+    let health = _.clamp(_.toNumber($('#health').val()), 3, 18)
+    let agility = _.clamp(_.toNumber($('#agility').val()), 3, 18)
+    let armor = $('#armor').val()
+    let weapons = selectedCheckboxes($('[name="weapon"]'))
+    let equipment = selectedCheckboxes($('[name="equipment"]'))
+    equipment.push(armor)
+    let encumbrance = pf.encumbranceCalculator(equipment, weapons)
+    let kv = pf.knockoutValue(will, skillLevel)
+    let speed = pf.movementSpeed(strength, agility, encumbrance)
+    let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
+
+    console.log(capi)
+}
+

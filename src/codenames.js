@@ -1,4 +1,4 @@
-let codenames = [
+export const codenames = [
   "Archer",
   "Badger",
   "Black Cat",

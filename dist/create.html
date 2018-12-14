@@ -21,7 +21,7 @@
         <div class="container">
             <div class="navbar-translate">
                 <a style="color: black;" class="navbar-brand" href="http://mbutler.org/phoenix-command/">
-          Create a new character </a>
+          Create a new character </a><button class="btn btn-primary btn-sm" onclick="randomize()">random</button>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
                     <span class="sr-only">Toggle navigation</span>
@@ -62,7 +62,7 @@
     <div class="main">
         <div class="container">
             <div class="section text-center">
-                <form>
+                <form id="character-form">
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="codename">Codename</label>
@@ -96,32 +96,143 @@
                             <label for="agility">Agility</label>
                             <input type="number" class="form-control" id="agility">
                         </div>
-                        <div class="form-group col-md-2">
-                            <label for="equipment-weight">Equipment Weight</label>
-                            <input type="number" class="form-control" id="equipment-weight">
-                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="armor">Armor</label>
                             <select class="form-control selectpicker" data-style="btn btn-link" id="armor">
-                                <option value="clothing">Clothing</option>
-                                <option value="light-flexible">Light Flexible</option>
-                                <option value="medium-flexible">Medium Flexible</option>
-                                <option value="heavy-flexible">Heavy Flexible</option>
-                                <option value="light-rigid">Light Rigid</option>
-                                <option value="medium-rigid">Medium Rigid</option>
-                                <option value="heavy-rigid">Heavy Rigid</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Light Flexible">Light Flexible</option>
+                                <option value="Medium Flexible">Medium Flexible</option>
+                                <option value="Heavy Flexible">Heavy Flexible</option>
+                                <option value="Light Rigid">Light Rigid</option>
+                                <option value="Medium Rigid">Medium Rigid</option>
+                                <option value="Heavy Rigid">Heavy Rigid</option>
                             </select>
                         </div>
                     </div>
-                    <div id="weapon-label" class="form-row">
-                        <label>Weapons</label>
+                    <div class="form-row label">
+                        <label><strong>Equipment</strong></label>
                     </div>
                     <div class="form-row">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="fn-mk-1" value="fn-mk-1"> FN Mk 1
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Bayonet"> Bayonet
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Binoculars"> Binoculars
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Bipod"> Bipod
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Canteen"> Canteen
+                                <span class="form-check-sign">
+                                        <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Clothing"> Clothing
+                                <span class="form-check-sign">
+                                        <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Entrenching Tool"> Entrenching Tool
+                                <span class="form-check-sign">
+                                        <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Field Radio"> Field Radio
+                                <span class="form-check-sign">
+                                            <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Fighting Harness"> Fighting Harness
+                                <span class="form-check-sign">
+                                            <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Headset Communications"> Headset Communications
+                                <span class="form-check-sign">
+                                            <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Holster"> Holster
+                                <span class="form-check-sign">
+                                            <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Magazine Pouch (2 Mags)"> Magazine Pouch (2 Mags)
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Optical Scope"> Optical Scope
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="equipment" type="checkbox" value="Smoke Grenade"> Smoke Grenade
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row label">
+                        <label><strong>Weapons</strong></label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" name="weapon" type="checkbox" id="fn-mk-1" value="FN Mk 1"> FN Mk 1
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
@@ -129,7 +240,7 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="uzi" value="uzi"> Uzi
+                                <input class="form-check-input" name="weapon" type="checkbox" id="uzi" value="Uzi"> Uzi
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
@@ -137,14 +248,14 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="akm-47" value="akm-47"> AKM 47
+                                <input class="form-check-input" name="weapon" type="checkbox" id="akm-47" value="AKM 47"> AKM 47
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
                             </label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary" onclick="formSubmit()">Create</button>
                 </form>
             </div>
         </div>
