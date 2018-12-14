@@ -5,3 +5,14 @@
 #nav-logo {
     color: black;
 }
+
+#weapon-label {
+    margin-bottom: 10px;
+}
+
+.form-label {
+    color: #6d6d6d;
+    text-align: left;
+    margin-left: -300px;
+    font-size: 14px;
+}

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Phoenix Command</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -13,172 +14,205 @@
     <link href="css/material-kit.css?v=2.0.5" rel="stylesheet" />
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
     <link href="css/style.css" rel="stylesheet" />
-  </head>
-  <body><nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg"  color-on-scroll="100">
-  <div class="container">
-      <div class="navbar-translate">
-        <a id="nav-logo" class="navbar-brand" href="http://mbutler.org/phoenix-command/">
-          Phoenix Command </a>
+</head>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon"></span>
-            <span class="navbar-toggler-icon"></span>
-            <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
+<body>
+    <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" color-on-scroll="100">
+        <div class="container">
+            <div class="navbar-translate">
+                <a style="color: black;" class="navbar-brand" href="http://mbutler.org/phoenix-command/">
+          Create a new character </a>
 
-      <div class="collapse navbar-collapse">
-          <ul class="navbar-nav ml-auto">
-              <li id="login" class="nav-item">
-                  <a href="#" id="signout" class="nav-link">
-                    <i class="material-icons">account_circle</i> Sign Out
-                  </a>
-                  <a href="#" id="signin" class="nav-link" data-toggle="modal" data-target="#signinModal">
-                    <i class="material-icons">account_circle</i> Sign In
-                  </a>
-              </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                  <i class="material-icons">new_releases</i> Create New
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false">Tools</a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Character Sheet</a>
-                <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
-                <a class="dropdown-item" href="#0"><svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
-                </svg> Calculators</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#0"><i class="material-icons">map</i> Map</a>
-              </div>
-            </li>
-          </ul>
-      </div>
-  </div>
-</nav>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
 
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li id="login" class="nav-item">
+                        <a href="#" style="color: black;" id="signout" class="nav-link">
+                            <i class="material-icons">account_circle</i> Sign Out
+                        </a>
+                        <a href="#" style="color: black;" id="signin" class="nav-link" data-toggle="modal" data-target="#signinModal">
+                            <i class="material-icons">account_circle</i> Sign In
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Character Sheet</a>
+                            <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
+                            <a class="dropdown-item" href="#0">
+                                <svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
+                                    <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
+                                </svg> Calculators</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#0"><i class="material-icons">map</i> Map</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="main">
-  <div class="container">
-    <div class="section text-center">
-      <form>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputEmail4">Email</label>
-            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="inputPassword4">Password</label>
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-          </div>
+    <div class="main">
+        <div class="container">
+            <div class="section text-center">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="codename">Codename</label>
+                            <input type="text" class="form-control" id="codename">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="skill-level">Skill Level</label>
+                            <input type="number" class="form-control" id="skill-level">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="strength">Strength</label>
+                            <input type="number" class="form-control" id="strength">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="intelligence">Intelligence</label>
+                            <input type="number" class="form-control" id="intelligence">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="will">Will</label>
+                            <input type="number" class="form-control" id="will">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="health">Health</label>
+                            <input type="number" class="form-control" id="health">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="agility">Agility</label>
+                            <input type="number" class="form-control" id="agility">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="equipment-weight">Equipment Weight</label>
+                            <input type="number" class="form-control" id="equipment-weight">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="armor">Armor</label>
+                            <select class="form-control selectpicker" data-style="btn btn-link" id="armor">
+                                <option value="clothing">Clothing</option>
+                                <option value="light-flexible">Light Flexible</option>
+                                <option value="medium-flexible">Medium Flexible</option>
+                                <option value="heavy-flexible">Heavy Flexible</option>
+                                <option value="light-rigid">Light Rigid</option>
+                                <option value="medium-rigid">Medium Rigid</option>
+                                <option value="heavy-rigid">Heavy Rigid</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="weapon-label" class="form-row">
+                        <label>Weapons</label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="fn-mk-1" value="fn-mk-1"> FN Mk 1
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="uzi" value="uzi"> Uzi
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="akm-47" value="akm-47"> AKM 47
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="inputAddress">Address</label>
-          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-        </div>
-        <div class="form-group">
-          <label for="inputAddress2">Address 2</label>
-          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity">
-          </div>
-          <div class="form-group col-md-3">
-            <label for="inputState">State</label>
-            <select id="inputState" class="form-control">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2 ml-auto">
-            <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-check">
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="">
-                Check me out
-                <span class="form-check-sign">
-                  <span class="check"></span>
-                </span>
-            </label>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Sign in</button>
-      </form>
     </div>
-  </div>
-</div>
 
-<footer class="footer footer-default" >
-  <div class="container">
-    <nav class="float-left">
-      <ul>
-        <li>
-          <a href="http://mbutler.org/">
+    <footer class="footer footer-default">
+        <div class="container">
+            <nav class="float-left">
+                <ul>
+                    <li>
+                        <a href="http://mbutler.org/">
               mbutler.org
           </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</footer>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
 
-<div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signinModalLabel"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div id="login-modal-body" class="modal-body">
-          <div id="firebaseui-auth-container"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+    <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signinModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="login-modal-body" class="modal-body">
+                    <div id="firebaseui-auth-container"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<div class="modal fade" id="signoutModal" tabindex="-1" role="dialog" aria-labelledby="signoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signoutModalLabel"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="modal fade" id="signoutModal" tabindex="-1" role="dialog" aria-labelledby="signoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signoutModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="login-modal-body" class="modal-body">
+                    <h3>You have been signed out.</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <div id="login-modal-body" class="modal-body">
-            <h3>You have been signed out.</h3>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-<!--   Core JS Files   -->
-<script src="js/core/jquery.min.js" type="text/javascript"></script>
-<script src="js/core/popper.min.js" type="text/javascript"></script>
-<script src="js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
-<script src="js/plugins/moment.min.js"></script>
-<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-<script src="js/plugins/nouislider.min.js" type="text/javascript"></script>
-<!-- Place this tag in your head or just before your close body tag. -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-<!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
-<script src="js/material-kit.js?v=2.0.5" type="text/javascript"></script>
-<script src="js/bundle.js" type="text/javascript"></script>
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="js/core/popper.min.js" type="text/javascript"></script>
+    <script src="js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+    <script src="js/plugins/moment.min.js"></script>
+    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+    <script src="js/plugins/nouislider.min.js" type="text/javascript"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+    <script src="js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+    <script src="js/bundle.js" type="text/javascript"></script>
 </body>
+
 </html>
