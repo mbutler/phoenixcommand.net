@@ -49,6 +49,16 @@ let config = {
     ]
   }
 
+  function addNewUser(user) {
+    let ref = firebase.database().ref("userIds")
+    ref.once('value').then((snapshot) => {
+        if (snapshot.hasChild(user.uid) === false) {
+            firebase.database().ref("users/" + user.uid).set({name: user.displayName, email: user.email})
+            firebase.database().ref("userIds/" + user.uid).set(true)
+        }
+    })
+  }
+
   // Initialize the FirebaseUI Widget using Firebase.
   let ui = new firebaseui.auth.AuthUI(firebase.auth())
   // The start method will wait until the DOM is loaded.
@@ -58,7 +68,8 @@ let config = {
     if (user) {
         $('#signin').hide()
         $('#signout').show()
-        console.log(user.email)
+        console.log(user)
+        addNewUser(user)
     } else {
         $('#signout').hide()
         $('#signin').show()
