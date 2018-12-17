@@ -97,6 +97,7 @@ let config = {
 $('#signout').on('mousedown touchstart', () => {
     firebase.auth().signOut().then(() => {
         $('#signoutModal').modal()
+        me = undefined
     }).catch((error) => {
         console.log('Sign out error.')
     })
