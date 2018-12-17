@@ -20,10 +20,10 @@
     <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" color-on-scroll="100">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="http://mbutler.org/phoenix-command/">
-          Phoenix Command </a>
+                <a style="color: black;" class="navbar-brand" href="http://mbutler.org/phoenix-command/">
+          Create a new game </a><button class="btn btn-primary btn-sm" onclick="operationName()">random</button>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="navbar-toggler-icon"></span>
                     <span class="navbar-toggler-icon"></span>
@@ -34,20 +34,15 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li id="login" class="nav-item">
-                        <a href="#" id="signout" class="nav-link">
+                        <a href="#" style="color: black;" id="signout" class="nav-link">
                             <i class="material-icons">account_circle</i> Sign Out
                         </a>
-                        <a href="#" id="signin" class="nav-link" data-toggle="modal" data-target="#signinModal">
+                        <a href="#" style="color: black;" id="signin" class="nav-link" data-toggle="modal" data-target="#signinModal">
                             <i class="material-icons">account_circle</i> Sign In
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="newgame.html" class="nav-link">
-                            <i class="material-icons">new_releases</i> Create New Game
-                        </a>
-                    </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false">Tools</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Character Sheet</a>
                             <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
@@ -64,23 +59,18 @@
         </div>
     </nav>
 
-    <div class="page-header header-filter" data-parallax="true" style="background-image: url('img/bg3.jpg')">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 ml-auto mr-auto">
-                    <div class="brand text-center">
-                        <h1></h1>
-                        <h3 class="title text-center"></h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="main">
         <div class="container">
             <div class="section text-center">
-                <h2 class="title">Your main section here</h2>
+                <form id="character-form">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="gamename">Game Name</label>
+                            <input type="text" class="form-control" id="gamename">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="newGameSubmit()">Create New Game!</button>
+                </form>
             </div>
         </div>
     </div>
@@ -129,6 +119,25 @@
                 </div>
                 <div id="login-modal-body" class="modal-body">
                     <h3>You have been signed out.</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newgameModal" tabindex="-1" role="dialog" aria-labelledby="newgameModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newgameModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="login-modal-body" class="modal-body">
+                    <h3>Your game has been created!</h3>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

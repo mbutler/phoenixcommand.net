@@ -3,31 +3,21 @@ import * as firebaseui from 'firebaseui'
 import * as _ from 'lodash'
 import * as pf from 'phoenix-functions'
 import { codenames } from './codenames'
+import { mission } from './operations'
+
+let me
 
 window.formSubmit = formSubmit
+window.newGameSubmit = newGameSubmit
 window.randomize = randomize
+window.operationName = operationName
 //don't reload the page when form is submitted
 $('#character-form').on('submit', (e) => {
     e.preventDefault()
 })
 
-let user
-
-function uniqueKey() {
-  return '_' + Math.random().toString(36).substr(2, 9)
-}
-
-if (localStorage.getItem('firebirdUserID') === null) {
-    localStorage.setItem('firebirdUserID', uniqueKey())
-    user = localStorage.getItem('firebirdUserID')
-} else {
-  user = localStorage.getItem('firebirdUserID')
-}
-
 let config = {
     gameID: '-L6D8cz625nLzyargSEO',
-    newGame: false,
-    userID: user,
     firebase: {
       apiKey: 'AIzaSyBKxAP8VRE18XIqhkZlI6z3xbCgaPCwVc0',
       authDomain: 'firebird-f30dc.firebaseapp.com',
@@ -42,7 +32,7 @@ let config = {
 
   // FirebaseUI config.
   let uiConfig = {
-    signInSuccessUrl: 'index.html',
+    signInSuccessUrl: window.location.href,
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID
@@ -59,6 +49,31 @@ let config = {
     })
   }
 
+  function createNewGame(user, gameName) {
+      let date = Date()
+      let ref = firebase.database().ref("users/" + user.uid + "/games")
+      let gameId, newRef
+      let newGame = {
+          "metadata": {
+              "title": gameName,
+              "created": date,
+              "created by": user.displayName
+          },
+          "users": {},
+          "content": {
+              "characters": {},
+              "time": {"phase": 1, "impulse": 1},
+              "messages": {}
+          }
+      }
+    newRef = ref.push(newGame)
+    gameId = newRef.key
+    firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(true)
+    if (gameId) {
+        $('#newgameModal').modal()
+    }
+  }
+
   // Initialize the FirebaseUI Widget using Firebase.
   let ui = new firebaseui.auth.AuthUI(firebase.auth())
   // The start method will wait until the DOM is loaded.
@@ -66,10 +81,12 @@ let config = {
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+        me = user
         $('#signin').hide()
         $('#signout').show()
         console.log(user)
-        addNewUser(user)
+        //addNewUser(user)
+        //createNewGame(user, "test game")
     } else {
         $('#signout').hide()
         $('#signin').show()
@@ -116,6 +133,10 @@ function randomize() {
     $('#agility').val(agi)
 }
 
+function operationName() {
+    $('#gamename').val(mission())
+}
+
 function formSubmit() {
     let codename = $('#codename').val()
     let skillLevel = _.clamp(_.toNumber($('#skill-level').val()), 3, 18)
@@ -134,5 +155,14 @@ function formSubmit() {
     let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
 
     console.log(capi)
+}
+
+function newGameSubmit() {
+    let name = $('#gamename').val()
+    if (me) {
+        createNewGame(me, name)
+    } else {
+        $('#signinModal').modal()
+    }
 }
 
