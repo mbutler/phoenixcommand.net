@@ -52,7 +52,6 @@ firebase.auth().onAuthStateChanged(user => {
     $("#signout").show()
     addNewUser(user)
     displayAccount(user)
-    //createNewGame(user, "test game")
   } else {
     $("#signout").hide()
     $("#signin").show()
@@ -75,7 +74,16 @@ function addNewUser(user) {
   })
 }
 
-function createNewGame(user, gameName) {
+function addPlayersToGame(user, gameId, players) {
+    let playerList = _.split(players, ',')
+    let ref = firebase.database().ref("userIds")
+
+    _.forEach(playerList, player => {
+        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + player).set(true)
+    })
+}
+
+function createNewGame(user, gameName, players) {
   let date = new Date()
   let ref = firebase.database().ref("users/" + user.uid + "/games")
   let gameId, newRef
@@ -96,6 +104,7 @@ function createNewGame(user, gameName) {
   gameId = newRef.key
   firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(true)
   firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
+  addPlayersToGame(user, gameId, players)
 
   if (gameId) {
     $("#newgameModal").modal()
@@ -202,8 +211,10 @@ function formSubmit() {
 
 function newGameSubmit() {
   let name = $("#gamename").val()
+  let players = $("#invite-players").val()
+
   if (me) {
-    createNewGame(me, name)
+    createNewGame(me, name, players)
   } else {
     $("#signinModal").modal()
   }
