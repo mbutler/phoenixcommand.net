@@ -42,7 +42,7 @@ export function createNew(user, gameName, players) {
     metadata: {
       title: gameName,
       created: date.getTime(),
-      "created by": user.displayName
+      createdby: user.displayName
     },
     users: {},
     content: {
@@ -57,8 +57,8 @@ export function createNew(user, gameName, players) {
   firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
   addPlayers(user, gameId, players)
 
-  if (gameId) {
-    $("#newgameModal").modal()
+  if (gameId) {    
+    window.location.href = "game.html"
   }
 }
 

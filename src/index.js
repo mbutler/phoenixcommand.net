@@ -1,12 +1,13 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
-import * as firebaseui from "firebaseui"
+import firebaseui from "firebaseui"
 import * as _ from "lodash"
 import * as pf from "phoenix-functions"
 import * as Utils from './utils'
 import * as Game from './game'
 import * as User from './user'
+import * as Session from './session'
 
 let me
 
@@ -82,6 +83,7 @@ firebase.auth().onAuthStateChanged(user => {
     User.addNew(user)
     Utils.displayAccount(user)
     Game.list(user)
+    Session.init(user)
   } else {
     $("#signout").hide()
     $("#signin").show()
