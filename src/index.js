@@ -11,6 +11,7 @@ window.formSubmit = formSubmit
 window.newGameSubmit = newGameSubmit
 window.randomize = randomize
 window.operationName = operationName
+window.selectGame = selectGame
 //don't reload the page when form is submitted
 $("#character-form").on("submit", e => {
   e.preventDefault()
@@ -52,12 +53,18 @@ firebase.auth().onAuthStateChanged(user => {
     $("#signout").show()
     addNewUser(user)
     displayAccount(user)
+    gameList(user)
   } else {
     $("#signout").hide()
     $("#signin").show()
     console.log("User logged out.")
   }
 })
+
+function selectGame(gameId) {
+    setCurrentGame(me, gameId)
+    window.location.href = "game.html"
+}
 
 function addNewUser(user) {
   let date = new Date()
@@ -79,7 +86,8 @@ function addPlayersToGame(user, gameId, players) {
     let ref = firebase.database().ref("userIds")
 
     _.forEach(playerList, player => {
-        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + player).set(true)
+        let person = _.trim(player)
+        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + person).set(true)
     })
 }
 
@@ -111,10 +119,21 @@ function createNewGame(user, gameName, players) {
   }
 }
 
-function displayAccount(user) {
-  $("#account-name").text(user.displayName)
-  $("#account-id").text(user.uid)
-  $("#account-email").text(user.email)
+function setCurrentGame(user, gameId) {
+    firebase.database().ref("users/" + user.uid + "/currentGame/").set(gameId)
+}
+
+function getCurrentGame(user) {
+    let gameId
+    let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
+    ref.on("value", snapshot => {
+        gameId = snapshot.val()
+        console.log(gameId)
+    })
+    return gameId
+}
+
+function gameList(user) {
   let adminQuery = firebase.database().ref("users/" + user.uid + "/adminOf").orderByKey()
   let memberQuery = firebase.database().ref("users/" + user.uid + "/memberOf").orderByKey()
 
@@ -122,17 +141,24 @@ function displayAccount(user) {
     snapshot.forEach(childSnapshot => {
       let gameId = childSnapshot.key
       let game = childSnapshot.val()
-      $("#account-games-admin").append(game + ", ")
+      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${gameId}')">${game}</a>`)
     })
   })
 
   memberQuery.once("value").then(snapshot => {
+    $("#game-dropdown").append(`<div class="dropdown-divider"></div>`)
     snapshot.forEach(childSnapshot => {
       let gameId = childSnapshot.key
       let game = childSnapshot.val()
-      $("#account-games-member").append(game + ", ")
+      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${gameId}')">${game}</a>`)
     })
   })
+}
+
+function displayAccount(user) {
+  $("#account-name").text(user.displayName)
+  $("#account-id").text(user.uid)
+  $("#account-email").text(user.email)
 }
 
 $("#signout").on("mousedown touchstart", () => {

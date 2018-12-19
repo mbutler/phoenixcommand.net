@@ -51,6 +51,12 @@
                             <a class="dropdown-item" href="#0"><i class="material-icons">map</i> Map</a>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
+                        <div id="game-dropdown" class="dropdown-menu">
+                            <a class="dropdown-item" href="#"></a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -78,14 +84,6 @@
                                     <strong>Email:&nbsp</strong>
                                     <div id="account-email"></div>
                                 </div>
-                                <div class="row">
-                                    <strong>Admin of:&nbsp</strong>
-                                    <div id="account-games-admin"></div>
-                                </div>
-                                <div class="row">
-                                    <strong>Member of:&nbsp</strong>
-                                    <div id="account-games-member"></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,7 +93,7 @@
                             <div class="card-header card-header-primary">
                                 <h4 class="card-title">Create New Game</h4>
                                 <p class="category">
-                                    <button class="btn btn-default btn-sm" onclick="operationName()">generate name</button>
+                                    <button class="btn btn-info btn-sm" onclick="operationName()">generate name</button>
                                 </p>
                             </div>
                             <div class="card-body">
@@ -108,7 +106,7 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
-                                            <label for="invite-players">Invite Players (ids separated by commas)</label>
+                                            <label for="invite-players">Invite Players (IDs separated by commas)</label>
                                             <input type="text" class="form-control" id="invite-players">
                                         </div>
                                     </div>

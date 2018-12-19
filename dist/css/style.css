@@ -17,3 +17,10 @@
     margin-left: -300px;
     font-size: 14px;
 }
+
+.dropdown-divider {
+    height: 0;
+    margin: 0.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid black;
+  }
