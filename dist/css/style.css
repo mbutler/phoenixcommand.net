@@ -24,3 +24,7 @@
     overflow: hidden;
     border-top: 1px solid black;
   }
+
+  .section {
+      margin-top: 20px;
+  }

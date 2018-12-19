@@ -7,29 +7,27 @@ import {mission} from "./operations"
 
 let me
 
-window.formSubmit = formSubmit
+window.characterSubmit = characterSubmit
 window.newGameSubmit = newGameSubmit
 window.randomize = randomize
 window.operationName = operationName
 window.selectGame = selectGame
+
 //don't reload the page when form is submitted
-$("#character-form").on("submit", e => {
+$(".submission-form").on("submit", e => {
   e.preventDefault()
 })
 
 let config = {
-  gameID: "-L6D8cz625nLzyargSEO",
-  firebase: {
-    apiKey: "AIzaSyBKxAP8VRE18XIqhkZlI6z3xbCgaPCwVc0",
-    authDomain: "firebird-f30dc.firebaseapp.com",
-    databaseURL: "https://firebird-f30dc.firebaseio.com",
-    projectId: "firebird-f30dc",
-    storageBucket: "firebird-f30dc.appspot.com",
-    messagingSenderId: "274623842874"
-  }
+  apiKey: "AIzaSyBKxAP8VRE18XIqhkZlI6z3xbCgaPCwVc0",
+  authDomain: "firebird-f30dc.firebaseapp.com",
+  databaseURL: "https://firebird-f30dc.firebaseio.com",
+  projectId: "firebird-f30dc",
+  storageBucket: "firebird-f30dc.appspot.com",
+  messagingSenderId: "274623842874"
 }
 
-firebase.initializeApp(config.firebase)
+firebase.initializeApp(config)
 
 // FirebaseUI config.
 let uiConfig = {
@@ -57,6 +55,7 @@ firebase.auth().onAuthStateChanged(user => {
   } else {
     $("#signout").hide()
     $("#signin").show()
+    clearUserDisplay()
     console.log("User logged out.")
   }
 })
@@ -161,15 +160,19 @@ function displayAccount(user) {
   $("#account-email").text(user.email)
 }
 
+function clearUserDisplay() {
+  $("#game-dropdown").empty()
+  $("#account-name").text('Account Name')
+  $("#account-id").empty()
+  $("#account-email").empty()
+}
+
 $("#signout").on("mousedown touchstart", () => {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
+  firebase.auth().signOut().then(() => {
       $("#signoutModal").modal()
+      clearUserDisplay()
       me = undefined
-    })
-    .catch(error => {
+    }).catch(error => {
       console.log("Sign out error.")
     })
 })
@@ -209,7 +212,7 @@ function operationName() {
   $("#gamename").val(mission())
 }
 
-function formSubmit() {
+function characterSubmit() {
   let codename = $("#codename").val()
   let skillLevel = _.clamp(_.toNumber($("#skill-level").val()), 3, 18)
   let strength = _.clamp(_.toNumber($("#strength").val()), 3, 18)

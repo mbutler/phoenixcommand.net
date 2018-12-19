@@ -17,10 +17,11 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" color-on-scroll="100">
+    <nav class="navbar fixed-top navbar-expand-lg" color-on-scroll="100">
         <div class="container">
             <div class="navbar-translate">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
+            <a style="color: black;" class="navbar-brand" href="http://mbutler.org/phoenix-command/">Account / Creation</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="navbar-toggler-icon"></span>
                     <span class="navbar-toggler-icon"></span>
@@ -38,6 +39,12 @@
                             <i class="material-icons">account_circle</i> Sign In
                         </a>
                     </li>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
+                        <div id="game-dropdown" class="dropdown-menu">
+                            <a class="dropdown-item" href="#"></a>
+                        </div>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
                         <div class="dropdown-menu">
@@ -49,12 +56,6 @@
                                 </svg> Calculators</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#0"><i class="material-icons">map</i> Map</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
-                        <div id="game-dropdown" class="dropdown-menu">
-                            <a class="dropdown-item" href="#"></a>
                         </div>
                     </li>
                 </ul>
@@ -69,13 +70,9 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Account Information</h4>
+                                <h4 id="account-name" class="card-title"></h4>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <strong>Name:&nbsp</strong>
-                                    <div id="account-name"></div>
-                                </div>
                                 <div class="row">
                                     <strong>ID:&nbsp</strong>
                                     <div id="account-id"></div>
@@ -97,7 +94,7 @@
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form id="character-form">
+                                <form id="character-form" class="submission-form">
                                     <div class="form-row">
                                         <div id="random-button" class="form-group col-md-12">
                                             <label for="gamename">Game Name</label>
