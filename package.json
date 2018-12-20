@@ -19,6 +19,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "documentation": "^8.1.2",
@@ -40,6 +41,12 @@
           }
         }
       ]
+    ],
+    "plugins": [
+      ["transform-runtime", {
+        "polyfill": false,
+        "regenerator": true
+      }]
     ]
   },
   "dependencies": {

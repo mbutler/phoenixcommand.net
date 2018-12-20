@@ -1,8 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import * as User from './user'
 
-export function list(user) {
+export function navList(user) {
   let adminQuery = firebase.database().ref("users/" + user.uid + "/adminOf").orderByKey()
   let memberQuery = firebase.database().ref("users/" + user.uid + "/memberOf").orderByKey()
 
@@ -27,10 +28,17 @@ export function list(user) {
 function addPlayers(user, gameId, players) {
   let playerList = _.split(players, ',')
   let ref = firebase.database().ref("userIds")
-
-  _.forEach(playerList, player => {
+  ref.once("value").then(snapshot => {
+    let users = snapshot.val()
+    _.forEach(playerList, player => {
       let person = _.trim(player)
-      firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + person).set(true)
+      if (snapshot.hasChild(person) === true) {
+        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + person).set(users[person])
+      } else {
+        alert("No user " + person)
+      }
+    })
+    window.location.href = "game.html"   
   })
 }
 
@@ -53,24 +61,25 @@ export function createNew(user, gameName, players) {
   }
   newRef = ref.push(newGame)
   gameId = newRef.key
-  firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(true)
-  firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
+  setCurrent(user.uid, gameId)
   addPlayers(user, gameId, players)
-
-  if (gameId) {    
-    window.location.href = "game.html"
-  }
+  firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(user.displayName)
+  firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
 }
 
-//doesn't work because of callback
-function getCurrent(user) {
-  let gameId
-  let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
-  ref.on("value", snapshot => {
-      gameId = snapshot.val()
-      console.log(gameId)
-  })
+export async function getCurrent(user) {
+  let currentGame = firebase.database().ref("users/" + user.uid + "/currentGame").once('value')
+  let value = await Promise.all([currentGame])
+  let gameId = value[0].val()
   return gameId
+}
+
+//Game.all(user, '-LU8-PVRfdNiufs0kDOC').then(game => {console.log(game)})
+export async function all(user, gameId) {
+  let gameRef = firebase.database().ref("users/" + user.uid + "/games/" + gameId).once('value')
+  let value = await Promise.all([gameRef])
+  let game = value[0].val()
+  return game
 }
 
 function setCurrent(uid, gameId) {
