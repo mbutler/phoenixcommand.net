@@ -63,6 +63,7 @@ export function createNew(user, gameName, players) {
   gameId = newRef.key
   setCurrent(user.uid, gameId)
   addPlayers(user, gameId, players)
+  firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/metadata/gameId/").set(gameId)
   firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(user.displayName)
   firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
 }
