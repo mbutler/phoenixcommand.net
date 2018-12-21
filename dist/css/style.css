@@ -34,8 +34,48 @@
       padding-bottom: 0px;
   }
 
-  @media only screen and (min-width: 768px) and (max-width: 2000px) {
+
+
+
+
+
+
+  @media only screen and (min-width: 1px) and (max-width: 306px) {
     #new-character-button {
         margin-top: 30px;
+    }
+
+    #character-name h2 {
+        margin-top: 20px;
+    }
+  }
+
+  @media only screen and (min-width: 307px) and (max-width: 767px) {
+    #new-character-button {
+        margin-top: 5px;
+    }
+    
+    #character-name h2 {
+        margin-top: 0px;
+    }
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991) {
+    #new-character-button {
+        margin-top: 0px;
+    }
+
+    #character-name h2 {
+        margin-top: 0px;
+    }
+  }
+
+  @media only screen and (min-width: 992px) and (max-width: 2000px) {
+    #new-character-button {
+        margin-top: 30px;
+    }
+
+    #character-name h2 {
+        margin-top: 20px;
     }
   }

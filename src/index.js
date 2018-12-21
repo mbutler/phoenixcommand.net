@@ -19,7 +19,8 @@ window.operationName = Utils.operationName
 window.selectGame = Game.select
 
 function characterSubmit() {
-  let codename = $("#codename").val()
+  let c = {}
+  let name = $("#codename").val()
   let skillLevel = _.clamp(_.toNumber($("#skill-level").val()), 3, 18)
   let strength = _.clamp(_.toNumber($("#strength").val()), 3, 18)
   let intelligence = _.clamp(_.toNumber($("#intelligence").val()), 3, 18)
@@ -35,7 +36,12 @@ function characterSubmit() {
   let speed = pf.movementSpeed(strength, agility, encumbrance)
   let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
 
-  console.log(capi)
+  c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
+  c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.kv = kv, c.speed = speed, c.capi = capi
+
+  c.user = me.uid
+
+  console.log(c)
 }
   
 function newGameSubmit() {

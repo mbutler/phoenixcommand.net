@@ -42,6 +42,18 @@ function addPlayers(user, gameId, players) {
   })
 }
 
+export function addCharacter(user, character) {
+  let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
+  ref.on("value", snapshot => {
+      let gameId = snapshot.val()
+      let gameRef = firebase.database().ref("users/" + user.uid + "/games/" + gameId)
+      gameRef.on("value", data => {
+        let game = data.val()
+        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/content/characters").push(users[person])
+      })
+  })
+}
+
 export function createNew(user, gameName, players) {
   let date = new Date()
   let ref = firebase.database().ref("users/" + user.uid + "/games")
