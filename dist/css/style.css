@@ -33,3 +33,9 @@
       margin-top: -20px;
       padding-bottom: 0px;
   }
+
+  @media only screen and (min-width: 768px) and (max-width: 2000px) {
+    #new-character-button {
+        margin-top: 30px;
+    }
+  }
