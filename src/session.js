@@ -27,11 +27,11 @@ function displayGame(user) {
         _.forEach(getUserCharacters(game), player => {
           let link = ''                  
           if (user.uid === player.userId) {
-            link = `<a href="character.html" class="btn btn-sm btn-info" role="button">${player.characterName}</a>`
+            link = `<a href="character.html">${player.characterName}</a>`
           } else {
             link = `${player.characterName}`
           }
-          $('#user-table tbody').append(`<tr><td>${player.userName}</td><td>${link}</td></tr>`)
+          $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
         })
       })
   })
@@ -55,6 +55,21 @@ function getUserCharacters(game) {
   let list = []
   let users = game.users
   let characters = game.content.characters
+  let characterIdList = []
+  _.forEach(characters, c => {characterIdList.push(c.user)})
+  _.forEach(users, u => {
+    let userId = _.findKey(users, o => { return o === u })
+    if (_.includes(characterIdList, userId ) === false) {
+      let guy = {}    
+      guy.userId = userId
+      guy.characterId = ''
+      guy.characterName = '[empty slot]'
+      guy.userName = users[userId]
+      guy.gameId = game.metadata.gameId
+      list.push(guy)
+    }
+  })
+
   _.forEach(characters, character => {
     let guy = {}    
     guy.userId = character.user 
@@ -64,6 +79,7 @@ function getUserCharacters(game) {
     guy.gameId = game.metadata.gameId
     list.push(guy)
   })
+
   return list
 }
 
