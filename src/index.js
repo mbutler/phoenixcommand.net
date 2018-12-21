@@ -41,7 +41,7 @@ function characterSubmit() {
 
   c.user = me.uid
 
-  console.log(c)
+  Game.addCharacter(me, c)
 }
   
 function newGameSubmit() {
@@ -90,8 +90,6 @@ firebase.auth().onAuthStateChanged(user => {
     Utils.displayAccount(user)
     Game.navList(user)
     Session.init(user)
-    //firebase.database().ref("userIds").once('value', snapshot => {console.log(snapshot.val())})
-    //Game.all(user, '-LU8-PVRfdNiufs0kDOC').then(game => {console.log(game)})
   } else {
     $("#signout").hide()
     $("#signin").show()

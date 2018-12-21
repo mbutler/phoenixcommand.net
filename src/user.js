@@ -17,7 +17,7 @@ export function addNew(user) {
   })
 }
 
-export function getUserCharacters(game) {
+export function getUserCharacters(game, characterName) {
   let list = []
   let users = game.users
   let characters = game.content.characters
@@ -37,20 +37,20 @@ export function getUserCharacters(game) {
   })
 
   _.forEach(characters, character => {
-    let guy = {}    
-    guy.userId = character.user 
-    guy.characterId = _.findKey(characters, o => { return o.name === character.name })
-    guy.characterName = character.name
-    guy.userName = users[character.user]
-    guy.gameId = game.metadata.gameId
-    list.push(guy)
+      let guy = character    
+      guy.userId = character.user 
+      guy.characterId = _.findKey(characters, o => { return o.name === character.name })
+      guy.characterName = character.name
+      guy.userName = users[character.user]
+      guy.gameId = game.metadata.gameId
+      list.push(guy)
   })
 
   return list
 }
 
-export function getCharacterSheet(user, game) {
-  let userCharacters = getUserCharacters(game)
-  let character = _.find(userCharacters, player => {return player.userId === user.uid})
+export function getCharacterSheet(game, characterName) {
+  let userCharacters = getUserCharacters(game, characterName)
+  let character = _.find(userCharacters, player => {return player.name === characterName})
   return character
 }

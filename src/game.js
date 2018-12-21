@@ -4,14 +4,13 @@ import 'firebase/database'
 import * as User from './user'
 
 export function navList(user) {
-  let adminQuery = firebase.database().ref("users/" + user.uid + "/adminOf").orderByKey()
+  let adminQuery = firebase.database().ref("users/" + user.uid + "/adminOf")
   let memberQuery = firebase.database().ref("users/" + user.uid + "/memberOf").orderByKey()
 
   adminQuery.once("value").then(snapshot => {
     snapshot.forEach(childSnapshot => {
-      let gameId = childSnapshot.key
       let game = childSnapshot.val()
-      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${gameId}')">${game}</a>`)
+      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
     })
   })
 
@@ -20,7 +19,7 @@ export function navList(user) {
     snapshot.forEach(childSnapshot => {
       let gameId = childSnapshot.key
       let game = childSnapshot.val()
-      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${gameId}')">${game}</a>`)
+      $("#game-dropdown").append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
     })
   })
 }
@@ -32,13 +31,14 @@ function addPlayers(user, gameId, players) {
     let users = snapshot.val()
     _.forEach(playerList, player => {
       let person = _.trim(player)
+      if (person === '') {person = 'blank'}
       if (snapshot.hasChild(person) === true) {
         firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + person).set(users[person])
       } else {
-        alert("No user " + person)
+        alert("players intentionally left " + person)
       }
     })
-    window.location.href = "game.html"   
+    $('#game-created-modal').modal()   
   })
 }
 
@@ -46,11 +46,8 @@ export function addCharacter(user, character) {
   let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
   ref.on("value", snapshot => {
       let gameId = snapshot.val()
-      let gameRef = firebase.database().ref("users/" + user.uid + "/games/" + gameId)
-      gameRef.on("value", data => {
-        let game = data.val()
-        firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/content/characters").push(users[person])
-      })
+      firebase.database().ref("users/" + gameId + "/content/characters/").push(character)
+      $('#character-created-modal').modal()
   })
 }
 
@@ -75,9 +72,9 @@ export function createNew(user, gameName, players) {
   gameId = newRef.key
   setCurrent(user.uid, gameId)
   addPlayers(user, gameId, players)
-  firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/metadata/gameId/").set(gameId)
+  firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/metadata/gameId/").set(user.uid + "/games/" + gameId)
   firebase.database().ref("users/" + user.uid + "/games/" + gameId + "/users/" + user.uid).set(user.displayName)
-  firebase.database().ref("users/" + user.uid + "/adminOf/" + gameId).set(gameName)
+  firebase.database().ref("users/" + user.uid + "/adminOf/").push({gameId: user.uid + "/games/" + gameId, name: gameName})
 }
 
 export async function getCurrent(user) {
@@ -87,9 +84,8 @@ export async function getCurrent(user) {
   return gameId
 }
 
-//Game.all(user, '-LU8-PVRfdNiufs0kDOC').then(game => {console.log(game)})
-export async function all(user, gameId) {
-  let gameRef = firebase.database().ref("users/" + user.uid + "/games/" + gameId).once('value')
+export async function all(gameId) {
+  let gameRef = firebase.database().ref("users/" + gameId).once('value')
   let value = await Promise.all([gameRef])
   let game = value[0].val()
   return game
