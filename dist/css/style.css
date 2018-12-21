@@ -34,6 +34,14 @@
       padding-bottom: 0px;
   }
 
+  .header-filter::before {
+    background: rgba(0, 0, 0, 0);
+  }
+
+  .navbar {
+      background: rgba(0, 0, 0, 0.5)
+  }
+
 
 
 
