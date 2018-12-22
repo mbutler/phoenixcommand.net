@@ -53,8 +53,31 @@ function displayCharacterSheet(user, characterName) {
         let game = data.val()
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
-        console.log(character)
-        $('#character-name').append(`<h2>${character.characterName}</h2>`)
+        $('#character-name').append(`<h3><strong>${character.characterName}</strong></h3>`)
+        $('#strength').append(character.strength)
+        $('#intelligence').append(character.intelligence)
+        $('#agility').append(character.agility)
+        $('#will').append(character.will)
+        $('#health').append(character.health)
+        $('#movement').append(character.speed)
+        $('#physical-damage').append(character.pd)
+        $('#total-damage').append(character.td)
+        $('#status').append(character.status)
+        $('#cover').append(character.cover)
+        $('#position').append(character.position)
+        $('#impulse1').append(character.capi['1'])
+        $('#impulse2').append(character.capi['2'])
+        $('#impulse3').append(character.capi['3'])
+        $('#impulse4').append(character.capi['4'])
+        $('#knockout-value').append(character.kv)
+        $('#disabling-injuries').attr('data-content', character.injuries)
+
+        if (character.stance === true) {
+          $('#stance').append('True')
+        } else {
+          $('#stance').append('False')
+        }
+        $('#weapons').append(character.weapons[0])
       })
   })
 }
@@ -66,7 +89,7 @@ function displayNewCharacter(user) {
       let gameRef = firebase.database().ref("users/" + gameId)
       gameRef.on("value", data => {
         let game = data.val()
-        $('.game-title').text(game.metadata.title)
+        $('.game-title').append(`<a href="game.html">${game.metadata.title}</a>`)
       })
   })
 }

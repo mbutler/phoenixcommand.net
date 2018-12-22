@@ -39,6 +39,15 @@ function characterSubmit() {
   c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
   c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.kv = kv, c.speed = speed, c.capi = capi
 
+  c.pd = 0 //physical damage
+  c.td = 0 //total damage
+  c.status = 'Alive'
+  c.injuries = 'None'
+  c.cover = 'Standing Exposed' //table 4E positions
+  c.position = 'Standing' //4B - Standing, Standing & Braced, Kneeling, Kneeling & Braced, Prone, Prone & Braced
+  c.stance = false
+  c.actions = {}
+
   c.user = me.uid
 
   Game.addCharacter(me, c)

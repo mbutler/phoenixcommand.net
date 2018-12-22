@@ -42,6 +42,26 @@
       background: rgba(0, 0, 0, 0.5)
   }
 
+  .card .card-header {
+      padding: 0px;
+  }
+
+  .card-header {
+      padding: 0px;
+  }
+
+  .color-row {
+      background-color: aliceblue;
+  }
+
+  #disabling-injuries {
+    padding: 1px;
+    margin-left: 20px;
+    margin-bottom: 2px;
+    background-color: #9c27b0;
+    color: white;
+  }
+
 
 
 
@@ -53,7 +73,7 @@
         margin-top: 30px;
     }
 
-    #character-name h2 {
+    #character-name h3 {
         margin-top: 20px;
     }
   }
@@ -63,7 +83,7 @@
         margin-top: 5px;
     }
     
-    #character-name h2 {
+    #character-name h3 {
         margin-top: 0px;
     }
   }
@@ -73,7 +93,7 @@
         margin-top: 0px;
     }
 
-    #character-name h2 {
+    #character-name h3 {
         margin-top: 0px;
     }
   }
@@ -83,7 +103,7 @@
         margin-top: 30px;
     }
 
-    #character-name h2 {
+    #character-name h3 {
         margin-top: 20px;
     }
   }

@@ -20,7 +20,7 @@
     <nav class="navbar fixed-top navbar-expand-lg" color-on-scroll="100">
         <div class="container">
             <div class="navbar-translate">
-            <a style="color: black;" class="game-title" class="navbar-brand" href="game.html"></a>
+                <a style="color: black;" class="game-title" class="navbar-brand" href="game.html"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="navbar-toggler-icon"></span>
@@ -69,22 +69,125 @@
 
     <div class="main">
         <div class="container">
-            <div id="game-section" class="section text-center">                
-                <div id="character-name"></div>            
+            <div id="game-section" class="section text-center">
+                <div id="character-name"></div>
             </div>
             <div class="container">
-                    <div class="row">
-                      <div class="col-sm">
-                        One of three columns
-                      </div>
-                      <div class="col-sm">
-                        One of three columns
-                      </div>
-                      <div class="col-sm">
-                        One of three columns
-                      </div>
+                <div class="card card-nav-tabs card-plain">
+                    <div class="card-header card-header-primary">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#stats" data-toggle="tab">Stats</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#weapons" data-toggle="tab">Weapons</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#gear" data-toggle="tab">Gear</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#actions" data-toggle="tab">Actions</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+                    <div class="card-body ">
+                        <div class="tab-content text-center">
+                            <div class="tab-pane active" id="stats">
+                                <div class="row color-row">
+                                    <div class="col-xs-8"><strong>Strength</strong></div>
+                                    <div id="strength" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8"><strong>Intelligence</strong></div>
+                                    <div id="intelligence" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-8"><strong>Will</strong></div>
+                                    <div id="will" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8"><strong>Health</strong></div>
+                                    <div id="health" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-8"><strong>Agility</strong></div>
+                                    <div id="agility" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8"><strong>Movement</strong></div>
+                                    <div id="movement" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-xs-12">
+                                        <strong>Combat actions per impulse</strong>
+                                    </div>
+                                </div>
+                                <table class="table table-condensed table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>impulse</th>
+                                            <th class="text-center">1</th>
+                                            <th class="text-center">2</th>
+                                            <th class="text-center">3</th>
+                                            <th class="text-center">4</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-success">
+                                            <td>actions</td>
+                                            <td id="impulse1" class="text-center"></td>
+                                            <td id="impulse2" class="text-center"></td>
+                                            <td id="impulse3" class="text-center"></td>
+                                            <td id="impulse4" class="text-center"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-xs-7"><strong>Knockout Value</strong></div>
+                                    <div id="knockout-value" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-7"><strong>Physical damage</strong></div>
+                                    <div id="physical-damage" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-7"><strong>Total Damage</strong></div>
+                                    <div id="total-damage" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-7"><strong>Status</strong></div>
+                                    <div id="status" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8"><strong>Disabling injuries</strong></div>
+                                    <button type="button" id="disabling-injuries" class="btn btn-secondary btn-xs dismissable-popover ml-auto" data-container="body" data-toggle="popover" data-placement="top" data-content="">
+                                        Click
+                                    </button>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-7"><strong>Cover</strong></div>
+                                    <div id="cover" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-7"><strong>Firing Stance</strong></div>
+                                    <div id="stance" class="col-xs-5 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-7"><strong>Position</strong></div>
+                                    <div id="position" class="col-xs-5 ml-auto"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="weapons"></div>
+                            <div class="tab-pane" id="gear"></div>
+                            <div class="tab-pane" id="actions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -125,7 +228,7 @@
             </div>
         </div>
     </div>
-    
+
     <!--   Core JS Files   -->
     <script src="js/core/jquery.min.js" type="text/javascript"></script>
     <script src="js/core/popper.min.js" type="text/javascript"></script>
