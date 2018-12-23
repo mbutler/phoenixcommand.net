@@ -39,6 +39,7 @@ function displayGame(user) {
           }
           $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
         })
+        $('.timestamp').append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
       })
   })
 }
