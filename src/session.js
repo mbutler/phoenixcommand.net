@@ -1,11 +1,11 @@
 import firebase from 'firebase/app'
-import 'firebase/auth'
 import 'firebase/database'
 import * as Game from './game'
 import * as User from './user'
+import * as Utils from './utils'
 
 export function init(user) {
-  let page = location.href.split("/").slice(-1)
+  let page = location.href.split('/').slice(-1)
   page = _.split(page, '?c=')
 
   if (page[0] === 'game.html') {
@@ -23,18 +23,18 @@ export function init(user) {
 }
 
 function displayGame(user) {
-  let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
-  ref.on("value", snapshot => {
+  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
+  ref.on('value', snapshot => {
       let gameId = snapshot.val()
-      let gameRef = firebase.database().ref("users/" + gameId)
-      gameRef.on("value", data => {
+      let gameRef = firebase.database().ref('users/' + gameId)
+      gameRef.on('value', data => {
         let game = data.val()
         $('.game-title').text(game.metadata.title)      
 
         _.forEach(User.getUserCharacters(game), player => {
           let link = ''                  
           if (user.uid === player.userId) {
-            link = `<a href="character.html?c=${player.characterName}">${player.characterName}</a>`
+            link = `<a href='character.html?c=${player.characterName}'>${player.characterName}</a>`
           } else {
             link = `${player.characterName}`
           }
@@ -45,11 +45,11 @@ function displayGame(user) {
 }
 
 function displayCharacterSheet(user, characterName) {
-  let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
-  ref.on("value", snapshot => {
+  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
+  ref.on('value', snapshot => {
       let gameId = snapshot.val()
-      let gameRef = firebase.database().ref("users/" + gameId)
-      gameRef.on("value", data => {
+      let gameRef = firebase.database().ref('users/' + gameId)
+      gameRef.on('value', data => {
         let game = data.val()
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
@@ -78,18 +78,20 @@ function displayCharacterSheet(user, characterName) {
           $('#stance').append('False')
         }
         $('#weapons').append(character.weapons[0])
+
+        console.log(Utils.getWeapons(character.weapons))
       })
   })
 }
 
 function displayNewCharacter(user) {
-  let ref = firebase.database().ref("users/" + user.uid + "/currentGame")
-  ref.on("value", snapshot => {
+  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
+  ref.on('value', snapshot => {
       let gameId = snapshot.val()
-      let gameRef = firebase.database().ref("users/" + gameId)
-      gameRef.on("value", data => {
+      let gameRef = firebase.database().ref('users/' + gameId)
+      gameRef.on('value', data => {
         let game = data.val()
-        $('.game-title').append(`<a href="game.html">${game.metadata.title}</a>`)
+        $('.game-title').append(`<a href='game.html'>${game.metadata.title}</a>`)
       })
   })
 }

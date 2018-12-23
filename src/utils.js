@@ -1,5 +1,7 @@
-import {codenames} from "./codenames"
-import {mission} from "./operations"
+import firebase from 'firebase/app'
+import 'firebase/database'
+import {codenames} from './codenames'
+import {mission} from './operations'
 
 export function selectedCheckboxes(boxes) {
   let selected = []
@@ -18,33 +20,46 @@ function threeD6() {
 export function randomize() {
   let name = _.sample(codenames)
   let skill = _.random(1, 6)
-  $("#skill-level").val(skill)
-  $("#codename").val(name)
+  $('#skill-level').val(skill)
+  $('#codename').val(name)
   let str = threeD6()
-  $("#strength").val(str)
+  $('#strength').val(str)
   let int = threeD6()
-  $("#intelligence").val(int)
+  $('#intelligence').val(int)
   let will = threeD6()
-  $("#will").val(will)
+  $('#will').val(will)
   let health = threeD6()
-  $("#health").val(health)
+  $('#health').val(health)
   let agi = threeD6()
-  $("#agility").val(agi)
+  $('#agility').val(agi)
 }
 
 export function operationName() {
-  $("#gamename").val(mission())
+  $('#gamename').val(mission())
 }
 
 export function displayAccount(user) {
-  $("#account-name").text(user.displayName)
-  $("#account-id").text(user.uid)
-  $("#account-email").text(user.email)
+  $('#account-name').text(user.displayName)
+  $('#account-id').text(user.uid)
+  $('#account-email').text(user.email)
 }
 
 export function clearUserDisplay() {
-  $("#game-dropdown").empty()
-  $("#account-name").text('Account Name')
-  $("#account-id").empty()
-  $("#account-email").empty()
+  $('#game-dropdown').empty()
+  $('#account-name').text('Account Name')
+  $('#account-id').empty()
+  $('#account-email').empty()
+}
+
+export function getWeapons(weaponList) {
+  let guns = []
+  let ref = firebase.database().ref('weapons')
+  ref.on('value', snap => {
+    let weapons = snap.val()
+    _.forEach(weaponList, weapon => {
+      let gun = _.find(weapons, o => {return o.Name === weapon})
+      guns.push(gun)
+    })
+  })
+  return guns
 }
