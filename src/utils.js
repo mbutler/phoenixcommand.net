@@ -50,16 +50,3 @@ export function clearUserDisplay() {
   $('#account-id').empty()
   $('#account-email').empty()
 }
-
-export function getWeapons(weaponList) {
-  let guns = []
-  let ref = firebase.database().ref('weapons')
-  ref.on('value', snap => {
-    let weapons = snap.val()
-    _.forEach(weaponList, weapon => {
-      let gun = _.find(weapons, o => {return o.Name === weapon})
-      guns.push(gun)
-    })
-  })
-  return guns
-}

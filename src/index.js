@@ -31,13 +31,14 @@ function characterSubmit() {
   let weapons = Utils.selectedCheckboxes($('[name="weapon"]'))
   let equipment = Utils.selectedCheckboxes($('[name="equipment"]'))
   equipment.push(armor)
+  let sal = pf.skillAccuracyLevel(skillLevel)
   let encumbrance = pf.encumbranceCalculator(equipment, weapons)
   let kv = pf.knockoutValue(will, skillLevel)
   let speed = pf.movementSpeed(strength, agility, encumbrance)
   let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
 
   c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
-  c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.kv = kv, c.speed = speed, c.capi = capi
+  c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.sal = sal, c.kv = kv, c.speed = speed, c.capi = capi
 
   c.pd = 0 //physical damage
   c.td = 0 //total damage

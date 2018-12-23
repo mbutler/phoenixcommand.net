@@ -1,109 +1,83 @@
 .material-icons {
     margin-right: 5px;
 }
-
 #nav-logo {
     color: black;
 }
-
 .label {
     margin-bottom: 10px;
     margin-top: 10px;
 }
-
 .form-label {
     color: #6d6d6d;
     text-align: left;
     margin-left: -300px;
     font-size: 14px;
 }
-
 .dropdown-divider {
     height: 0;
     margin: 0.5rem 0;
     overflow: hidden;
     border-top: 1px solid black;
-  }
-
-  #account-section {
-      margin-top: 20px;
-  }
-
-  #game-section {
-      margin-top: -20px;
-      padding-bottom: 0px;
-  }
-
-  .header-filter::before {
+}
+#account-section {
+    margin-top: 20px;
+}
+#game-section {
+    margin-top: -20px;
+    padding-bottom: 0px;
+}
+.header-filter::before {
     background: rgba(0, 0, 0, 0);
-  }
+}
+.navbar {
+    background: rgba(0, 0, 0, 0.5) 
+}
+.card .card-header {
+    padding: 0px;
+}
+.card-header {
+    padding: 0px;
+}
+.color-row {
+    background-color: aliceblue;
+}
 
-  .navbar {
-      background: rgba(0, 0, 0, 0.5)
-  }
+#weapon-name h4 {
+    margin: 0px;
+}
 
-  .card .card-header {
-      padding: 0px;
-  }
-
-  .card-header {
-      padding: 0px;
-  }
-
-  .color-row {
-      background-color: aliceblue;
-  }
-
-  #disabling-injuries {
+#disabling-injuries {
     padding: 1px;
     margin-left: 20px;
     margin-bottom: 2px;
     background-color: #9c27b0;
     color: white;
-  }
+}
+#skill-level h6 {
+    margin: 0px;
+}
 
+#new-character-button {
+    margin-top: 30px;
+}
+#character-name h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
 
+@media (max-width: 991px) {
+    #new-character-button {
+        margin-top: 0px;
+    }
+}
 
-
-
-
-
-  @media only screen and (min-width: 1px) and (max-width: 306px) {
+@media (min-width: 992px) {
     #new-character-button {
         margin-top: 30px;
     }
-
     #character-name h3 {
-        margin-top: 20px;
-    }
-  }
-
-  @media only screen and (min-width: 307px) and (max-width: 767px) {
-    #new-character-button {
-        margin-top: 5px;
-    }
-    
-    #character-name h3 {
-        margin-top: 0px;
-    }
-  }
-
-  @media only screen and (min-width: 768px) and (max-width: 991) {
-    #new-character-button {
-        margin-top: 0px;
-    }
-
-    #character-name h3 {
-        margin-top: 0px;
-    }
-  }
-
-  @media only screen and (min-width: 992px) and (max-width: 2000px) {
-    #new-character-button {
         margin-top: 30px;
+        margin-bottom: 0px;
     }
-
-    #character-name h3 {
-        margin-top: 20px;
-    }
-  }
+}
