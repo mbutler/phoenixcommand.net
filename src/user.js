@@ -7,10 +7,10 @@ export function addNew(user) {
   ref.once('value').then(snapshot => {
     if (snapshot.hasChild(user.uid) === false) {
       firebase.database().ref('users/' + user.uid).set({
-          name: user.displayName,
-          email: user.email,
-          created: date.getTime()
-        })
+        name: user.displayName,
+        email: user.email,
+        created: date.getTime()
+      })
       firebase.database().ref('userIds/' + user.uid).set(user.displayName)
     }
   })
