@@ -16,7 +16,7 @@ export function addNew(user) {
   })
 }
 
-export function getUserCharacters(game, characterName) {
+export function getUserCharacters(game) {
   let list = []
   let users = game.users
   let characters = game.content.characters
@@ -49,7 +49,13 @@ export function getUserCharacters(game, characterName) {
 }
 
 export function getCharacterSheet(game, characterName) {
-  let userCharacters = getUserCharacters(game, characterName)
+  let userCharacters = getUserCharacters(game)
   let character = _.find(userCharacters, player => {return player.name === characterName})
   return character
+}
+
+export function getCharacterId(game, characterName) {
+  let userCharacters = getUserCharacters(game)
+  let character = _.find(userCharacters, player => {return player.name === characterName})
+  return character.characterId
 }

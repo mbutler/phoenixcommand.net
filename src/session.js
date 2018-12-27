@@ -3,6 +3,16 @@ import 'firebase/database'
 import * as Game from './game'
 import * as User from './user'
 
+$('.dropdown-item-charactersheet').click((e) => {
+  let path = $('#character-path').val()
+  let targetId = $(e.target.parentElement.parentElement.parentElement).attr('id')
+  e.preventDefault()
+  let result = e.delegateTarget.innerText
+  $(`#${targetId} button`).empty()
+  $(`#${targetId} button`).empty().append(result)
+  firebase.database().ref(path + '/' + targetId).set(result)
+})
+
 export function init(user) {
   let page = location.href.split('/').slice(-1)
   page = _.split(page, '?c=')
@@ -37,9 +47,9 @@ function displayGame(user) {
           } else {
             link = `${player.characterName}`
           }
-          $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
+          $('#user-table tbody').empty().append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
         })
-        $('.timestamp').append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
+        $('.timestamp').empty().append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
       })
   })
 }
@@ -50,36 +60,38 @@ function displayCharacterSheet(user, characterName) {
       let gameId = snapshot.val()
       let gameRef = firebase.database().ref('users/' + gameId)
       gameRef.on('value', data => {
+        //$('#character-path').text('users/' + gameId)
         let game = data.val()
+        $('#character-path').val('users/' + gameId + '/content/characters/' + User.getCharacterId(game, characterName))
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
-        $('#character-name').append(`<h3><strong>${character.characterName}</strong></h3>`)
-        $('#skill-level').append(`<h6>Level: ${character.skillLevel}</h6>`)
-        $('#strength').append(character.strength)
-        $('#intelligence').append(character.intelligence)
-        $('#agility').append(character.agility)
-        $('#will').append(character.will)
-        $('#health').append(character.health)
-        $('#movement').append(character.speed)
-        $('#sal').append(character.sal)
-        $('#physical-damage').append(character.pd)
-        $('#total-damage').append(character.td)
-        $('#status').append(character.status)
-        $('#cover').append(character.cover)
-        $('#position').append(character.position)
-        $('#impulse1').append(character.capi['1'])
-        $('#impulse2').append(character.capi['2'])
-        $('#impulse3').append(character.capi['3'])
-        $('#impulse4').append(character.capi['4'])
-        $('#knockout-value').append(character.kv)
+        $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
+        $('#skill-level').empty().append(`<h6>Level: ${character.skillLevel}</h6>`)
+        $('#strength').empty().append(character.strength)
+        $('#intelligence').empty().append(character.intelligence)
+        $('#agility').empty().append(character.agility)
+        $('#will').empty().append(character.will)
+        $('#health').empty().append(character.health)
+        $('#movement').empty().append(character.speed)
+        $('#sal').empty().append(character.sal)
+        $('#physical-damage').empty().append(character.pd)
+        $('#total-damage').empty().append(character.td)
+        $('#status').empty().append(character.status)
+        $('#cover button').empty().append(character.cover)
+        $('#position button').empty().append(character.position)
+        $('#impulse1').empty().append(character.capi['1'])
+        $('#impulse2').empty().append(character.capi['2'])
+        $('#impulse3').empty().append(character.capi['3'])
+        $('#impulse4').empty().append(character.capi['4'])
+        $('#knockout-value').empty().append(character.kv)
         $('#disabling-injuries').attr('data-content', character.injuries)
 
         if (character.stance === true) {
-          $('#stance').append('True')
+          $('#stance button').empty().append('True')
         } else {
-          $('#stance').append('False')
+          $('#stance button').empty().append('False')
         }
-        $('#weapon-name').append(`<h4><strong>${character.weapons[0]}<strong></h4>`)
+        $('#weapon-name').empty().append(`<h4><strong>${character.weapons[0]}<strong></h4>`)
 
         displayWeapons(character.weapons, character.sal)
       })
@@ -93,7 +105,7 @@ function displayNewCharacter(user) {
       let gameRef = firebase.database().ref('users/' + gameId)
       gameRef.on('value', data => {
         let game = data.val()
-        $('.game-title').append(`<a href='game.html'>${game.metadata.title}</a>`)
+        $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)
       })
   })
 }
@@ -152,7 +164,7 @@ function displayWeapons(weaponList, sal) {
             </thead>
             <tbody id="weapon-table">${aimTime}</tbody>
           </table>`
-        $('#weapons').append(div)
+        $('#weapons').empty().append(div)
     })
   })
 }

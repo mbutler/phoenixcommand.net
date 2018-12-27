@@ -54,6 +54,26 @@
     background-color: #9c27b0;
     color: white;
 }
+
+.drop-sm {
+    padding: 1px !important;
+    background-color: transparent !important;
+    color: black !important;
+    text-transform: none !important;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    font-weight: 300 !important;
+    line-height: 1.5em !important;
+    font-size: 14px !important;
+}
+
+.dropdown-item-charactersheet {
+    padding: 1px !important;
+}
+
+.dropleft {
+    margin: 0px;
+}
+
 #skill-level h6 {
     margin: 0px;
 }
