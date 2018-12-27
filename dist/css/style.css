@@ -20,6 +20,10 @@
     overflow: hidden;
     border-top: 1px solid black;
 }
+#game-dropdown {
+   height: auto;
+   padding-bottom: 0px;
+}
 #account-section {
     margin-top: 20px;
 }

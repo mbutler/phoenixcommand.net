@@ -14,12 +14,14 @@ export function navList(user) {
   })
 
   memberQuery.once('value').then(snapshot => {
-    $('#game-dropdown').append(`<div class="dropdown-divider"></div>`)
-    snapshot.forEach(childSnapshot => {
-      let gameId = childSnapshot.key
-      let game = childSnapshot.val()
-      $('#game-dropdown').append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
-    })
+    if (snapshot.val()) {
+      $('#game-dropdown').append(`<div class="dropdown-divider"></div>`)
+      snapshot.forEach(childSnapshot => {
+        let gameId = childSnapshot.key
+        let game = childSnapshot.val()
+        $('#game-dropdown').append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
+      })
+    }    
   })
 }
 

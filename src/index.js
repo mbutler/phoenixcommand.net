@@ -46,7 +46,7 @@ function characterSubmit() {
   c.injuries = 'None'
   c.cover = 'Standing Exposed' //table 4E positions
   c.position = 'Standing' //4B - Standing, Standing & Braced, Kneeling, Kneeling & Braced, Prone, Prone & Braced
-  c.stance = false
+  c.stance = "False"
   c.actions = {}
 
   c.user = me.uid

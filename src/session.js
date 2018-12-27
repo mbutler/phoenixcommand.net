@@ -4,11 +4,10 @@ import * as Game from './game'
 import * as User from './user'
 
 $('.dropdown-item-charactersheet').click((e) => {
-  let path = $('#character-path').val()
-  let targetId = $(e.target.parentElement.parentElement.parentElement).attr('id')
   e.preventDefault()
+  let path = $('#character-path').val()
+  let targetId = $(e.target.parentElement.parentElement.parentElement).attr('id')  
   let result = e.delegateTarget.innerText
-  $(`#${targetId} button`).empty()
   $(`#${targetId} button`).empty().append(result)
   firebase.database().ref(path + '/' + targetId).set(result)
 })
@@ -47,7 +46,7 @@ function displayGame(user) {
           } else {
             link = `${player.characterName}`
           }
-          $('#user-table tbody').empty().append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
+          $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
         })
         $('.timestamp').empty().append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
       })
@@ -85,14 +84,7 @@ function displayCharacterSheet(user, characterName) {
         $('#impulse4').empty().append(character.capi['4'])
         $('#knockout-value').empty().append(character.kv)
         $('#disabling-injuries').attr('data-content', character.injuries)
-
-        if (character.stance === true) {
-          $('#stance button').empty().append('True')
-        } else {
-          $('#stance button').empty().append('False')
-        }
-        $('#weapon-name').empty().append(`<h4><strong>${character.weapons[0]}<strong></h4>`)
-
+        $('#stance button').empty().append('False')
         displayWeapons(character.weapons, character.sal)
       })
   })
