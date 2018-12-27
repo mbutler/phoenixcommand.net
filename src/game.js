@@ -25,7 +25,7 @@ export function navList(user) {
   })
 }
 
-function addPlayers(user, gameId, players) {
+function addPlayers(user, gameId, players, gameName) {
   let playerList = _.split(players, ',')
   let ref = firebase.database().ref('userIds')
   ref.once('value').then(snapshot => {
@@ -35,6 +35,7 @@ function addPlayers(user, gameId, players) {
       if (person === '') {person = 'blank'}
       if (snapshot.hasChild(person) === true) {
         firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/users/' + person).set(users[person])
+        firebase.database().ref('users/' + person + '/memberOf/').push({gameId: user.uid + '/games/' + gameId, name: gameName})
       } else {
         alert('players intentionally left ' + person)
       }
@@ -72,7 +73,7 @@ export function createNew(user, gameName, players) {
   newRef = ref.push(newGame)
   gameId = newRef.key
   setCurrent(user.uid, gameId)
-  addPlayers(user, gameId, players)
+  addPlayers(user, gameId, players, gameName)
   firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/metadata/gameId/').set(user.uid + '/games/' + gameId)
   firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/users/' + user.uid).set(user.displayName)
   firebase.database().ref('users/' + user.uid + '/adminOf/').push({gameId: user.uid + '/games/' + gameId, name: gameName})
