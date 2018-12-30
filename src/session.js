@@ -29,6 +29,10 @@ export function init(user) {
   if (page[0] === 'newcharacter.html') {
     displayNewCharacter(user)
   }
+
+  if (page[0] === 'calculator.html') {
+    Calc.setUser(user)
+  }
 }
 
 function displayGame(user) {
