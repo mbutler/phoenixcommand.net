@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 import * as Game from './game'
 import * as User from './user'
+import * as Calc from './calc'
 
 $('.dropdown-item-charactersheet').click((e) => {
   e.preventDefault()
