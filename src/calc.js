@@ -78,29 +78,33 @@ export function eal() {
     ref.on('value', snap => {
         let eal = {}
         let sal = _.toNumber($('#sal').val())
+        let range = _.toNumber($('#range').val())
         let targetSpeed = _.toNumber($('#target-speed').val())
         let shooterSpeed = _.toNumber($('#shooter-speed').val())
         let aimTime = _.toNumber($('#aim-time').val())
-        if (targetSpeed > 0) {aimTime = 2}
-        if (shooterSpeed > 0) {aimTime = 1}
+        //if (pf.movingALM(targetSpeed, shooterSpeed, range) === -10) {aimTime = 2}
+        $('#from-the-hip').prop('checked', false)
+        if (shooterSpeed > 0) {$('#from-the-hip').prop('checked', true)}
         let weapon = $(`#weapon-button .dropdown-toggle`).html()
         let weapons = snap.val()        
         let gun = _.find(weapons, o => {return o.Name === weapon})
         let weaponAim = gun['Aim Time']
         let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)        
-        let shotType = $('#shot-type-button .dropdown-toggle').html()
-        let targetSizeType = 'Target Size'
-        if (shotType === 'Burst') {targetSizeType = 'Auto Elev'}       
-        let range = _.toNumber($('#range').val())        
+        let shotType = $('#shot-type-button .dropdown-toggle').html()        
         let firingStance = $('#firing-stance-button .dropdown-toggle').html()
+        if (firingStance === false) {$('#from-the-hip').prop('checked', true)}
         let position = $('#position-button .dropdown-toggle').html()
         let situational = Utils.selectedCheckboxes($('[name="situational"]'))
         let visibility = Utils.selectedCheckboxes($('[name="visibility"]'))
         let targetSize = Utils.selectedCheckboxes($('[name="targetsize"]'))
-
+        let targetDiameter = _.toNumber($('#target-size').val())
         eal.sal = sal, eal.shotType = shotType, eal.targetSpeed = targetSpeed, eal.shooterSpeed = shooterSpeed, eal.range = range, eal.aimTime = aimTime
         eal.firingStance = firingStance, eal.position = position, eal.situational = situational, eal.visibility = visibility, eal.targetSize = targetSize
-        eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetSizeType = targetSizeType
+        eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter
         let accuracy = pf.effectiveAccuracyLevel(eal)
+        let chance = pf.oddsOfHitting(accuracy, shotType)
+        $('#eal').empty().append(accuracy)
+        $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+        $('.nav-tabs a[href="#odds"]').tab('show')
     })    
 }

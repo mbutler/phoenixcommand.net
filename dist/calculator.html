@@ -54,7 +54,7 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
-                            <a class="dropdown-item" href="#0">
+                            <a class="dropdown-item" href="calculator.html">
                                 <svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
                                     <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
                                 </svg> Calculators</a>
@@ -183,6 +183,22 @@
                                     </div>
                                     <div class="form-check">
                                         <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" name="situational" value="Using Sling for Support"> Using Sling for Support
+                                            <span class="form-check-sign">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input id="from-the-hip" class="form-check-input" type="checkbox" name="situational" value="Firing from the Hip"> Firing from the Hip
+                                            <span class="form-check-sign">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
                                             <input class="form-check-input" type="checkbox" name="situational" value="Firing Rifle with One Hand"> Firing Rifle with One Hand
                                             <span class="form-check-sign">
                                                 <span class="check"></span>
@@ -239,7 +255,7 @@
                                     </div>
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" name="situational" value="Firing Pistol with One Hand"> Firing Pistol with One Hand
+                                            <input class="form-check-input" type="checkbox" name="situational" value="Turret Mounted Weapon"> Turret Mounted Weapon
                                             <span class="form-check-sign">
                                                         <span class="check"></span>
                                             </span>
@@ -371,6 +387,11 @@
                                     <div class="row">
                                         <h5>Target Size</h5>
                                     </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <input id="target-size" type="number" class="form-control" placeholder="diameter in feet (optional)">
+                                        </div>
+                                    </div>
                                     <div class="form-check">
                                         <label class="form-check-label">
                                             <input class="form-check-input" type="checkbox" name="targetsize" value="Look Over/Around"> Look Over/Around
@@ -382,6 +403,14 @@
                                     <div class="form-check">
                                         <label class="form-check-label">
                                             <input class="form-check-input" type="checkbox" name="targetsize" value="Fire Over/Around"> Fire Over/Around
+                                            <span class="form-check-sign">
+                                                        <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" name="targetsize" value="Standing Exposed"> Standing Exposed
                                             <span class="form-check-sign">
                                                         <span class="check"></span>
                                             </span>
@@ -463,7 +492,14 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="odds">
-
+                            <div class="row">
+                                    <div class="col-xs-8"><strong>Effective Accuracy Level</strong></div>
+                                    <div id="eal" class="col-xs-4 ml-auto"></div>
+                                </div>
+                                <div class="row color-row">
+                                    <div class="col-xs-8"><strong><h3>Odds of Hitting</h3></strong></div>
+                                    <div id="odds-of-hitting" class="col-xs-4 ml-auto"></div>
+                                </div>
                             </div>
                             <div class="tab-pane" id="location"></div>
                             <div class="tab-pane" id="damage"></div>
