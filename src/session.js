@@ -69,6 +69,7 @@ function displayCharacterSheet(user, characterName) {
         $('#character-path').val('users/' + gameId + '/content/characters/' + User.getCharacterId(game, characterName))
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
+        console.log(character.weapons)
         $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
         $('#skill-level').empty().append(`<h6>Level: ${character.skillLevel}</h6>`)
         $('#strength').empty().append(character.strength)
@@ -161,7 +162,7 @@ function displayWeapons(weaponList, sal) {
             </thead>
             <tbody id="weapon-table">${aimTime}</tbody>
           </table>`
-        $('#weapons').empty().append(div)
+        $('#weapons').append(div)
     })
   })
 }
