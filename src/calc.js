@@ -116,15 +116,28 @@ export function eal() {
 function displayHit(accuracy, chance, shotType, range, weapon) {
     $('#eal').empty().append(accuracy)
     if (shotType === 'Burst') {
-        $('.arc-rows h5').append(`Number of Targets in Minimum Arc of ${getMinimumArc(weapon, range)}:`)
+        let sab = weapon['SAB']
+        $('.arc-rows h5').empty().append(`Number of Targets in Minimum Arc of ${getMinimumArc(weapon, range)}:`)
         $('.arc-rows').show()
         $('#odds-label').empty().append(`<strong><h3>Chance of Burst Hitting</h3></strong>`)
-        $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+        let odds = $('#odds-of-hitting h3').html()
+        odds = _.toNumber(_.trim(odds, '%'))
+        if (odds === 0) {
+            $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+            odds = chance
+        } else {
+            $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
+        }
         $('#fire-button').click(e => {
             e.preventDefault()
             let targets = _.toNumber($('#number-of-targets').val())
             let arc = _.toNumber($('#arc').val())
-            fireBurst(weapon, range, targets, arc, chance)
+            if (odds <= chance) {            
+                odds = odds - sab
+                $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
+                $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
+            }
+            fireBurst(weapon, range, targets, arc, odds)
         })
     } else if (shotType === 'Single Shot') {
         $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
