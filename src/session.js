@@ -64,12 +64,10 @@ function displayCharacterSheet(user, characterName) {
       let gameId = snapshot.val()
       let gameRef = firebase.database().ref('users/' + gameId)
       gameRef.on('value', data => {
-        //$('#character-path').text('users/' + gameId)
         let game = data.val()
         $('#character-path').val('users/' + gameId + '/content/characters/' + User.getCharacterId(game, characterName))
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
-        console.log(character.weapons)
         $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
         $('#skill-level').empty().append(`<h6>Level: ${character.skillLevel}</h6>`)
         $('#strength').empty().append(character.strength)

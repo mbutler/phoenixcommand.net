@@ -90,6 +90,10 @@
     margin-bottom: 0px;
 }
 
+#fire-button {
+    margin-top: 40px;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin-top: 0px;
