@@ -108,6 +108,8 @@ export function eal() {
             let accuracy = pf.effectiveAccuracyLevel(eal)
             let chance = pf.oddsOfHitting(accuracy, shotType)
             $('.arc-rows').hide()
+            $('#sab-message').empty()
+            $('#odds-of-hitting').empty()
             displayHit(accuracy, chance, shotType, range, gun)            
         }) 
     }       
@@ -117,9 +119,9 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
     $('#eal').empty().append(accuracy)
     if (shotType === 'Burst') {
         let sab = weapon['SAB']
-        $('.arc-rows h5').empty().append(`Number of Targets in Minimum Arc of ${getMinimumArc(weapon, range)}:`)
+        $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, range)}:</strong>`)
         $('.arc-rows').show()
-        $('#odds-label').empty().append(`<strong><h3>Chance of Burst Hitting</h3></strong>`)
+        $('#odds-label').empty().append(`<strong><h3>Burst Elevation Chance</h3></strong>`)
         let odds = $('#odds-of-hitting h3').html()
         odds = _.toNumber(_.trim(odds, '%'))
         if (odds === 0) {
@@ -134,6 +136,7 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
             let arc = _.toNumber($('#arc').val())
             if (odds <= chance) {            
                 odds = odds - sab
+                if (odds < 0) {odds = 0}
                 $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
                 $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
             }
@@ -147,8 +150,7 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
             fireSingleShot(weapon, range, chance)
         })
         
-    }
-    
+    }    
     $('.nav-tabs a[href="#odds"]').tab('show')    
 }
 

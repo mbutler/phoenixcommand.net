@@ -1,6 +1,5 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
-import * as User from './user'
 
 export function navList(user) {
   let adminQuery = firebase.database().ref('users/' + user.uid + '/adminOf')

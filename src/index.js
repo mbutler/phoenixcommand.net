@@ -7,7 +7,8 @@ import * as pf from 'phoenix-functions'
 import * as Utils from './utils'
 import * as Game from './game'
 import * as User from './user'
-import * as Session from './session'
+import * as Sheet from './character'
+import * as Calc from './calc'
 
 let me
 
@@ -17,6 +18,28 @@ window.newGameSubmit = newGameSubmit
 window.randomize = Utils.randomize
 window.operationName = Utils.operationName
 window.selectGame = Game.select
+
+function route(user) {
+  let page = location.href.split('/').slice(-1)
+  page = _.split(page, '?c=')
+
+  if (page[0] === 'game.html') {
+    Sheet.displayGame(user)
+  }
+
+  if (page[0] === 'character.html') {
+    let characterName = _.replace(page[1], '%20', ' ')
+    Sheet.displayCharacterSheet(user, characterName)
+  }
+
+  if (page[0] === 'newcharacter.html') {
+    Sheet.displayNewCharacter(user)
+  }
+
+  if (page[0] === 'calculator.html') {
+    Calc.setUser(user)
+  }
+}
 
 function characterSubmit() {
   let c = {}
@@ -36,9 +59,21 @@ function characterSubmit() {
   let kv = pf.knockoutValue(will, skillLevel)
   let speed = pf.movementSpeed(strength, agility, encumbrance)
   let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
+  let ammo = {}
 
+  _.forEach(weapons, gun => {
+    ammo[gun] = {
+        "loaded" : 0,
+        "total" : 50,
+        "type" : "FMJ"
+    }
+  })
+  
   c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
   c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.sal = sal, c.kv = kv, c.speed = speed, c.capi = capi
+  c.ammo = ammo
+
+  
 
   c.pd = 0 //physical damage
   c.td = 0 //total damage
@@ -99,7 +134,7 @@ firebase.auth().onAuthStateChanged(user => {
     User.addNew(user)
     Utils.displayAccount(user)
     Game.navList(user)
-    Session.init(user)
+    route(user)
   } else {
     $('#signout').hide()
     $('#signin').show()
