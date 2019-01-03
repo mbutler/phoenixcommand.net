@@ -134,13 +134,17 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
             e.preventDefault()
             let targets = _.toNumber($('#number-of-targets').val())
             let arc = _.toNumber($('#arc').val())
-            if (odds <= chance) {            
-                odds = odds - sab
-                if (odds < 0) {odds = 0}
-                $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
-                $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
-            }
-            fireBurst(weapon, range, targets, arc, odds)
+            if (targets > 0 && arc > 0) {
+                if (odds <= chance) {            
+                    odds = odds - sab
+                    if (odds < 0) {odds = 0}
+                    $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
+                    $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
+                }
+                fireBurst(weapon, range, targets, arc, odds)
+            } else {
+                alert('Arc and number of targets required.')
+            }     
         })
     } else if (shotType === 'Single Shot') {
         $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
@@ -169,9 +173,6 @@ function fireBurst(weapon, range, numberOfTargets, arc, chance) {
         let character = snap.val()
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let minArc = getMinimumArc(weapon, range)
-        if (arc < minArc) {
-            alert ('Arc size must be at least minimum arc size')
-        }
         if (loadedAmmo >= rof) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
             if (_.random(0,99) <= chance) {
@@ -182,7 +183,7 @@ function fireBurst(weapon, range, numberOfTargets, arc, chance) {
         } else {
             result = 'Not enough ammo loaded for burst mode.'
             alert(result)
-        }     
+        }        
         console.log(result)
     })    
 }
