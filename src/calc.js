@@ -110,13 +110,13 @@ export function eal() {
             $('#sab-message').empty()
             $('#odds-of-hitting').empty()
             $('#fire-button').off('click')
-            displayHit(accuracy, chance, shotType, range, gun)            
+            $('#eal').empty().append(accuracy)
+            displayHit(chance, shotType, range, gun)            
         }) 
     }       
 }
 
-function displayHit(accuracy, chance, shotType, range, weapon) {
-    $('#eal').empty().append(accuracy)
+function displayHit(chance, shotType, range, weapon) {    
     if (shotType === 'Burst') {
         let sab = weapon['SAB']
         $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, range)}:</strong>`)
@@ -134,14 +134,16 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
             e.preventDefault()
             let targets = _.toNumber($('#number-of-targets').val())
             let arc = _.toNumber($('#arc').val())
+            //make sure these fields are not empty
             if (targets > 0 && arc > 0) {
+                //if we've already fired a burst, lower the chances
                 if (odds <= chance) {            
                     odds = odds - sab
                     if (odds < 0) {odds = 0}
                     $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
                     $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
                 }
-                fireBurst(weapon, range, targets, arc, odds)
+                fireBurst(weapon, targets, arc, odds)
             } else {
                 alert('Arc and number of targets required.')
             }     
@@ -152,8 +154,7 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
         $('#fire-button').click(e => {
             e.preventDefault()
             fireSingleShot(weapon, chance)
-        })
-        
+        })        
     }    
     $('.nav-tabs a[href="#odds"]').tab('show')    
 }
@@ -164,15 +165,15 @@ function getMinimumArc(weapon, range) {
     return arc
 }
 
-function fireBurst(weapon, range, numberOfTargets, arc, chance) {
+function fireBurst(weapon, numberOfTargets, arc, chance) {
     let result = ''
     let path = $('#character-path').val()
     let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
+    let sab = weapon['SAB']
     ref.once('value').then(snap => {
         let character = snap.val()
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
-        let minArc = getMinimumArc(weapon, range)
         if (loadedAmmo >= rof) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
             if (_.random(0,99) <= chance) {
@@ -182,6 +183,9 @@ function fireBurst(weapon, range, numberOfTargets, arc, chance) {
             }
         } else {
             result = 'Not enough ammo loaded for burst mode.'
+            //this is fake. If fire button is clicked again the chance still goes down. Should be fine...
+            $('#odds-of-hitting').empty().append(`<h3>${chance + sab}%</h3>`)
+            $('#sab-message').empty()
             alert(result)
         }        
         console.log(result)
