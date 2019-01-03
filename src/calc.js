@@ -79,7 +79,7 @@ export function eal() {
         alert("Weapon, Range, and Aim Time are required values.")
     } else {
         let ref = firebase.database().ref('weapons')
-        ref.on('value', snap => {
+        ref.once('value').then(snap => {
             let eal = {}
             let sal = _.toNumber($('#sal').val())
             let range = _.toNumber($('#range').val())
@@ -109,6 +109,7 @@ export function eal() {
             $('.arc-rows').hide()
             $('#sab-message').empty()
             $('#odds-of-hitting').empty()
+            $('#fire-button').off('click')
             displayHit(accuracy, chance, shotType, range, gun)            
         }) 
     }       
@@ -146,7 +147,7 @@ function displayHit(accuracy, chance, shotType, range, weapon) {
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#fire-button').click(e => {
             e.preventDefault()
-            fireSingleShot(weapon, range, chance)
+            fireSingleShot(weapon, chance)
         })
         
     }    
@@ -160,21 +161,50 @@ function getMinimumArc(weapon, range) {
 }
 
 function fireBurst(weapon, range, numberOfTargets, arc, chance) {
-    let result
-    let minArc = getMinimumArc(weapon, range)
+    let result = ''
+    let path = $('#character-path').val()
+    let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
-    if (arc < minArc) {
-        alert ('Arc size must be at least minimum arc size')
-    }
-    if (_.random(0,99) <= chance) {
-        result = pf.burstFire(arc, rof, numberOfTargets)
-    } else {
-        result = 'Burst fire at wrong elevation. All targets missed.'
-    }
-    console.log(result)
+    ref.once('value').then(snap => {
+        let character = snap.val()
+        let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        let minArc = getMinimumArc(weapon, range)
+        if (arc < minArc) {
+            alert ('Arc size must be at least minimum arc size')
+        }
+        if (loadedAmmo >= rof) {
+            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
+            if (_.random(0,99) <= chance) {
+                result = pf.burstFire(arc, rof, numberOfTargets)
+            } else {
+                result = 'Burst fire at wrong elevation. All targets missed.'
+            }
+        } else {
+            result = 'Not enough ammo loaded for burst mode.'
+            alert(result)
+        }     
+        console.log(result)
+    })    
 }
 
-function fireSingleShot(weapon, range, chance) {
-    let targets = pf.singleShotFire(chance)
-    console.log(targets)
+function fireSingleShot(weapon, chance) {
+    let result = ''
+    let path = $('#character-path').val()
+    let ref = firebase.database().ref(path)
+    ref.once('value').then(snap => {
+        let character = snap.val()
+        let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        if (loadedAmmo >= 1) {
+            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
+            if (_.random(0,99) <= chance) {
+                result = pf.singleShotFire(chance)
+            } else {
+                result = 'Miss.'
+            }
+        } else {
+            result = 'Out of ammo.'
+            alert(result)
+        }
+        console.log(result)
+    })
 }
