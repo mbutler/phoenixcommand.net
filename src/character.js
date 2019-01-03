@@ -88,8 +88,9 @@ export function displayWeapons(character) {
     let databaseWeapons = snap.val()
     _.forEach(character.weapons, weapon => {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
-      let id = _.kebabCase(gun.Name)
+      let ammoDropdown = _.kebabCase(gun.Name)
       let ammo = character['ammo'][gun.Name]['type']
+      let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
       for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
         let tr = `
@@ -104,15 +105,19 @@ export function displayWeapons(character) {
       let div = `<div class="row">
         <div id="weapon-name"class="col-xs-8"><h4><strong>${gun.Name}</strong></h4></div>
           </div>
+          <div class="row color-row">
+            <div class="col-xs-8"><strong>Rounds Loaded</strong></div>
+            <div id="reload-time" class="col-xs-4 ml-auto">${rounds}</div>
+          </div>
           <div class="row">
               <div class="col-xs-7"><strong>Ammo Type</strong></div>
               <div class="col-xs-5 ml-auto">
                   <div class="btn-group dropleft">
-                      <button id="" type="button" class="btn btn-sm btn-secondary dropdown-toggle drop-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${ammo}</button>
+                      <button type="button" class="btn btn-sm btn-secondary dropdown-toggle drop-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${ammo}</button>
                       <div class="dropdown-menu">
-                          <span class="dropdown-item dropdown-ammotype ${id}">FMJ</span>
-                          <span class="dropdown-item dropdown-ammotype ${id}">AP</span>
-                          <span class="dropdown-item dropdown-ammotype ${id}">JHP</span>
+                          <span class="dropdown-item ${ammoDropdown}">FMJ</span>
+                          <span class="dropdown-item ${ammoDropdown}">AP</span>
+                          <span class="dropdown-item ${ammoDropdown}">JHP</span>
                       </div>
                   </div>
               </div>
@@ -152,12 +157,10 @@ export function displayWeapons(character) {
             <tbody id="weapon-table">${aimTime}</tbody>
           </table>`
         $('#weapons').append(div)
-        $(`.${id}`).click(e => {
-          let button = e.currentTarget.parentElement.parentElement
+        $(`.${ammoDropdown}`).click(e => {
           $('#weapons').empty()
           let path = $('#character-path').val()
           let result = e.currentTarget.innerText
-          $(`#${id}`).empty().append(result)
           firebase.database().ref(path + '/ammo/' + gun.Name + '/type/').set(result)
         })
     })

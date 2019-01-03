@@ -86,7 +86,6 @@ export function eal() {
             let targetSpeed = _.toNumber($('#target-speed').val())
             let shooterSpeed = _.toNumber($('#shooter-speed').val())
             let aimTime = _.toNumber($('#aim-time').val())
-            //if (pf.movingALM(targetSpeed, shooterSpeed, range) === -10) {aimTime = 2}
             $('#from-the-hip').prop('checked', false)
             if (shooterSpeed > 0) {$('#from-the-hip').prop('checked', true)}
             let weapon = $(`#weapon-button .dropdown-toggle`).html()
