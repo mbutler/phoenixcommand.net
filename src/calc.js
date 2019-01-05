@@ -171,6 +171,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
     let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
     let sab = weapon['SAB']
+    let roll = _.random(0,99)
     ref.once('value').then(snap => {
         let character = snap.val()
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
@@ -178,6 +179,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
             if (_.random(0,99) <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
+                displayTargets(result)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
             }
@@ -203,6 +205,7 @@ function fireSingleShot(weapon, chance) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
             if (_.random(0,99) <= chance) {
                 result = pf.singleShotFire(chance)
+                displayTargets(result)
             } else {
                 result = 'Miss.'
             }
@@ -212,4 +215,43 @@ function fireSingleShot(weapon, chance) {
         }
         console.log(result)
     })
+}
+
+function displayTargets(targetList) {
+    console.log()
+    let targetRows = ''
+    let targets = targetList
+    //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
+    for (let i = 1; i <= _.size(targets); i++) {
+        let bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
+        let tr = `
+            <tr>
+                <td class="text-center">${i}</td>
+                <td id="target-${i}-bullets" class="text-center">${bullets}</td>
+                <td id="target-${i}-chance" class="text-center">${targets[`target ${i}`]['chance']}%</td>
+                <td id="target-${i}-armor" class="text-center"><select class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                    <option value="Clothing">Clothing</option>
+                    <option value="Light Flexible">Light Flexible</option>
+                    <option value="Medium Flexible">Medium Flexible</option>
+                    <option value="Heavy Flexible">Heavy Flexible</option>
+                    <option value="Light Rigid">Light Rigid</option>
+                    <option value="Medium Rigid">Medium Rigid</option>
+                    <option value="Heavy Rigid">Heavy Rigid</option>
+                </select></td>
+            </tr>
+        `
+        targetRows += tr
+    }
+    let div = `<table class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Target</th>
+                <th class="text-center">Hits</th>
+                <th class="text-center">Chance</th>
+                <th class="text-center">Armor</th>
+            </tr>
+        </thead>
+        <tbody id="target-table">${targetRows}</tbody>
+    </table>`
+    $('#location').empty().append(div)
 }

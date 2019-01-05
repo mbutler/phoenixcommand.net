@@ -94,6 +94,12 @@
     margin-top: 40px;
 }
 
+.target-armor-select {
+    margin-left: 20%;
+    background: none !important;
+    border: none !important;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin-top: 0px;
