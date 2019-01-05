@@ -190,8 +190,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
             $('#odds-of-hitting').empty().append(`<h3>${chance + sab}%</h3>`)
             $('#sab-message').empty()
             alert(result)
-        }        
-        console.log(result)
+        }
     })    
 }
 
@@ -215,7 +214,6 @@ function fireSingleShot(weapon, chance) {
             result = 'Out of ammo.'
             alert(result)
         }
-        console.log(result)
     })
 }
 
@@ -233,7 +231,7 @@ function displayTargets(targetList, weapon, ammoType) {
                 <td id="target-${i}-bullets" class="text-center">${bullets}</td>
                 <td id="target-${i}-cover" class="text-center"><select id="target-${i}-cover" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
                 <option value="True">True</option>
-                <option value="Light False">False</option>
+                <option value="False">False</option>
             </select></td>
                 <td class="text-center"><select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
                     <option value="Clothing">Clothing</option>
@@ -303,5 +301,52 @@ function calculateDamage(targets, weapon, ammoType) {
         
         result[`target ${i}`] = {"hit location": shots, "hit damage": damage}
     }    
-    console.log(result) 
+    displayDamage(result)
+    $('.nav-tabs a[href="#damage"]').tab('show')
+}
+
+function displayDamage(targets) {
+    let targetRows = ''
+    for (let i = 1; i <= _.size(targets); i++) {
+        let damage = targets[`target ${i}`]['hit damage']
+        let location = targets[`target ${i}`]['hit location']
+        location = _.uniq(location)
+        let tr = `
+        <tr>
+            <td class="text-center">${i}</td>
+            <td id="target-${i}-location" class="text-center">${location}</td>
+            <td id="target-${i}-damage" class="text-center">${damage}</td>
+            <td class="text-center"><select id="target-${i}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
+                <option value="No Aid">No Aid</option>
+                <option value="First Aid">First Aid</option>
+                <option value="Aid Station">Aid Station</option>
+                <option value="Field Hospital">Field Hospital</option>
+                <option value="Trauma Center">Trauma Center</option>
+            </select></td>
+            <td id="target-${i}-recovery" class="text-center"></td>
+        </tr>
+    `
+    targetRows += tr
+    }
+    let div = `<table id="damage-table" class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Target</th>
+                <th class="text-center">Location</th>
+                <th class="text-center">Damage</th>
+                <th class="text-center">Aid</th>
+                <th class="text-center">Recovery</th>
+            </tr>
+        </thead>
+        <tbody>${targetRows}</tbody>
+    </table>`
+    $('#damage').empty().append(div)
+    $('.target-aid-select').change((e) => {
+        let id = _.split(e.target.id, '-', 2)
+        let aid = e.target.value
+        let damage = $(`#target-${id[1]}-damage`).text()
+        let result = pf.medicalAid(_.toNumber(damage), aid)
+        let recoveryId = `target-${id[1]}-recovery`
+        $(`#${recoveryId}`).empty().append(result)
+     })
 }
