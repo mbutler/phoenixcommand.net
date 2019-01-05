@@ -2,15 +2,6 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 import * as User from './user'
 
-$('.dropdown-item-charactersheet').click(e => {
-  e.preventDefault()
-  let path = $('#character-path').val()
-  let targetId = $(e.target.parentElement.parentElement.parentElement).attr('id')  
-  let result = e.delegateTarget.innerText
-  $(`#${targetId} button`).empty().append(result)
-  firebase.database().ref(path + '/' + targetId).set(result)
-})
-
 export function displayGame(user) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
   ref.on('value', snapshot => {
@@ -41,7 +32,8 @@ export function displayCharacterSheet(user, characterName) {
       let gameRef = firebase.database().ref('users/' + gameId)
       gameRef.on('value', data => {
         let game = data.val()
-        $('#character-path').val('users/' + gameId + '/content/characters/' + User.getCharacterId(game, characterName))
+        let characterId = User.getCharacterId(game, characterName)
+        $('#character-path').val('users/' + gameId + '/content/characters/' + characterId)
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
         $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
@@ -56,16 +48,22 @@ export function displayCharacterSheet(user, characterName) {
         $('#physical-damage').empty().append(character.pd)
         $('#total-damage').empty().append(character.td)
         $('#status').empty().append(character.status)
-        $('#cover button').empty().append(character.cover)
-        $('#position button').empty().append(character.position)
+        $("#cover").val(character.cover).find(`option[value="${character.cover}"]`).attr('selected', true)
+        $("#position").val(character.position).find(`option[value="${character.position}"]`).attr('selected', true)
         $('#impulse1').empty().append(character.capi['1'])
         $('#impulse2').empty().append(character.capi['2'])
         $('#impulse3').empty().append(character.capi['3'])
         $('#impulse4').empty().append(character.capi['4'])
         $('#knockout-value').empty().append(character.kv)
         $('#disabling-injuries').attr('data-content', character.injuries)
-        $('#stance button').empty().append('False')
+        $("#stance").val(character.stance).find(`option[value="${character.stance}"]`).attr('selected', true)
         displayWeapons(character)
+        $('.sheet-picker').change((e) => {
+          let id = e.target.id
+          let val = e.target.value
+          let path = `users/${gameId}/content/characters/${characterId}/${id}`
+          firebase.database().ref(path).set(val)
+        })
       })
   })
 }

@@ -100,6 +100,14 @@
     border: none !important;
 }
 
+.selectpicker {
+    padding: 0px !important;
+    margin: 0px !important;
+    border: none !important;
+    height: 100% !important;
+    box-shadow: 0px !important;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin-top: 0px;
