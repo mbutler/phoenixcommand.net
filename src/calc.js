@@ -160,7 +160,7 @@ function displayHit(chance, shotType, range, weapon) {
 }
 
 function getMinimumArc(weapon, range) {
-    range = pf.snapToValue(range, [0,10,20,40,70,100,200,300,400,600,800,1000,1200,1500])
+    range = pf.snapToValue(range, [10,20,40,70,100,200,300,400])
     let arc = weapon[_.toString(range)]['MA']
     return arc
 }
@@ -175,11 +175,12 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
     ref.once('value').then(snap => {
         let character = snap.val()
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        let ammoType = character['ammo'][weapon.Name]['type']
         if (loadedAmmo >= rof) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
             if (_.random(0,99) <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
-                displayTargets(result)
+                displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
             }
@@ -201,11 +202,12 @@ function fireSingleShot(weapon, chance) {
     ref.once('value').then(snap => {
         let character = snap.val()
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        let ammoType = character['ammo'][weapon.Name]['type']
         if (loadedAmmo >= 1) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
             if (_.random(0,99) <= chance) {
                 result = pf.singleShotFire(chance)
-                displayTargets(result)
+                displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Miss.'
             }
@@ -217,19 +219,23 @@ function fireSingleShot(weapon, chance) {
     })
 }
 
-function displayTargets(targetList) {
-    console.log()
+function displayTargets(targetList, weapon, ammoType) {
+    let bullets = 0
     let targetRows = ''
     let targets = targetList
     //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
     for (let i = 1; i <= _.size(targets); i++) {
-        let bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
+        bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
+        
         let tr = `
             <tr>
                 <td class="text-center">${i}</td>
                 <td id="target-${i}-bullets" class="text-center">${bullets}</td>
-                <td id="target-${i}-chance" class="text-center">${targets[`target ${i}`]['chance']}%</td>
-                <td id="target-${i}-armor" class="text-center"><select class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                <td id="target-${i}-cover" class="text-center"><select id="target-${i}-cover" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                <option value="True">True</option>
+                <option value="Light False">False</option>
+            </select></td>
+                <td class="text-center"><select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
                     <option value="Clothing">Clothing</option>
                     <option value="Light Flexible">Light Flexible</option>
                     <option value="Medium Flexible">Medium Flexible</option>
@@ -242,16 +248,60 @@ function displayTargets(targetList) {
         `
         targetRows += tr
     }
-    let div = `<table class="table table-condensed table-bordered table-striped">
+    let div = `<table id="target-table" class="table table-condensed table-bordered table-striped">
         <thead>
             <tr>
                 <th class="text-center">Target</th>
                 <th class="text-center">Hits</th>
-                <th class="text-center">Chance</th>
+                <th class="text-center">Cover</th>
                 <th class="text-center">Armor</th>
             </tr>
         </thead>
-        <tbody id="target-table">${targetRows}</tbody>
+        <tbody>${targetRows}</tbody>
     </table>`
-    $('#location').empty().append(div)
+    $('#hits').empty().append(div)
+    $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
+    $('#damage-button').click(e => {
+        e.preventDefault()
+        let result = {}
+        for (let i = 1; i <= _.size(targets); i++) {
+            let armor = 'Clothing'
+            let hits = _.toNumber($(`#target-${i}-bullets`).text())
+            armor = $(`#target-${i}-armor`).find(":selected").text()
+            let cover = $(`#target-${i}-cover`).find(":selected").text()
+            result[`target ${i}`] = {"hits": hits, "cover": cover, "armor": armor}
+        }
+        calculateDamage(result, weapon, ammoType)
+    })
+    $('.nav-tabs a[href="#hits"]').tab('show')
+}
+
+function calculateDamage(targets, weapon, ammoType) {
+    let range = _.toNumber($('#range').val())
+    range = pf.snapToValue(range, [10,20,40,70,100,200,300,400])
+    let pen = weapon[range][ammoType]['PEN']
+    let dc = weapon[range][ammoType]['DC']
+    let result = {}
+    for (let i = 1; i <= _.size(targets); i++) {
+        let damage = 0
+        let shots = []
+        let armor = targets[`target ${i}`]['armor']
+        let hits = targets[`target ${i}`]['hits']
+        let cover = targets[`target ${i}`]['cover']
+        cover = cover.toLowerCase() == 'true' ? true : false
+        for (let j = 1; j <= hits; j++) {
+            //0-9 roll for epf
+            let epfRoll = _.random(0,9)
+            let hitRoll = _.random(0,99)
+            let epf = pf.effectivePenetrationFactor(epfRoll, armor)
+
+            let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
+            let hitLocation = pf.hitLocation(hitRoll, cover)
+            damage += hitDamage
+            shots.push(hitLocation)
+        }
+        
+        result[`target ${i}`] = {"hit location": shots, "hit damage": damage}
+    }    
+    console.log(result) 
 }
