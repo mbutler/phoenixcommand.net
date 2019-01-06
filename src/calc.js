@@ -68,8 +68,7 @@ export function setUser(user) {
                 if (user.uid === player.userId) {
                     $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
                 }
-            })
-            
+            })            
         })
     })
 }
@@ -178,11 +177,12 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
         let ammoType = character['ammo'][weapon.Name]['type']
         if (loadedAmmo >= rof) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
-            if (_.random(0,99) <= chance) {
+            if (roll <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
+                alert(result)
             }
         } else {
             result = 'Not enough ammo loaded for burst mode.'
@@ -204,12 +204,8 @@ function fireSingleShot(weapon, chance) {
         let ammoType = character['ammo'][weapon.Name]['type']
         if (loadedAmmo >= 1) {
             firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
-            if (_.random(0,99) <= chance) {
-                result = pf.singleShotFire(chance)
-                displayTargets(result, weapon, ammoType)
-            } else {
-                result = 'Miss.'
-            }
+            result = pf.singleShotFire(chance)
+            displayTargets(result, weapon, ammoType)
         } else {
             result = 'Out of ammo.'
             alert(result)

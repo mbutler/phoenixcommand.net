@@ -47,6 +47,11 @@
     background-color: aliceblue;
 }
 
+#damage-table td {
+    display:table-cell;
+    vertical-align:middle;
+}
+
 #weapon-name h4 {
     margin: 0px;
 }
