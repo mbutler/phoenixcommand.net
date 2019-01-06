@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 import * as User from './user'
+import * as pf from 'phoenix-functions'
 
 export function displayGame(user) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
@@ -45,8 +46,8 @@ export function displayCharacterSheet(user, characterName) {
         $('#health').empty().append(character.health)
         $('#movement').empty().append(character.speed)
         $('#sal').empty().append(character.sal)
-        $('#physical-damage').empty().append(character.pd)
-        $('#total-damage').empty().append(character.td)
+        $('#physical-damage').val(character.pd)
+        $('#total-damage').empty().append(character.dt)
         $('#status').empty().append(character.status)
         $("#cover").val(character.cover).find(`option[value="${character.cover}"]`).attr('selected', true)
         $("#position").val(character.position).find(`option[value="${character.position}"]`).attr('selected', true)
@@ -58,11 +59,28 @@ export function displayCharacterSheet(user, characterName) {
         $('#disabling-injuries').attr('data-content', character.injuries)
         $("#stance").val(character.stance).find(`option[value="${character.stance}"]`).attr('selected', true)
         displayWeapons(character)
-        $('.sheet-picker').change((e) => {
+        $('.sheet-picker').change(e => {
           let id = e.target.id
           let val = e.target.value
           let path = `users/${gameId}/content/characters/${characterId}/${id}`
           firebase.database().ref(path).set(val)
+        })
+        $('#physical-damage').change(e => {
+          let pd = _.toNumber(e.target.value)
+          let dt = pf.damageTotal(pd, character.health)
+          let pdPath = `users/${gameId}/content/characters/${characterId}/pd`
+          let dtPath = `users/${gameId}/content/characters/${characterId}/dt`
+          firebase.database().ref(pdPath).set(pd)
+          firebase.database().ref(dtPath).set(dt)
+          $('#total-damage').empty().append(dt)
+          let chance = pf.incapacitationChance(pd, character.kv)
+          if (_.random(0,99) <= chance) {
+            let roll = _.random(0,9)
+            let time = pf.incapacitationTime(roll, pd)
+            $('#status').empty().append('Incapacitated')
+            firebase.database().ref(`users/${gameId}/content/characters/${characterId}/status`).set('Incapacitated')
+            alert(`${characterName} incapacitated for ${time}`)
+          }
         })
       })
   })

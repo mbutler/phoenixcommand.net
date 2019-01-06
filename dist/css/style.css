@@ -108,6 +108,12 @@
     box-shadow: 0px !important;
 }
 
+#physical-damage {
+    background-color: aliceblue;
+    height: 100%;
+    padding: 0px;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin-top: 0px;

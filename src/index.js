@@ -76,7 +76,7 @@ function characterSubmit() {
   
 
   c.pd = 0 //physical damage
-  c.td = 0 //total damage
+  c.dt = 0 //total damage
   c.status = 'Alive'
   c.injuries = 'None'
   c.cover = 'Standing Exposed' //table 4E positions
