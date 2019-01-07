@@ -12,7 +12,6 @@ $('#eal-button').click(e => {
 
 $('.dropdown-eal').click(e => {
     e.preventDefault()
-    let path = $('#character-path').val()
     let targetId = $(e.target.parentElement.parentElement).attr('id')
     let result = e.delegateTarget.innerText
     $(`#${targetId} .dropdown-toggle`).empty().append(result)
@@ -39,7 +38,7 @@ $("#character-name").on('click', '.dropdown-eal', e => {
             let game = data.val()
             _.forEach(game.content.characters, player => {                
                 if (player.name === result) {
-                    $('#character-path').val('users/' + gameId + '/content/characters/' + User.getCharacterId(game, result))
+                    window.localStorage.setItem('firebird-command-current-character', 'users/' + gameId + '/content/characters/' + User.getCharacterId(game, result))
                     $('#sal').val(player.sal)
                     $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
                     $(`#position-button .dropdown-toggle`).empty().append(player.position)
@@ -66,7 +65,7 @@ export function setUser(user) {
             let userCharacters = User.getUserCharacters(game)
             _.forEach(userCharacters, player => {
                 if (user.uid === player.userId) {
-                    $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
+                    $('#character-name .dropdown-menu').empty().append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
                 }
             })            
         })
@@ -166,7 +165,7 @@ function getMinimumArc(weapon, range) {
 
 function fireBurst(weapon, numberOfTargets, arc, chance) {
     let result = ''
-    let path = $('#character-path').val()
+    let path = window.localStorage.getItem('firebird-command-current-character')
     let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
     let sab = weapon['SAB']
@@ -196,7 +195,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
 
 function fireSingleShot(weapon, chance) {
     let result = ''
-    let path = $('#character-path').val()
+    let path = window.localStorage.getItem('firebird-command-current-character')
     let ref = firebase.database().ref(path)
     ref.once('value').then(snap => {
         let character = snap.val()
@@ -219,8 +218,7 @@ function displayTargets(targetList, weapon, ammoType) {
     let targets = targetList
     //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
     for (let i = 1; i <= _.size(targets); i++) {
-        bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
-        
+        bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)        
         let tr = `
             <tr>
                 <td class="text-center">${i}</td>

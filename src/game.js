@@ -1,6 +1,11 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 
+$('#next-impulse-button').click(e => {
+  
+  $('#next-impulse-button').toggleClass('btn-default btn-danger')
+})
+
 export function navList(user) {
   let adminQuery = firebase.database().ref('users/' + user.uid + '/adminOf')
   let memberQuery = firebase.database().ref('users/' + user.uid + '/memberOf').orderByKey()

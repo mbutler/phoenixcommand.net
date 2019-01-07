@@ -36,7 +36,7 @@ export function displayCharacterSheet(user, characterName) {
       gameRef.on('value', data => {
         let game = data.val()
         let characterId = User.getCharacterId(game, characterName)
-        $('#character-path').val('users/' + gameId + '/content/characters/' + characterId)
+        window.localStorage.setItem('firebird-command-current-character', 'users/' + gameId + '/content/characters/' + characterId)
         $('.game-title').text(game.metadata.title)        
         let character = User.getCharacterSheet(game, characterName)
         $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
@@ -177,7 +177,7 @@ export function displayWeapons(character) {
         $('#weapons').append(div)
         $(`.${ammoDropdown}`).click(e => {
           $('#weapons').empty()
-          let path = $('#character-path').val()
+          let path = window.localStorage.getItem('firebird-command-current-character')
           let result = e.currentTarget.innerText
           firebase.database().ref(path + '/ammo/' + gun.Name + '/type/').set(result)
         })

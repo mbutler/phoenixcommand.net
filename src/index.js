@@ -28,7 +28,7 @@ function route(user) {
   }
 
   if (page[0] === 'character.html') {
-    let characterName = _.replace(page[1], '%20', ' ')
+    let characterName = page[1].replace(/%20/g, ' ')
     Sheet.displayCharacterSheet(user, characterName)
   }
 
@@ -132,6 +132,7 @@ firebase.auth().onAuthStateChanged(user => {
     $('#signin').hide()
     $('#signout').show()
     User.addNew(user)
+    window.localStorage.setItem('firebird-command-user-id', user.uid)
     Utils.displayAccount(user)
     Game.navList(user)
     route(user)

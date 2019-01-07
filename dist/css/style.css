@@ -119,15 +119,19 @@
     padding: 0px;
 }
 
+#next-impulse-button {
+    margin: 10%;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
-        margin-top: 0px;
+        margin: 10px;
     }
 }
 
 @media (min-width: 992px) {
     #new-character-button {
-        margin-top: 30px;
+        margin: 10px;
     }
     #character-name h3 {
         margin-top: 30px;
