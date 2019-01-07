@@ -24,7 +24,7 @@ function route(user) {
   page = _.split(page, '?c=')
 
   if (page[0] === 'game.html') {
-    Sheet.displayGame(user)
+    Game.displayGame(user)
   }
 
   if (page[0] === 'character.html') {

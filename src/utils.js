@@ -50,3 +50,10 @@ export function clearUserDisplay() {
   $('#account-id').empty()
   $('#account-email').empty()
 }
+
+export function getGamePath() {
+  let path = window.localStorage.getItem('firebird-command-current-character')
+  let pathArr = _.split(path, '/', 4)
+  let gamePath = _.join(pathArr, '/')
+  return gamePath
+}

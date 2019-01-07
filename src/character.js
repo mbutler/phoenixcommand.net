@@ -3,31 +3,6 @@ import 'firebase/database'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
 
-export function displayGame(user) {
-  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  ref.on('value', snapshot => {
-    let gameId = snapshot.val()
-    let gameRef = firebase.database().ref('users/' + gameId)
-    gameRef.on('value', data => {
-      let game = data.val()
-      $('#phase').empty().append(`<h4>Phase: <strong>${game.content.time.phase}</strong></h4>`)
-      $('#impulse').empty().append(`<h4>Impulse: <strong>${game.content.time.impulse}</strong></h4>`)
-      $('.game-title').text(game.metadata.title)      
-      $('#user-table tbody').empty()
-      _.forEach(User.getUserCharacters(game), player => {
-        let link = ''                  
-        if (user.uid === player.userId) {
-          link = `<a href='character.html?c=${player.characterName}'>${player.characterName}</a>`
-        } else {
-          link = `${player.characterName}`
-        }
-        $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
-      })
-      $('.timestamp').empty().append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))               
-    })
-  })
-}
-
 export function displayCharacterSheet(user, characterName) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
   ref.on('value', snapshot => {
