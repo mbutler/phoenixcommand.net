@@ -317,7 +317,7 @@ function displayDamage(targets) {
                 <option value="Field Hospital">Field Hospital</option>
                 <option value="Trauma Center">Trauma Center</option>
             </select></td>
-            <td id="target-${i}-recovery" class="text-center"></td>
+            <td id="target-${i}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
         </tr>
     `
     targetRows += tr
