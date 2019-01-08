@@ -12,7 +12,7 @@ export function displayGame(user) {
       let game = data.val()
       let userReady = game.metadata.readyPlayers[user.uid]
       toggleUserReady(userReady)
-      checkReadyPlayers(game.metadata.readyPlayers)
+      checkReadyPlayers(game.metadata)
       $('#phase').empty().append(`<h4>Phase: <strong>${game.content.time.phase}</strong></h4>`)
       $('#impulse').empty().append(`<h4>Impulse: <strong>${game.content.time.impulse}</strong></h4>`)
       $('.game-title').text(game.metadata.title)      
@@ -39,12 +39,35 @@ export function displayGame(user) {
   })
 }
 
-export function checkReadyPlayers(readyPlayers) {
-  if (_.every(readyPlayers)) {
-    console.log('time incremedn')
-  } else {
-    console.log('no way')
+export function checkReadyPlayers(metadata) {
+  if (_.every(metadata.readyPlayers)) {
+    nextImpulse(metadata)
   }
+}
+
+export function nextImpulse(metadata) {
+  let ref = firebase.database().ref('users/' + metadata.gameId)
+  ref.once('value').then(snap => {
+    let game = snap.val()
+    let path = game.metadata.gameId
+    let time = game.content.time
+    let keys = _.keys(game.metadata.readyPlayers)
+    let phase = time.phase
+    let impulse = time.impulse
+    let next = {}
+    _.forEach(keys, key => {
+      firebase.database().ref('users/'+path+'/metadata/readyPlayers/'+key).set(false)
+    })   
+    if (impulse === 4) {
+      phase += 1
+      impulse = 1
+    } else {
+        impulse += 1
+    }
+    next.impulse = impulse, next.phase = phase
+    firebase.database().ref('users/' + path + '/content/time').set(next)
+    alert('Next impulse!')
+  })
 }
 
 function toggleUserReady(userReady) {
@@ -104,7 +127,7 @@ function addPlayers(user, gameId, players, gameName) {
 
 export function addCharacter(user, character) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  ref.on('value', snapshot => {
+  ref.once('value').then(snapshot => {
       let gameId = snapshot.val()
       firebase.database().ref('users/' + gameId + '/content/characters/').push(character)
       $('#character-created-modal').modal()
