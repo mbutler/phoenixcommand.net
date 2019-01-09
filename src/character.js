@@ -100,9 +100,11 @@ export function displayWeapons(character) {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
       let ammoDropdown = _.kebabCase(gun.Name)
       let ammoTypes = pf.getAmmoTypes(gun.Name)
+      let ammoDiv = ''
       let ammo = character['ammo'][gun.Name]['type']
       let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
+      _.forEach(ammoTypes, ammo => {ammoDiv += `<span class="dropdown-item ${ammoDropdown}">${ammo}</span>`})
       for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
         let tr = `
             <tr>
@@ -126,9 +128,7 @@ export function displayWeapons(character) {
                   <div class="btn-group dropleft">
                       <button type="button" class="btn btn-sm btn-secondary dropdown-toggle drop-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${ammo}</button>
                       <div class="dropdown-menu">
-                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[0]}</span>
-                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[1]}</span>
-                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[2]}</span>
+                          ${ammoDiv}
                       </div>
                   </div>
               </div>

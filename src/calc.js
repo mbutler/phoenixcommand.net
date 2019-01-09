@@ -77,21 +77,23 @@ export function eal() {
     if ($('#range').val() === '' || $('#aim-time').val() === '' || $(`#weapon-button .dropdown-toggle`).html() === 'Weapon') {
         alert("Weapon, Range, and Aim Time are required values.")
     } else {
-        let ref = firebase.database().ref('weapons')
+        let path = window.localStorage.getItem('firebird-command-current-character')
+        let ref = firebase.database().ref(path)
         ref.once('value').then(snap => {
+            let character = snap.val()
             let eal = {}
             let sal = _.toNumber($('#sal').val())
             let range = _.toNumber($('#range').val())
             let targetSpeed = _.toNumber($('#target-speed').val())
             let shooterSpeed = _.toNumber($('#shooter-speed').val())
-            let aimTime = _.toNumber($('#aim-time').val())
+            let aimTime = _.toNumber($('#aim-time').val()) - 1 //decrement to access zero-based array
             $('#from-the-hip').prop('checked', false)
             if (shooterSpeed > 0) {$('#from-the-hip').prop('checked', true)}
-            let weapon = $(`#weapon-button .dropdown-toggle`).html()
-            let weapons = snap.val()        
-            let gun = _.find(weapons, o => {return o.Name === weapon})
-            let weaponAim = gun['Aim Time']
-            let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)        
+            let weaponName = $(`#weapon-button .dropdown-toggle`).html()
+            let gun = pf.getWeaponByName(weaponName)
+            let ammoType = character['ammo'][weaponName]['type']   
+            let weaponAim = _.values(gun['Aim Time'])
+            let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)
             let shotType = $('#shot-type-button .dropdown-toggle').html()        
             let firingStance = $('#firing-stance-button .dropdown-toggle').html()
             if (firingStance === false) {$('#from-the-hip').prop('checked', true)}
@@ -102,7 +104,7 @@ export function eal() {
             let targetDiameter = _.toNumber($('#target-size').val())
             eal.sal = sal, eal.shotType = shotType, eal.targetSpeed = targetSpeed, eal.shooterSpeed = shooterSpeed, eal.range = range, eal.aimTime = aimTime
             eal.firingStance = firingStance, eal.position = position, eal.situational = situational, eal.visibility = visibility, eal.targetSize = targetSize
-            eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0 
+            eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0, eal.ammoType = ammoType, eal.salm = 0
             $('#fire-button').off('click')
             $('#sab').val('false')
             displayHit(gun, eal)            
@@ -117,6 +119,7 @@ function displayHit(weapon, eal) {
     $('.arc-rows').hide()
     $('#odds-of-hitting').empty()
     $('#eal').empty().append(accuracy)
+    
     if (shotType === 'Burst') {
         $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, range)}:</strong>`)
         $('.arc-rows').show()
@@ -124,12 +127,12 @@ function displayHit(weapon, eal) {
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)        
         $('#fire-button').click(e => {
             e.preventDefault()
-            eal.sab = 0 - weapon['SAB']
+            eal.sab = weapon['SAB']
             accuracy = pf.effectiveAccuracyLevel(eal)
             chance = pf.oddsOfHitting(accuracy, shotType)
             $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
             $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-            $('#sab').empty().append(`${0 - weapon['SAB']}`)
+            $('#sab').empty().append(`-${weapon['SAB']}`)
             let targets = _.toNumber($('#number-of-targets').val())
             let arc = _.toNumber($('#arc').val())            
             if (targets > 0 && arc > 0) {
@@ -140,26 +143,77 @@ function displayHit(weapon, eal) {
         })
     } 
     
-    if (shotType === 'Single Shot') {
+    if (shotType === 'Single Shot' && weapon.Type !== 'Shotgun') {
         $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#fire-button').click(e => {
             e.preventDefault()
-            eal.sab = 0 - weapon['SAB']
+            eal.sab = weapon['SAB']
             accuracy = pf.effectiveAccuracyLevel(eal)
             chance = pf.oddsOfHitting(accuracy, shotType)
             $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
             $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-            $('#sab').empty().append(`${0 - weapon['SAB']}`)
+            $('#sab').empty().append(`-${weapon['SAB']}`)
             fireSingleShot(weapon, chance)
         })        
     }
     
-    if (shotType === 'Shotgun') {
-
+    if (weapon.Type === 'Shotgun') {
+        range = pf.snapToValue(eal.range, [1,2,4,6,8,10,15,20,30,40,80])
+        let salm = 0
+        if (eal.ammoType === 'Shot') {
+            salm = weapon[range]['Shot']['SALM']
+            eal.salm = salm
+        }
+        accuracy = pf.effectiveAccuracyLevel(eal)
+        accuracy = accuracy + salm
+        chance = pf.oddsOfHitting(accuracy, eal.shotType)
+        $('#odds-label').empty().append(`<strong><h3>Pattern Hit Chance</h3></strong>`)
+        $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)        
+        $('#fire-button').click(e => {
+            e.preventDefault()
+            eal.sab = weapon['SAB']       
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            accuracy = accuracy + salm
+            chance = pf.oddsOfHitting(accuracy, shotType)
+            $('#eal').empty().append(accuracy)
+            $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+            $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
+            $('#sab').empty().append(`-${weapon['SAB']}`)
+            fireShotgun(eal.ammoType, range, weapon, chance)
+        })        
     }
 
     $('.nav-tabs a[href="#odds"]').tab('show')    
+}
+
+function fireShotgun(ammoType, range, weapon, chance) {
+    let result = ''
+    let bphc
+    if (ammoType === 'Shot') {
+        bphc = weapon[range][ammoType]['BPHC']
+    }
+    let roll = _.random(0,99)
+    let path = window.localStorage.getItem('firebird-command-current-character')
+    let ref = firebase.database().ref(path)
+    ref.once('value').then(snap => {
+        let character = snap.val()
+        let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        let ammoType = character['ammo'][weapon.Name]['type']
+        if (loadedAmmo >= 1) {
+            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
+            if (roll <= chance) {
+                result = pf.shotgunFire(ammoType, range, bphc)
+                displayTargets(result, weapon, ammoType)
+            } else {
+                result = 'Shotgun blast missed.'
+                alert(result)
+            }            
+        } else {
+            result = 'Out of ammo.'
+            alert(result)
+        }
+    })
 }
 
 function getMinimumArc(weapon, range) {
