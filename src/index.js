@@ -62,18 +62,18 @@ function characterSubmit() {
   let ammo = {}
 
   _.forEach(weapons, gun => {
+    let ammoType = pf.getAmmoTypes(gun)
+    let weapon = pf.getWeaponByName(gun)
     ammo[gun] = {
-        "loaded" : 0,
-        "total" : 50,
-        "type" : "FMJ"
+        "loaded" : weapon['Cap'],
+        "total" : 99999,
+        "type" : ammoType[0]
     }
   })
   
   c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
   c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.sal = sal, c.kv = kv, c.speed = speed, c.capi = capi
-  c.ammo = ammo
-
-  
+  c.ammo = ammo  
 
   c.pd = 0 //physical damage
   c.dt = 0 //total damage

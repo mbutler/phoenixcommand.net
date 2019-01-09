@@ -65,13 +65,30 @@ export function displayCharacterSheet(user, characterName) {
 
 export function displayNewCharacter(user) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  ref.on('value', snapshot => {
+  let weaponRef = firebase.database().ref('weapons')
+  ref.once('value').then(snapshot => {
       let gameId = snapshot.val()
       let gameRef = firebase.database().ref('users/' + gameId)
       gameRef.on('value', data => {
         let game = data.val()
         $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)
       })
+  })
+
+  weaponRef.once('value').then(snap => {
+    let weapons = snap.val()
+    let weaponKeys = _.keys(weapons)
+    _.forEach(weaponKeys, gun => {
+      $('#weapon-checkboxes').append(`
+      <div class="form-check form-check-inline">
+          <label class="form-check-label">
+              <input class="form-check-input" name="weapon" type="checkbox" id="${_.kebabCase(gun)}" value="${gun}">${gun}
+              <span class="form-check-sign">
+                <span class="check"></span>
+              </span>
+          </label>
+      </div>`)
+    })
   })
 }
 
@@ -82,6 +99,7 @@ export function displayWeapons(character) {
     _.forEach(character.weapons, weapon => {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
       let ammoDropdown = _.kebabCase(gun.Name)
+      let ammoTypes = pf.getAmmoTypes(gun.Name)
       let ammo = character['ammo'][gun.Name]['type']
       let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
@@ -108,9 +126,9 @@ export function displayWeapons(character) {
                   <div class="btn-group dropleft">
                       <button type="button" class="btn btn-sm btn-secondary dropdown-toggle drop-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${ammo}</button>
                       <div class="dropdown-menu">
-                          <span class="dropdown-item ${ammoDropdown}">FMJ</span>
-                          <span class="dropdown-item ${ammoDropdown}">AP</span>
-                          <span class="dropdown-item ${ammoDropdown}">JHP</span>
+                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[0]}</span>
+                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[1]}</span>
+                          <span class="dropdown-item ${ammoDropdown}">${ammoTypes[2]}</span>
                       </div>
                   </div>
               </div>

@@ -65,7 +65,7 @@ export function setUser(user) {
             let userCharacters = User.getUserCharacters(game)
             _.forEach(userCharacters, player => {
                 if (user.uid === player.userId) {
-                    $('#character-name .dropdown-menu').empty().append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
+                    $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
                 }
             })            
         })
