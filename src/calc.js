@@ -30,7 +30,8 @@ $("#character-name").on('click', '.dropdown-eal', e => {
     let targetId = $(e.target.parentElement.parentElement).attr('id')
     let result = e.target.innerText
     $(`#${targetId} .dropdown-toggle`).empty().append(result)
-    let ref = firebase.database().ref('users/' + $('#uid').val() + '/currentGame')
+    let userId = window.localStorage.getItem('firebird-command-user-id')
+    let ref = firebase.database().ref('users/' + userId + '/currentGame')
     ref.on('value', snapshot => {
         let gameId = snapshot.val()
         let gameRef = firebase.database().ref('users/' + gameId)
@@ -101,59 +102,63 @@ export function eal() {
             let targetDiameter = _.toNumber($('#target-size').val())
             eal.sal = sal, eal.shotType = shotType, eal.targetSpeed = targetSpeed, eal.shooterSpeed = shooterSpeed, eal.range = range, eal.aimTime = aimTime
             eal.firingStance = firingStance, eal.position = position, eal.situational = situational, eal.visibility = visibility, eal.targetSize = targetSize
-            eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter
-            let accuracy = pf.effectiveAccuracyLevel(eal)
-            let chance = pf.oddsOfHitting(accuracy, shotType)
-            $('.arc-rows').hide()
-            $('#sab-message').empty()
-            $('#odds-of-hitting').empty()
+            eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0 
             $('#fire-button').off('click')
-            $('#eal').empty().append(accuracy)
-            displayHit(chance, shotType, range, gun)            
+            $('#sab').val('false')
+            displayHit(gun, eal)            
         }) 
     }       
 }
 
-function displayHit(chance, shotType, range, weapon) {    
+function displayHit(weapon, eal) {
+    let shotType = eal.shotType, range = eal.range
+    let accuracy = pf.effectiveAccuracyLevel(eal)
+    let chance = pf.oddsOfHitting(accuracy, shotType)
+    $('.arc-rows').hide()
+    $('#odds-of-hitting').empty()
+    $('#eal').empty().append(accuracy)
     if (shotType === 'Burst') {
-        let sab = weapon['SAB']
         $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, range)}:</strong>`)
         $('.arc-rows').show()
-        $('#odds-label').empty().append(`<strong><h3>Burst Elevation Chance</h3></strong>`)
-        let odds = $('#odds-of-hitting h3').html()
-        odds = _.toNumber(_.trim(odds, '%'))
-        if (odds === 0) {
-            $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-            odds = chance
-        } else {
-            $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
-        }
+        $('#odds-label').empty().append(`<strong><h3>Burst Elevation Chance</h3></strong>`)        
+        $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)        
         $('#fire-button').click(e => {
             e.preventDefault()
+            eal.sab = 0 - weapon['SAB']
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            chance = pf.oddsOfHitting(accuracy, shotType)
+            $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+            $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
+            $('#sab').empty().append(`${0 - weapon['SAB']}`)
             let targets = _.toNumber($('#number-of-targets').val())
-            let arc = _.toNumber($('#arc').val())
-            //make sure these fields are not empty
+            let arc = _.toNumber($('#arc').val())            
             if (targets > 0 && arc > 0) {
-                //if we've already fired a burst, lower the chances
-                if (odds <= chance) {            
-                    odds = odds - sab
-                    if (odds < 0) {odds = 0}
-                    $('#odds-of-hitting').empty().append(`<h3>${odds}%</h3>`)
-                    $('#sab-message').empty().append(`With sustained auto burst penalty of -${sab}`)
-                }
-                fireBurst(weapon, targets, arc, odds)
+                fireBurst(weapon, targets, arc, chance)                
             } else {
                 alert('Arc and number of targets required.')
             }     
         })
-    } else if (shotType === 'Single Shot') {
+    } 
+    
+    if (shotType === 'Single Shot') {
         $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#fire-button').click(e => {
             e.preventDefault()
+            eal.sab = 0 - weapon['SAB']
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            chance = pf.oddsOfHitting(accuracy, shotType)
+            $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+            $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
+            $('#sab').empty().append(`${0 - weapon['SAB']}`)
             fireSingleShot(weapon, chance)
         })        
-    }    
+    }
+    
+    if (shotType === 'Shotgun') {
+
+    }
+
     $('.nav-tabs a[href="#odds"]').tab('show')    
 }
 
@@ -168,7 +173,6 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
     let path = window.localStorage.getItem('firebird-command-current-character')
     let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
-    let sab = weapon['SAB']
     let roll = _.random(0,99)
     ref.once('value').then(snap => {
         let character = snap.val()
@@ -185,9 +189,6 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
             }
         } else {
             result = 'Not enough ammo loaded for burst mode.'
-            //this is fake. If fire button is clicked again the chance still goes down. Should be fine...
-            $('#odds-of-hitting').empty().append(`<h3>${chance + sab}%</h3>`)
-            $('#sab-message').empty()
             alert(result)
         }
     })    
