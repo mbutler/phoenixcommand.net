@@ -273,6 +273,7 @@ function displayTargets(targetList, weapon, ammoType) {
     let targets = targetList
     //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
     for (let i = 1; i <= _.size(targets); i++) {
+        //add the cumulative hits to the latest hits
         bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)        
         let tr = `
             <tr>
@@ -324,8 +325,9 @@ function displayTargets(targetList, weapon, ammoType) {
 }
 
 function calculateDamage(targets, weapon, ammoType) {
-    let range = _.toNumber($('#range').val())
-    range = pf.snapToValue(range, [10,20,40,70,100,200,300,400])
+    let rangeVal = _.toNumber($('#range').val())
+    let range = pf.snapToValue(rangeVal, [10,20,40,70,100,200,300,400])
+    if (weapon.Type === 'Shotgun') {range = pf.snapToValue(rangeVal, [1,2,4,6,8,10,15,20,30,40,80])}
     let pen = weapon[range][ammoType]['PEN']
     let dc = weapon[range][ammoType]['DC']
     let result = {}
@@ -335,19 +337,24 @@ function calculateDamage(targets, weapon, ammoType) {
         let armor = targets[`target ${i}`]['armor']
         let hits = targets[`target ${i}`]['hits']
         let cover = targets[`target ${i}`]['cover']
+        let hitRoll
         cover = cover.toLowerCase() == 'true' ? true : false
         for (let j = 1; j <= hits; j++) {
             //0-9 roll for epf
             let epfRoll = _.random(0,9)
-            let hitRoll = _.random(0,99)
+            if (j > 1 && ammoType === 'Shot') {
+                let salm = weapon[range]['Shot']['SALM']
+                hitRoll = hitRoll + pf.shotgunMultipleHit(salm)
+                hitRoll = _.clamp(hitRoll, 0, 99)
+            } else {
+                hitRoll = _.random(0,99)
+            }
             let epf = pf.effectivePenetrationFactor(epfRoll, armor)
-
             let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
             let hitLocation = pf.hitLocation(hitRoll, cover)
             damage += hitDamage
             shots.push(hitLocation)
-        }
-        
+        }        
         result[`target ${i}`] = {"hit location": shots, "hit damage": damage}
     }    
     displayDamage(result)
