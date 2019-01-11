@@ -1,15 +1,13 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Timer from './timer'
 import * as Database from './database'
 
 export function displayGame(user) {
-  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
+  let ref = Database.ref('users/' + user.uid + '/currentGame')
   ref.on('value', snapshot => {
     let gameId = snapshot.val()
-    let gameRef = firebase.database().ref('users/' + gameId)
+    let gameRef = Database.ref('users/' + gameId)
     gameRef.on('value', data => {
       let game = data.val()
       let userReady = game.metadata.readyPlayers[user.uid]
@@ -33,9 +31,9 @@ export function displayGame(user) {
     $('#next-impulse-button').click(e => {
       let path = `users/${gameId}/metadata/readyPlayers/${user.uid}`
       if ($('#next-impulse-button').hasClass('btn-default')) {
-        firebase.database().ref(path).set(true)
+        Database.set(path, true)
       } else if ($('#next-impulse-button').hasClass('btn-danger')) {
-        firebase.database().ref(path).set(false)
+        Database.set(path, false)
       }
     })
   })
@@ -48,22 +46,22 @@ export function checkReadyPlayers(metadata) {
 }
 
 export function nextImpulse(metadata) {
-  let ref = firebase.database().ref('users/' + metadata.gameId)
+  let ref = Database.ref('users/' + metadata.gameId)
   ref.once('value').then(snap => {
     let game = snap.val()
     let path = game.metadata.gameId
     let time = game.content.time
     let keys = _.keys(game.metadata.readyPlayers)
     _.forEach(keys, key => {
-      firebase.database().ref('users/'+path+'/metadata/readyPlayers/'+key).set(false)
+      Database.set('users/'+path+'/metadata/readyPlayers/'+key, false)
     })   
     let next = pf.nextImpulse(time)
-    firebase.database().ref('users/' + path + '/content/time').set(next)
+    Database.set('users/' + path + '/content/time', next)
     alert('Next impulse!')
   })
 }
 
-function toggleUserReady(userReady) {
+export function toggleUserReady(userReady) {
   if (userReady === undefined) {userReady = false}
   if (userReady === false) {
     $('#next-impulse-button').removeClass('btn-danger')
@@ -76,8 +74,8 @@ function toggleUserReady(userReady) {
 }
 
 export function navList(user) {
-  let adminQuery = firebase.database().ref('users/' + user.uid + '/adminOf')
-  let memberQuery = firebase.database().ref('users/' + user.uid + '/memberOf').orderByKey()
+  let adminQuery = Database.ref('users/' + user.uid + '/adminOf')
+  let memberQuery = Database.ref('users/' + user.uid + '/memberOf').orderByKey()
 
   adminQuery.once('value').then(snapshot => {
     snapshot.forEach(childSnapshot => {
@@ -98,18 +96,18 @@ export function navList(user) {
   })
 }
 
-function addPlayers(user, gameId, players, gameName) {
+export function addPlayers(user, gameId, players, gameName) {
   let playerList = _.split(players, ',')
-  let ref = firebase.database().ref('userIds')
+  let ref = Database.ref('userIds')
   ref.once('value').then(snapshot => {
     let users = snapshot.val()
     _.forEach(playerList, player => {
       let person = _.trim(player)
       if (person === '') {person = 'blank'}
       if (snapshot.hasChild(person) === true) {
-        firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/users/' + person).set(users[person])
-        firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + person).set(false)
-        firebase.database().ref('users/' + person + '/memberOf/').push({gameId: user.uid + '/games/' + gameId, name: gameName})
+        Database.set('users/' + user.uid + '/games/' + gameId + '/users/' + person, users[person])
+        Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + person, false).set(false)
+        Database.push('users/' + person + '/memberOf/', {gameId: user.uid + '/games/' + gameId, name: gameName})
       } else {
         alert('players intentionally left ' + person)
       }
@@ -118,18 +116,17 @@ function addPlayers(user, gameId, players, gameName) {
   })
 }
 
-export function addCharacter(user, character) {
-  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  ref.once('value').then(snapshot => {
-      let gameId = snapshot.val()
-      firebase.database().ref('users/' + gameId + '/content/characters/').push(character)
-      $('#character-created-modal').modal()
+export function addCharacter(character) {
+  let snap = Database.currentGame()
+  snap.then(game => {
+    Database.push('users/' + game.metadata.gameId + '/content/characters/', character)
+    $('#character-created-modal').modal()
   })
 }
 
 export function createNew(user, gameName, players) {
   let date = new Date()
-  let ref = firebase.database().ref('users/' + user.uid + '/games')
+  let ref = Database.ref('users/' + user.uid + '/games')
   let gameId, newRef
   let newGame = {
     metadata: {
@@ -148,28 +145,15 @@ export function createNew(user, gameName, players) {
   gameId = newRef.key
   setCurrent(user.uid, gameId)
   addPlayers(user, gameId, players, gameName)
-  firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/metadata/gameId/').set(user.uid + '/games/' + gameId)
-  firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/users/' + user.uid).set(user.displayName)
-  firebase.database().ref('users/' + user.uid + '/adminOf/').push({gameId: user.uid + '/games/' + gameId, name: gameName})
-  firebase.database().ref('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + user.uid).set(false)
+  Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/gameId/', user.uid + '/games/' + gameId)
+  Database.set('users/' + user.uid + '/games/' + gameId + '/users/' + user.uid, user.displayName)
+  Database.push('users/' + user.uid + '/adminOf/', {gameId: user.uid + '/games/' + gameId, name: gameName})
+  Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + user.uid, false)
+  navList(user)
 }
 
-export async function getCurrent(user) {
-  let currentGame = firebase.database().ref('users/' + user.uid + '/currentGame').once('value')
-  let value = await Promise.all([currentGame])
-  let gameId = value[0].val()
-  return gameId
-}
-
-export async function all(gameId) {
-  let gameRef = firebase.database().ref('users/' + gameId).once('value')
-  let value = await Promise.all([gameRef])
-  let game = value[0].val()
-  return game
-}
-
-function setCurrent(uid, gameId) {
-  firebase.database().ref('users/' + uid + '/currentGame/').set(gameId)
+export function setCurrent(uid, gameId) {
+  Database.set('users/' + uid + '/currentGame/', gameId)
 }
 
 export function select(uid, gameId) {
@@ -177,11 +161,14 @@ export function select(uid, gameId) {
   window.location.href = 'game.html'
 }
 
-$(window).keypress((e) => {
-  if (e.which === 13) {
-      let dude = Database.currentCharacter()
-      dude.then(data => {
-        console.log(data)
-      })
-  }
-})
+export function newGameSubmit() {
+  let name = $('#gamename').val()
+  let players = $('#invite-players').val()
+  let authUser = Database.auth().currentUser  
+
+  if (authUser) {
+    createNew(authUser, name, players)
+  } else {
+      $('#signinModal').modal()
+  } 
+}

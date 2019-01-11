@@ -1,5 +1,3 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
 import {codenames} from './codenames'
 import {mission} from './operations'
 

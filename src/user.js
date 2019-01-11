@@ -1,17 +1,16 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
+import * as Database from './database'
 
 export function addNew(user) {
   let date = new Date()
-  let ref = firebase.database().ref('userIds')
+  let ref = Database.ref('userIds')
   ref.once('value').then(snapshot => {
     if (snapshot.hasChild(user.uid) === false) {
-      firebase.database().ref('users/' + user.uid).set({
+      Database.ref('users/' + user.uid).set({
         name: user.displayName,
         email: user.email,
         created: date.getTime()
       })
-      firebase.database().ref('userIds/' + user.uid).set(user.displayName)
+      Database.set('userIds/' + user.uid, user.displayName)
     }
   })
 }

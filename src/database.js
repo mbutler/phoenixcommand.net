@@ -1,5 +1,22 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/database'
+import firebaseui from 'firebaseui'
+import { config } from './config'
+
+firebase.initializeApp(config)
+
+const uiConfig = {
+  signInSuccessUrl: window.location.href,
+  signInOptions: [
+    // Leave the lines as is for the providers you want to offer your users.
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+  ]
+}
+
+const ui = new firebaseui.auth.AuthUI(firebase.auth())
+// The start method will wait until the DOM is loaded.
+ui.start('#firebaseui-auth-container', uiConfig)
 
 export async function user(userId) {
     if (userId === undefined) {
@@ -47,4 +64,9 @@ export function set(path, value) {
 
 export function push(path, value) {
     firebase.database().ref(path).push(value)
+}
+
+export function auth() {
+    let auth = firebase.auth()
+    return auth
 }

@@ -3,48 +3,6 @@ import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Database from './database'
 
-$('#eal-button').click(e => {
-    e.preventDefault()
-    eal()
-})
-
-$('.dropdown-eal').click(e => {
-    e.preventDefault()
-    let targetId = $(e.target.parentElement.parentElement).attr('id')
-    let result = e.delegateTarget.innerText
-    $(`#${targetId} .dropdown-toggle`).empty().append(result)
-})
-
-$('#weapon-button').on('click', '.dropdown-eal', e => {
-    $('#weapon-button .dropdown-toggle').empty()
-    e.preventDefault()
-    let result = e.target.innerText
-    $(`#weapon-button .dropdown-toggle`).empty().append(result)
-})
-
-$("#character-name").on('click', '.dropdown-eal', e => {
-    $('#character-name .dropdown-toggle').empty()
-    e.preventDefault()
-    let targetId = $(e.target.parentElement.parentElement).attr('id')
-    let result = e.target.innerText
-    $(`#${targetId} .dropdown-toggle`).empty().append(result)
-    let userId = window.localStorage.getItem('firebird-command-user-id')
-    let snap = Database.currentGame(userId)
-    snap.then(game => {
-        _.forEach(game.content.characters, player => {                
-            if (player.name === result) {
-                window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
-                $('#sal').val(player.sal)
-                $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
-                $(`#position-button .dropdown-toggle`).empty().append(player.position)
-                _.forEach(player.weapons, gun => {
-                    $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
-                })
-            }
-        })
-    })   
-})
-
 export function setUser(user) {
     $('.arc-rows').hide()
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
@@ -55,7 +13,7 @@ export function setUser(user) {
         let userCharacters = User.getUserCharacters(game)
         _.forEach(userCharacters, player => {
             if (user.uid === player.userId) {
-                $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
+                $('#calc-character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
             }
         })
     })    

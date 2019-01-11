@@ -1,11 +1,12 @@
 import * as User from './user'
-import * as pf from 'phoenix-functions'
+import * as Utils from './utils'
+import * as Game from './game'
 import * as Database from './database'
+import * as pf from 'phoenix-functions'
 
 export function displayCharacterSheet(characterName) {
   let snap = Database.currentGame()
   snap.then(game => {
-    console.log(characterName)
     let characterId = User.getCharacterId(game, characterName)
     window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + characterId)
     $('.game-title').text(game.metadata.title)        
@@ -164,4 +165,52 @@ export function displayWeapons(character) {
         })
     })
   })
+}
+
+export function submitCharacter() {
+  let c = {}
+  let name = $('#codename').val()
+  let skillLevel = _.clamp(_.toNumber($('#skill-level').val()), 3, 18)
+  let strength = _.clamp(_.toNumber($('#strength').val()), 3, 18)
+  let intelligence = _.clamp(_.toNumber($('#intelligence').val()), 3, 18)
+  let will = _.clamp(_.toNumber($('#will').val()), 3, 18)
+  let health = _.clamp(_.toNumber($('#health').val()), 3, 18)
+  let agility = _.clamp(_.toNumber($('#agility').val()), 3, 18)
+  let armor = $('#armor').val()
+  let weapons = Utils.selectedCheckboxes($('[name="weapon"]'))
+  let equipment = Utils.selectedCheckboxes($('[name="equipment"]'))
+  equipment.push(armor)
+  let sal = pf.skillAccuracyLevel(skillLevel)
+  let encumbrance = pf.encumbranceCalculator(equipment, weapons)
+  let kv = pf.knockoutValue(will, skillLevel)
+  let speed = pf.movementSpeed(strength, agility, encumbrance)
+  let capi = pf.combatActionsPerImpulse(strength, agility, intelligence, skillLevel, encumbrance)
+  let ammo = {}
+
+  _.forEach(weapons, gun => {
+    let ammoType = pf.getAmmoTypes(gun)
+    let weapon = pf.getWeaponByName(gun)
+    ammo[gun] = {
+        "loaded" : weapon['Cap'],
+        "total" : 99999,
+        "type" : ammoType[0]
+    }
+  })
+  
+  c.name = name, c.skillLevel = skillLevel, c.strength = strength, c.intelligence = intelligence, c.will = will, c.health = health, c.agility = agility
+  c.armor = armor, c.equipment = equipment, c.weapons = weapons, c.encumbrance = encumbrance, c.sal = sal, c.kv = kv, c.speed = speed, c.capi = capi
+  c.ammo = ammo  
+
+  c.pd = 0 //physical damage
+  c.dt = 0 //total damage
+  c.status = 'Alive'
+  c.injuries = 'None'
+  c.cover = 'Standing Exposed' //table 4E positions
+  c.position = 'Standing' //4B - Standing, Standing & Braced, Kneeling, Kneeling & Braced, Prone, Prone & Braced
+  c.stance = "False"
+  c.actions = {}
+
+  c.user = window.localStorage.getItem('firebird-command-user-id')
+
+  Game.addCharacter(c)
 }
