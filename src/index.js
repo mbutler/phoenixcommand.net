@@ -29,7 +29,7 @@ function route(user) {
 
   if (page[0] === 'character.html') {
     let characterName = page[1].replace(/%20/g, ' ')
-    Sheet.displayCharacterSheet(user, characterName)
+    Sheet.displayCharacterSheet(characterName)
   }
 
   if (page[0] === 'newcharacter.html') {

@@ -1,13 +1,11 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
 import * as Utils from './utils'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
-
-window.eal = eal
+import * as Database from './database'
 
 $('#eal-button').click(e => {
     e.preventDefault()
+    eal()
 })
 
 $('.dropdown-eal').click(e => {
@@ -31,23 +29,18 @@ $("#character-name").on('click', '.dropdown-eal', e => {
     let result = e.target.innerText
     $(`#${targetId} .dropdown-toggle`).empty().append(result)
     let userId = window.localStorage.getItem('firebird-command-user-id')
-    let ref = firebase.database().ref('users/' + userId + '/currentGame')
-    ref.on('value', snapshot => {
-        let gameId = snapshot.val()
-        let gameRef = firebase.database().ref('users/' + gameId)
-        gameRef.on('value', data => {
-            let game = data.val()
-            _.forEach(game.content.characters, player => {                
-                if (player.name === result) {
-                    window.localStorage.setItem('firebird-command-current-character', 'users/' + gameId + '/content/characters/' + User.getCharacterId(game, result))
-                    $('#sal').val(player.sal)
-                    $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
-                    $(`#position-button .dropdown-toggle`).empty().append(player.position)
-                    _.forEach(player.weapons, gun => {
-                        $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
-                    })
-                }
-            })
+    let snap = Database.currentGame(userId)
+    snap.then(game => {
+        _.forEach(game.content.characters, player => {                
+            if (player.name === result) {
+                window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+                $('#sal').val(player.sal)
+                $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
+                $(`#position-button .dropdown-toggle`).empty().append(player.position)
+                _.forEach(player.weapons, gun => {
+                    $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
+                })
+            }
         })
     })   
 })
@@ -55,32 +48,25 @@ $("#character-name").on('click', '.dropdown-eal', e => {
 export function setUser(user) {
     $('.arc-rows').hide()
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
-    let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
     $('#uid').val(user.uid)
-    ref.on('value', snapshot => {
-        let gameId = snapshot.val()
-        let gameRef = firebase.database().ref('users/' + gameId)
-        gameRef.on('value', data => {
-            let game = data.val()            
-            $('.game-title').text(game.metadata.title)
-            let userCharacters = User.getUserCharacters(game)
-            _.forEach(userCharacters, player => {
-                if (user.uid === player.userId) {
-                    $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
-                }
-            })            
+    let snap = Database.currentGame(user.uid)
+    snap.then(game => {
+        $('.game-title').text(game.metadata.title)
+        let userCharacters = User.getUserCharacters(game)
+        _.forEach(userCharacters, player => {
+            if (user.uid === player.userId) {
+                $('#character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${player.characterName}</span>`)                    
+            }
         })
-    })
+    })    
 }
 
 export function eal() {
     if ($('#range').val() === '' || $('#aim-time').val() === '' || $(`#weapon-button .dropdown-toggle`).html() === 'Weapon') {
         alert("Weapon, Range, and Aim Time are required values.")
     } else {
-        let path = window.localStorage.getItem('firebird-command-current-character')
-        let ref = firebase.database().ref(path)
-        ref.once('value').then(snap => {
-            let character = snap.val()
+        let snap = Database.currentCharacter()
+        snap.then(character => {
             let eal = {}
             let sal = _.toNumber($('#sal').val())
             let range = _.toNumber($('#range').val())
@@ -195,13 +181,13 @@ function fireShotgun(ammoType, range, weapon, chance) {
     }
     let roll = _.random(0,99)
     let path = window.localStorage.getItem('firebird-command-current-character')
-    let ref = firebase.database().ref(path)
-    ref.once('value').then(snap => {
-        let character = snap.val()
+    let snap = Database.currentCharacter()
+    snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let ammoType = character['ammo'][weapon.Name]['type']
+        let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
         if (loadedAmmo >= 1) {
-            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
+            Database.set(loadedAmmoPath, loadedAmmo - 1)
             if (roll <= chance) {
                 result = pf.shotgunFire(ammoType, range, bphc)
                 displayTargets(result, weapon, ammoType)
@@ -224,16 +210,16 @@ function getMinimumArc(weapon, range) {
 
 function fireBurst(weapon, numberOfTargets, arc, chance) {
     let result = ''
-    let path = window.localStorage.getItem('firebird-command-current-character')
-    let ref = firebase.database().ref(path)
     let rof = weapon['ROF']
     let roll = _.random(0,99)
-    ref.once('value').then(snap => {
-        let character = snap.val()
+    let path = window.localStorage.getItem('firebird-command-current-character')
+    let snap = Database.currentCharacter()
+    snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let ammoType = character['ammo'][weapon.Name]['type']
+        let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
         if (loadedAmmo >= rof) {
-            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - rof)
+            Database.set(loadedAmmoPath, loadedAmmo - rof)
             if (roll <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
                 displayTargets(result, weapon, ammoType)
@@ -251,13 +237,13 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
 function fireSingleShot(weapon, chance) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
-    let ref = firebase.database().ref(path)
-    ref.once('value').then(snap => {
-        let character = snap.val()
+    let snap = Database.currentCharacter()
+    snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let ammoType = character['ammo'][weapon.Name]['type']
+        let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
         if (loadedAmmo >= 1) {
-            firebase.database().ref(path + '/ammo/' + weapon.Name + '/loaded/').set(loadedAmmo - 1)
+            Database.set(loadedAmmoPath, loadedAmmo - 1)
             result = pf.singleShotFire(chance)
             displayTargets(result, weapon, ammoType)
         } else {

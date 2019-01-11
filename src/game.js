@@ -1,7 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
-import * as Utils from './utils'
 import * as User from './user'
+import * as pf from 'phoenix-functions'
+import * as Timer from './timer'
+import * as Database from './database'
 
 export function displayGame(user) {
   let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
@@ -52,19 +54,10 @@ export function nextImpulse(metadata) {
     let path = game.metadata.gameId
     let time = game.content.time
     let keys = _.keys(game.metadata.readyPlayers)
-    let phase = time.phase
-    let impulse = time.impulse
-    let next = {}
     _.forEach(keys, key => {
       firebase.database().ref('users/'+path+'/metadata/readyPlayers/'+key).set(false)
     })   
-    if (impulse === 4) {
-      phase += 1
-      impulse = 1
-    } else {
-        impulse += 1
-    }
-    next.impulse = impulse, next.phase = phase
+    let next = pf.nextImpulse(time)
     firebase.database().ref('users/' + path + '/content/time').set(next)
     alert('Next impulse!')
   })
@@ -183,3 +176,12 @@ export function select(uid, gameId) {
   setCurrent(uid, gameId)
   window.location.href = 'game.html'
 }
+
+$(window).keypress((e) => {
+  if (e.which === 13) {
+      let dude = Database.currentCharacter()
+      dude.then(data => {
+        console.log(data)
+      })
+  }
+})

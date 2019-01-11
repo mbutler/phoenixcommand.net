@@ -1,82 +1,72 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
+import * as Database from './database'
 
-export function displayCharacterSheet(user, characterName) {
-  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  ref.on('value', snapshot => {
-      let gameId = snapshot.val()
-      let gameRef = firebase.database().ref('users/' + gameId)
-      gameRef.on('value', data => {
-        let game = data.val()
-        let characterId = User.getCharacterId(game, characterName)
-        window.localStorage.setItem('firebird-command-current-character', 'users/' + gameId + '/content/characters/' + characterId)
-        $('.game-title').text(game.metadata.title)        
-        let character = User.getCharacterSheet(game, characterName)
-        $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
-        $('#skill-level').empty().append(`<h6>Level: ${character.skillLevel}</h6>`)
-        $('#strength').empty().append(character.strength)
-        $('#intelligence').empty().append(character.intelligence)
-        $('#agility').empty().append(character.agility)
-        $('#will').empty().append(character.will)
-        $('#health').empty().append(character.health)
-        $('#movement').empty().append(character.speed)
-        $('#sal').empty().append(character.sal)
-        $('#physical-damage').val(character.pd)
-        $('#total-damage').empty().append(character.dt)
-        $('#status').empty().append(character.status)
-        $("#cover").val(character.cover).find(`option[value="${character.cover}"]`).attr('selected', true)
-        $("#position").val(character.position).find(`option[value="${character.position}"]`).attr('selected', true)
-        $('#impulse1').empty().append(character.capi['1'])
-        $('#impulse2').empty().append(character.capi['2'])
-        $('#impulse3').empty().append(character.capi['3'])
-        $('#impulse4').empty().append(character.capi['4'])
-        $('#knockout-value').empty().append(character.kv)
-        $('#disabling-injuries').attr('data-content', character.injuries)
-        $("#stance").val(character.stance).find(`option[value="${character.stance}"]`).attr('selected', true)
-        displayWeapons(character)
-        $('.sheet-picker').change(e => {
-          let id = e.target.id
-          let val = e.target.value
-          let path = `users/${gameId}/content/characters/${characterId}/${id}`
-          firebase.database().ref(path).set(val)
-        })
-        $('#physical-damage').change(e => {
-          let pd = _.toNumber(e.target.value)
-          let dt = pf.damageTotal(pd, character.health)
-          let pdPath = `users/${gameId}/content/characters/${characterId}/pd`
-          let dtPath = `users/${gameId}/content/characters/${characterId}/dt`
-          firebase.database().ref(pdPath).set(pd)
-          firebase.database().ref(dtPath).set(dt)
-          $('#total-damage').empty().append(dt)
-          let chance = pf.incapacitationChance(pd, character.kv)
-          if (_.random(0,99) <= chance) {
-            let roll = _.random(0,9)
-            let time = pf.incapacitationTime(roll, pd)
-            $('#status').empty().append('Incapacitated')
-            firebase.database().ref(`users/${gameId}/content/characters/${characterId}/status`).set('Incapacitated')
-            alert(`${characterName} incapacitated for ${time}`)
-          }
-        })
-      })
+export function displayCharacterSheet(characterName) {
+  let snap = Database.currentGame()
+  snap.then(game => {
+    console.log(characterName)
+    let characterId = User.getCharacterId(game, characterName)
+    window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + characterId)
+    $('.game-title').text(game.metadata.title)        
+    let character = User.getCharacterSheet(game, characterName)
+    $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
+    $('#skill-level').empty().append(`<h6>Level: ${character.skillLevel}</h6>`)
+    $('#strength').empty().append(character.strength)
+    $('#intelligence').empty().append(character.intelligence)
+    $('#agility').empty().append(character.agility)
+    $('#will').empty().append(character.will)
+    $('#health').empty().append(character.health)
+    $('#movement').empty().append(character.speed)
+    $('#sal').empty().append(character.sal)
+    $('#physical-damage').val(character.pd)
+    $('#total-damage').empty().append(character.dt)
+    $('#status').empty().append(character.status)
+    $("#cover").val(character.cover).find(`option[value="${character.cover}"]`).attr('selected', true)
+    $("#position").val(character.position).find(`option[value="${character.position}"]`).attr('selected', true)
+    $('#impulse1').empty().append(character.capi['1'])
+    $('#impulse2').empty().append(character.capi['2'])
+    $('#impulse3').empty().append(character.capi['3'])
+    $('#impulse4').empty().append(character.capi['4'])
+    $('#knockout-value').empty().append(character.kv)
+    $('#disabling-injuries').attr('data-content', character.injuries)
+    $("#stance").val(character.stance).find(`option[value="${character.stance}"]`).attr('selected', true)
+    displayWeapons(character)
+    $('.sheet-picker').change(e => {
+      let id = e.target.id
+      let val = e.target.value
+      let path = `users/${game.metadata.gameId}/content/characters/${characterId}/${id}`
+      Database.set(path, val)
+    })
+    $('#physical-damage').change(e => {
+      let pd = _.toNumber(e.target.value)
+      let dt = pf.damageTotal(pd, character.health)
+      let pdPath = `users/${game.metadata.gameId}/content/characters/${characterId}/pd`
+      let dtPath = `users/${game.metadata.gameId}/content/characters/${characterId}/dt`
+      Database.set(pdPath, pd)
+      Database.set(dtPath, dt)
+      $('#total-damage').empty().append(dt)
+      let chance = pf.incapacitationChance(pd, character.kv)
+      if (_.random(0,99) <= chance) {
+        let roll = _.random(0,9)
+        let time = pf.incapacitationTime(roll, pd)
+        $('#status').empty().append('Incapacitated')
+        let statusPath = `users/${game.metadata.gameId}/content/characters/${characterId}/status`
+        Database.set(statusPath, 'Incapacitated')
+        alert(`${characterName} incapacitated for ${time}`)
+      }
+    })
   })
 }
 
-export function displayNewCharacter(user) {
-  let ref = firebase.database().ref('users/' + user.uid + '/currentGame')
-  let weaponRef = firebase.database().ref('weapons')
-  ref.once('value').then(snapshot => {
-      let gameId = snapshot.val()
-      let gameRef = firebase.database().ref('users/' + gameId)
-      gameRef.on('value', data => {
-        let game = data.val()
-        $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)
-      })
+export function displayNewCharacter() {
+  let snap = Database.currentGame()
+  snap.then(game => {
+    $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)
   })
 
-  weaponRef.once('value').then(snap => {
-    let weapons = snap.val()
+  let weaponSnap = Database.weapons()
+  weaponSnap.then(weapons => {
     let weaponKeys = _.keys(weapons)
     _.forEach(weaponKeys, gun => {
       $('#weapon-checkboxes').append(`
@@ -93,18 +83,18 @@ export function displayNewCharacter(user) {
 }
 
 export function displayWeapons(character) {
-  let ref = firebase.database().ref('weapons')
-  ref.on('value', snap => {
-    let databaseWeapons = snap.val()
+  let snap = Database.weapons()
+  snap.then(databaseWeapons => {
     _.forEach(character.weapons, weapon => {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
       let ammoDropdown = _.kebabCase(gun.Name)
       let ammoTypes = pf.getAmmoTypes(gun.Name)
-      let ammoDiv = ''
+      let ammoDiv = `<select dir="rtl" id="${ammoDropdown}" data-gun-name="${gun.Name}" class="form-control selectpicker ammo-picker" data-style="btn btn-link">`
       let ammo = character['ammo'][gun.Name]['type']
       let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
-      _.forEach(ammoTypes, ammo => {ammoDiv += `<span class="dropdown-item ${ammoDropdown}">${ammo}</span>`})
+      _.forEach(ammoTypes, ammo => {ammoDiv += `<option value="${ammo}">${ammo}</option>`})
+      ammoDiv += '</select>'
       for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
         let tr = `
             <tr>
@@ -126,10 +116,7 @@ export function displayWeapons(character) {
               <div class="col-xs-7"><strong>Ammo Type</strong></div>
               <div class="col-xs-5 ml-auto">
                   <div class="btn-group dropleft">
-                      <button type="button" class="btn btn-sm btn-secondary dropdown-toggle drop-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${ammo}</button>
-                      <div class="dropdown-menu">
-                          ${ammoDiv}
-                      </div>
+                        ${ammoDiv}
                   </div>
               </div>
           </div>
@@ -168,11 +155,12 @@ export function displayWeapons(character) {
             <tbody id="weapon-table">${aimTime}</tbody>
           </table>`
         $('#weapons').append(div)
-        $(`.${ammoDropdown}`).click(e => {
-          $('#weapons').empty()
+        $(`#${ammoDropdown}`).change(e => {
+          let name = $(`#${e.target.id}`).data('gun-name')
           let path = window.localStorage.getItem('firebird-command-current-character')
-          let result = e.currentTarget.innerText
-          firebase.database().ref(path + '/ammo/' + gun.Name + '/type/').set(result)
+          let result = e.target.value
+          let ammoPath = path + '/ammo/' + name + '/type/'
+          Database.set(ammoPath, result)
         })
     })
   })
