@@ -41,19 +41,18 @@ export function displayGame(user) {
 
 export function checkReadyPlayers(metadata) {
   if (_.every(metadata.readyPlayers)) {
-    nextImpulse(metadata)
+    nextImpulse()
   }
 }
 
-export function nextImpulse(metadata) {
-  let ref = Database.ref('users/' + metadata.gameId)
-  ref.once('value').then(snap => {
-    let game = snap.val()
+export function nextImpulse() {
+  let snap = Database.currentGame()
+  snap.then(game => {
     let path = game.metadata.gameId
     let time = game.content.time
     let keys = _.keys(game.metadata.readyPlayers)
     _.forEach(keys, key => {
-      Database.set('users/'+path+'/metadata/readyPlayers/'+key, false)
+      Database.set('users/' + path + '/metadata/readyPlayers/' + key, false)
     })   
     let next = pf.nextImpulse(time)
     Database.set('users/' + path + '/content/time', next)
