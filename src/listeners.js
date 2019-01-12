@@ -4,6 +4,7 @@ import * as Character from './character'
 import * as Calc from './calc'
 import * as Game from './game'
 import * as Database from './database'
+import * as pf from 'phoenix-functions'
 
 $('#randomize-character').click(e => {
   Utils.randomize()
@@ -50,6 +51,8 @@ $('#weapon-button').on('click', '.dropdown-eal', e => {
   $('#weapon-button .dropdown-toggle').empty()
   e.preventDefault()
   let result = e.target.innerText
+  let weaponType = pf.getWeaponByName(result).Type
+  Utils.setShotType(weaponType)
   $(`#weapon-button .dropdown-toggle`).empty().append(result)
 })
 
@@ -61,18 +64,18 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
   $(`#${targetId} .dropdown-toggle`).empty().append(result)
   let snap = Database.currentGame()
   snap.then(game => {
-      _.forEach(game.content.characters, player => {                
-          if (player.name === result) {
-              window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
-              $('#sal').val(player.sal)
-              $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
-              $(`#position-button .dropdown-toggle`).empty().append(player.position)
-              $('#weapon-button .col .dropdown-menu').empty()
-              _.forEach(player.weapons, gun => {
-                  $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
-              })
-          }
-      })
+    _.forEach(game.content.characters, player => {                
+        if (player.name === result) {
+            window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+            $('#sal').val(player.sal)
+            $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
+            $(`#position-button .dropdown-toggle`).empty().append(player.position)
+            $('#weapon-button .col .dropdown-menu').empty()
+            _.forEach(player.weapons, gun => {
+                $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
+            })
+        }
+    })
   })   
 })
 

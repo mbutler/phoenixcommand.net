@@ -42,6 +42,41 @@ export function toggleSignInLink(user) {
   }
 }
 
+export function setShotType(gunType) {
+  if (gunType === 'Pistol') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
+    $('#burst-eal').hide()
+    $('#shotgun-eal').hide()
+    $('#explosive-eal').hide()      
+  }
+
+  if (gunType === 'Sub-Machinegun') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
+    $('#shotgun-eal').hide()
+    $('#explosive-eal').hide()      
+  }
+
+  if (gunType === 'Assault Rifle') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
+    $('#shotgun-eal').hide()
+    $('#explosive-eal').hide()      
+  }
+
+  if (gunType === 'Shotgun') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Shotgun')
+    $('#single-shot-eal').hide()
+    $('#explosive-eal').hide()
+    $('#burst-eal').hide()     
+  }
+
+  if (gunType === 'Explosive') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Explosive')
+    $('#single-shot-eal').hide()
+    $('#burst-eal').hide()
+    $('#shotgun-eal').hide()    
+  }
+}
+
 export function operationName() {
   $('#gamename').val(mission())
 }
