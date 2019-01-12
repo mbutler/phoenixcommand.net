@@ -73,17 +73,17 @@ export function toggleUserReady(userReady) {
 }
 
 export function navList(user) {
-  let adminQuery = Database.ref('users/' + user.uid + '/adminOf')
-  let memberQuery = Database.ref('users/' + user.uid + '/memberOf').orderByKey()
-
-  adminQuery.once('value').then(snapshot => {
+  let adminRef = Database.ref('users/' + user.uid + '/adminOf')
+  let memberRef = Database.ref('users/' + user.uid + '/memberOf').orderByKey()
+  
+  adminRef.once('value').then(snapshot => {
     snapshot.forEach(childSnapshot => {
       let game = childSnapshot.val()
       $('#game-dropdown').append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
     })
   })
 
-  memberQuery.once('value').then(snapshot => {
+  memberRef.once('value').then(snapshot => {
     if (snapshot.val()) {
       $('#game-dropdown').append(`<div class="dropdown-divider"></div>`)
       snapshot.forEach(childSnapshot => {

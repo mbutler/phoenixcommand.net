@@ -51,13 +51,13 @@ export function eal() {
             eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0, eal.ammoType = ammoType, eal.salm = 0
             $('#fire-button').off('click')
             $('#sab').val('false')
-            displayHit(gun, eal)            
+            displayChanceToHit(gun, eal)            
         }) 
     }       
 }
 
-function displayHit(weapon, eal) {
-    let shotType = eal.shotType, range = eal.range
+function displayChanceToHit(weapon, eal) {
+    let shotType = eal.shotType
     let accuracy = pf.effectiveAccuracyLevel(eal)
     let chance = pf.oddsOfHitting(accuracy, shotType)
     $('.arc-rows').hide()

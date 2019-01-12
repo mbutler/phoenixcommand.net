@@ -60,7 +60,7 @@ export function displayCharacterSheet(characterName) {
   })
 }
 
-export function displayNewCharacter() {
+export function displayCharacterCreation() {
   let snap = Database.currentGame()
   snap.then(game => {
     $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)

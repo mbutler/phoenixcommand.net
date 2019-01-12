@@ -22,9 +22,9 @@ export async function user(userId) {
     if (userId === undefined) {
         userId = window.localStorage.getItem('firebird-command-user-id')
     }
-    let user = firebase.database().ref('users/' + userId).once('value')
-    let value = await Promise.all([user])
-    return value[0].val()
+    let userRef = firebase.database().ref('users/' + userId).once('value')
+    let user = await Promise.all([userRef])
+    return user[0].val()
 }
 
 export async function currentGame(userId) {

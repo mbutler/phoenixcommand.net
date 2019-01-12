@@ -1,6 +1,5 @@
 import * as Database from './database'
 import * as _ from 'lodash'
-import * as pf from 'phoenix-functions'
 import * as Utils from './utils'
 import * as Game from './game'
 import * as User from './user'
@@ -14,40 +13,40 @@ window.selectGame = Game.select
 Database.auth().onAuthStateChanged(user => {
   if (user) {
     window.localStorage.setItem('firebird-command-user-id', user.uid)
-    $('#signin').hide()
-    $('#signout').show()
     User.addNew(user)
-    
-    Utils.displayAccount(user)
     Game.navList(user)
     route(user)
   } else {
     window.localStorage.setItem('firebird-command-user-id', '')
-    $('#signout').hide()
-    $('#signin').show()
     Utils.clearUserDisplay()
-    console.log('User logged out.')
   }
+
+  Utils.toggleSignInLink(user)
 })
 
 function route(user) {
   let page = location.href.split('/').slice(-1)
   page = _.split(page, '?c=')
+  let file = page[0]
 
-  if (page[0] === 'game.html') {
+  if (file === 'game.html') {
     Game.displayGame(user)
   }
 
-  if (page[0] === 'character.html') {
+  if (file === 'character.html') {
     let characterName = page[1].replace(/%20/g, ' ')
     Character.displayCharacterSheet(characterName)
   }
 
-  if (page[0] === 'newcharacter.html') {
-    Character.displayNewCharacter(user)
+  if (file === 'newcharacter.html') {
+    Character.displayCharacterCreation(user)
   }
 
-  if (page[0] === 'calculator.html') {
+  if (file === 'calculator.html') {
     Calc.setUser(user)
+  }
+
+  if (file === 'account.html') {
+    Utils.displayAccount(user)
   }
 }

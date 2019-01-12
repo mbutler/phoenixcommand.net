@@ -11,6 +11,7 @@ export function addNew(user) {
         created: date.getTime()
       })
       Database.set('userIds/' + user.uid, user.displayName)
+      window.localStorage.setItem('firebird-command-user-id', user.uid)
     }
   })
 }

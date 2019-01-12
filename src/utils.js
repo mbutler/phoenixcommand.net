@@ -32,6 +32,16 @@ export function randomize() {
   $('#agility').val(agi)
 }
 
+export function toggleSignInLink(user) {
+  if (user) {
+    $('#signin').hide()
+    $('#signout').show()
+  } else {
+    $('#signout').hide()
+    $('#signin').show()
+  }
+}
+
 export function operationName() {
   $('#gamename').val(mission())
 }

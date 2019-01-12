@@ -67,6 +67,7 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
               $('#sal').val(player.sal)
               $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
               $(`#position-button .dropdown-toggle`).empty().append(player.position)
+              $('#weapon-button .col .dropdown-menu').empty()
               _.forEach(player.weapons, gun => {
                   $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
               })
