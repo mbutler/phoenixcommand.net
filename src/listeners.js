@@ -56,6 +56,12 @@ $('#weapon-button').on('click', '.dropdown-eal', e => {
   $(`#weapon-button .dropdown-toggle`).empty().append(result)
 })
 
+$('#game-dropdown').on('click', '.dropdown-item', e => {
+  let uid = $(e.target).data('uid')
+  let gameId = $(e.target).data('gameid')
+  Game.select(uid, gameId)
+})
+
 $("#calc-character-name").on('click', '.dropdown-eal', e => {
   $('#calc-character-name .dropdown-toggle').empty()
   e.preventDefault()

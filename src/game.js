@@ -79,7 +79,7 @@ export function navList(user) {
   adminRef.once('value').then(snapshot => {
     snapshot.forEach(childSnapshot => {
       let game = childSnapshot.val()
-      $('#game-dropdown').append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
+      $('#game-dropdown').append(`<a class="dropdown-item" data-uid="${user.uid}" data-gameid="${game.gameId}" href="#">${game.name}</a>`)
     })
   })
 
@@ -89,7 +89,7 @@ export function navList(user) {
       snapshot.forEach(childSnapshot => {
         let gameId = childSnapshot.key
         let game = childSnapshot.val()
-        $('#game-dropdown').append(`<a class="dropdown-item" href="#" onclick="selectGame('${user.uid}', '${game.gameId}')">${game.name}</a>`)
+        $('#game-dropdown').append(`<a class="dropdown-item" data-uid="${user.uid}" data-gameid="${game.gameId}" href="#">${game.name}</a>`)
       })
     }    
   })

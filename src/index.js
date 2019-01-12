@@ -7,9 +7,6 @@ import * as Character from './character'
 import * as Calc from './calc'
 import './listeners'
 
-//expose to window for use in Game.displayGame() onClicks... for now
-window.selectGame = Game.select
-
 Database.auth().onAuthStateChanged(user => {
   if (user) {
     window.localStorage.setItem('firebird-command-user-id', user.uid)
