@@ -64,16 +64,20 @@ function displayChanceToHit(weapon, eal) {
     $('#odds-of-hitting').empty()
     $('#eal').empty().append(accuracy)
     
-    if (shotType === 'Burst' && weapon.Type !== 'Shotgun') {
+    if (shotType === 'Burst') {
         burstHandler(weapon, eal, accuracy, chance)
     } 
     
-    if (shotType === 'Single Shot' && weapon.Type !== 'Shotgun') {
+    if (shotType === 'Single Shot') {
         singleShotHandler(weapon, eal, accuracy, chance)
     }
     
-    if (weapon.Type === 'Shotgun') {
+    if (shotType === 'Shotgun') {
         shotgunHandler(weapon, eal, accuracy, chance)
+    }
+
+    if (shotType === 'Explosive') {
+        explosiveHandler(weapon, eal, accuracy, chance)
     }
 
     $('.nav-tabs a[href="#odds"]').tab('show')    
@@ -141,6 +145,10 @@ function shotgunHandler(weapon, eal, accuracy, chance) {
         $('#sab').empty().append(`-${weapon['SAB']}`)
         fireShotgun(eal.ammoType, range, weapon, chance)
     })     
+}
+
+function explosiveHandler(weapon, eal, accuracy, chance) {
+
 }
 
 function fireBurst(weapon, numberOfTargets, arc, chance) {

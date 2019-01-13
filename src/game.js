@@ -2,6 +2,7 @@ import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Timer from './timer'
 import * as Database from './database'
+import * as Utils from './utils'
 
 export function displayGame(user) {
   let ref = Database.ref('users/' + user.uid + '/currentGame')
@@ -10,6 +11,7 @@ export function displayGame(user) {
     let gameRef = Database.ref('users/' + gameId)
     gameRef.on('value', data => {
       let game = data.val()
+      Timer.run(game.metadata.gameId)
       let userReady = game.metadata.readyPlayers[user.uid]
       toggleUserReady(userReady)
       checkReadyPlayers(game.metadata)
@@ -56,7 +58,7 @@ export function nextImpulse() {
     })   
     let next = pf.nextImpulse(time)
     Database.set('users/' + path + '/content/time', next)
-    alert('Next impulse!')
+    //Utils.modal('Phoenix Command', 'Next Impulse!')
   })
 }
 
@@ -108,10 +110,10 @@ export function addPlayers(user, gameId, players, gameName) {
         Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + person, false).set(false)
         Database.push('users/' + person + '/memberOf/', {gameId: user.uid + '/games/' + gameId, name: gameName})
       } else {
-        alert('players intentionally left ' + person)
+        //alert('players intentionally left ' + person)
       }
     })
-    $('#game-created-modal').modal()   
+    Utils.modal('Phoenix Command', 'Game Created Successfully!')   
   })
 }
 
@@ -119,7 +121,7 @@ export function addCharacter(character) {
   let snap = Database.currentGame()
   snap.then(game => {
     Database.push('users/' + game.metadata.gameId + '/content/characters/', character)
-    $('#character-created-modal').modal()
+    Utils.modal('Phoenix Command', 'Character Created Successfully!')
   })
 }
 
@@ -168,6 +170,6 @@ export function newGameSubmit() {
   if (authUser) {
     createNew(authUser, name, players)
   } else {
-      $('#signinModal').modal()
+    Utils.modal('Phoenix Command', 'Signed In Successfully!')
   } 
 }

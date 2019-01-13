@@ -4,6 +4,7 @@ import * as Character from './character'
 import * as Calc from './calc'
 import * as Game from './game'
 import * as Database from './database'
+import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 
 $('#randomize-character').click(e => {
@@ -71,27 +72,36 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
   let snap = Database.currentGame()
   snap.then(game => {
     _.forEach(game.content.characters, player => {                
-        if (player.name === result) {
-            window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
-            $('#sal').val(player.sal)
-            $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
-            $(`#position-button .dropdown-toggle`).empty().append(player.position)
-            $('#weapon-button .col .dropdown-menu').empty()
-            _.forEach(player.weapons, gun => {
-                $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
-            })
-        }
+      if (player.name === result) {
+        window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+        $('#sal').val(player.sal)
+        $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
+        $(`#position-button .dropdown-toggle`).empty().append(player.position)
+        $('#weapon-button .col .dropdown-menu').empty()
+        _.forEach(player.weapons, gun => {
+            $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
+        })
+      }
     })
   })   
 })
 
-
 //testing
 $(window).keypress((e) => {
   if (e.which === 13) {
-      let dude = Database.currentCharacter()
-      dude.then(data => {
-        console.log(dude)
-      })
+    let action = {}
+    action.runTime = {"phase": 5, "impulse": 3}    
+    action.setTime = {"phase": 2, "impulse": 3}
+    action.message = 'Reloading Uzi'
+    action.function = 'reload'
+    action.parameters = ['doo', 'dah']
+    action.setBy = 'tFZn6Q7yIaSHwcOiCyNV3NlZERj2'
+    action.characterPath = 'users/tFZn6Q7yIaSHwcOiCyNV3NlZERj2/games/-LVymInNe…FZE5Kz6Ba/content/characters/-LVynbcLBx3I71LXFiIt'
+    action.gameId = 'tFZn6Q7yIaSHwcOiCyNV3NlZERj2/games/-LVymInNePcFZE5Kz6Ba'
+    action.userList = ['tFZn6Q7yIaSHwcOiCyNV3NlZERj2']
+  Timer.add(action)
+  //console.log(added)
+
+  //Timer.run('tFZn6Q7yIaSHwcOiCyNV3NlZERj2/games/-LVymInNePcFZE5Kz6Ba')  
   }
 })

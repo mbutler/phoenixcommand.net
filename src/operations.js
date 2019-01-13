@@ -175,7 +175,7 @@ const adj = [
 ]
 
 const noun = [
-  "Amphibian",
+  	 "Amphibian",
 	 "Anaconda",
 	 "Arrow",
 	 "Ayatollah",
@@ -284,10 +284,8 @@ const noun = [
 	 "Mutual Fund",
 	 "Turban",
 	 "Lance",
-	 "Mullah",
 	 "Assassination",
 	 "Djinn",
-	 "Caliph",
 	 "Hummus",
 	 "Chick Pea",
 	 "Cleric",
