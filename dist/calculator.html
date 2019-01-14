@@ -53,7 +53,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
+                            <a class="dropdown-item" href="timer.html"><i class="material-icons">alarm_add</i> Set Timer</a>
                             <a class="dropdown-item" href="calculator.html">
                                 <svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
                                     <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
@@ -75,7 +75,6 @@
                     <div class="dropdown-menu">
                     </div>
                 </div>
-                <div id="skill-level"></div>
             </div>
             <div class="container">
                 <div class="card card-nav-tabs card-plain">
@@ -120,11 +119,14 @@
                                     </div>
                                     <div id="shot-type-button" class="row">
                                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu col col-xs-6">
                                             <span id="single-shot-eal" class="dropdown-item dropdown-eal">Single Shot</span>
                                             <span id="burst-eal" class="dropdown-item dropdown-eal">Burst</span>
                                             <span id="shotgun-eal" class="dropdown-item dropdown-eal">Shotgun</span>
                                             <span id="explosive-eal" class="dropdown-item dropdown-eal">Explosive</span>
+                                        </div>
+                                        <div class="col col-xs-6">
+                                            <input id="ammo-type" type="text" class="form-control" placeholder="ammo type" >
                                         </div>
                                     </div>
                                     <div class="row">

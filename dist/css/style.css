@@ -31,6 +31,9 @@
     margin-top: -20px;
     padding-bottom: 0px;
 }
+#game-section h5 {
+    margin-left: 20px;
+}
 .header-filter::before {
     background: rgba(0, 0, 0, 0);
 }
@@ -123,6 +126,16 @@
     margin: 10%;
 }
 
+#ammo-type {
+    width: 60%;
+    float: right;
+}
+
+#sal {
+    width: 30%;
+    float: left;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin: 10px;
@@ -138,6 +151,10 @@
         margin-bottom: 0px;
     }
     #calc-character-name {
+        margin-top: 30px;
+        margin-bottom: 0px;
+    }
+    #timer-character-name {
         margin-top: 30px;
         margin-bottom: 0px;
     }

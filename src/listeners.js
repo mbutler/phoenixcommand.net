@@ -55,6 +55,10 @@ $('#weapon-button').on('click', '.dropdown-eal', e => {
   let weaponType = pf.getWeaponByName(result).Type
   Utils.setShotType(weaponType)
   $(`#weapon-button .dropdown-toggle`).empty().append(result)
+  let snap = Database.currentCharacter()
+  snap.then(character => {
+    $('#ammo-type').val(character['ammo'][result]['type'])
+  })  
 })
 
 $('#game-dropdown').on('click', '.dropdown-item', e => {
@@ -81,6 +85,26 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
         _.forEach(player.weapons, gun => {
             $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun}</span>`)
         })
+      }
+    })
+  })   
+})
+
+$("#timer-character-name").on('click', '.dropdown-timer', e => {
+  $('#timer-character-name .dropdown-toggle').empty()
+  e.preventDefault()
+  let targetId = $(e.target.parentElement.parentElement).attr('id')
+  let result = e.target.innerText
+  $(`#${targetId} .dropdown-toggle`).empty().append(result)
+  let snap = Database.currentGame()
+  snap.then(game => {
+    _.forEach(game.content.characters, player => {                
+      if (player.name === result) {
+        window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+        $('#impulse1').html(player.capi['1'])
+        $('#impulse2').html(player.capi['2'])
+        $('#impulse3').html(player.capi['3'])
+        $('#impulse4').html(player.capi['4'])
       }
     })
   })   

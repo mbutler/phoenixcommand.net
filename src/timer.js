@@ -1,6 +1,20 @@
 import * as pf from 'phoenix-functions'
 import * as Database from './database'
+import * as User from './user'
 import * as Utils from './utils'
+
+export function setUser(user) {
+    let snap = Database.currentGame(user.uid)
+    snap.then(game => {
+        $('.game-title').text(game.metadata.title)
+        let userCharacters = User.getUserCharacters(game)
+        _.forEach(userCharacters, player => {
+            if (user.uid === player.userId) {
+                $('#timer-character-name .dropdown-menu').append(`<span class="dropdown-item dropdown-timer">${player.characterName}</span>`)                 
+            }
+        })
+    })    
+}
 
 export function run(gameId) {
     let path = 'users/' + gameId + '/content/actionList/'

@@ -5,6 +5,7 @@ import * as Game from './game'
 import * as User from './user'
 import * as Character from './character'
 import * as Calc from './calc'
+import * as Timer from './timer'
 import './listeners'
 
 Database.auth().onAuthStateChanged(user => {
@@ -45,5 +46,9 @@ function route(user) {
 
   if (file === 'account.html') {
     Utils.displayAccount(user)
+  }
+
+  if (file === 'timer.html') {
+    Timer.setUser(user)
   }
 }
