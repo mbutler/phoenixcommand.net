@@ -23,10 +23,13 @@ export function run(gameId) {
         let keys = _.keys(actions.list)
         _.forEach(keys, key => {
             let action = actions.list[key]
-            if (_.isEqual(action.runTime, actions.time)) {
-                //do stuff with the action
-                Utils.modal('Phoenix Command', action.message)
-                Database.remove(path, key)
+            if (_.isEqual(action.runTime.time, actions.time)) {
+                let ref = Database.ref(action.characterPath)
+                ref.on('value', snapshot => {
+                    let character = snapshot.val()
+                    Utils.modal(character.name, action.message)
+                    Database.remove(path, key)
+                })                
             }
         })
     })
@@ -37,17 +40,34 @@ export function add(action) {
     Database.push(path, action)
 }
 
+export function actionTemplate() {
+    let currentCharacter = window.localStorage.getItem('firebird-command-current-character')
+    let userId = window.localStorage.getItem('firebird-command-user-id')
+    let current = _.split(currentCharacter, '/')
+    let action = {}
+    action.runTime = {}    
+    action.setTime = {}
+    action.message = ''
+    action.function = ''
+    action.parameters = []
+    action.setBy = userId
+    action.characterPath = currentCharacter
+    action.userList = []
+    return action
+}
+
 
 
 /*
 {
-    "setTime": {},
-    "runTime": {},
-    "setBy": "",
-    "message": "",
-    "action": "",
-    "userList": [],
-    "function": function(){},
-    "gameId": ""
+    action.runTime = {"phase": 5, "impulse": 3}    
+    action.setTime = {"phase": 2, "impulse": 3}
+    action.message = 'Reloading Uzi'
+    action.function = 'reload'
+    action.parameters = ['doo', 'dah']
+    action.setBy = 'tFZn6Q7yIaSHwcOiCyNV3NlZERj2'
+    action.characterPath = 'users/tFZn6Q7yIaSHwcOiCyNV3NlZERj2/games/-LVymInNe…FZE5Kz6Ba/content/characters/-LVynbcLBx3I71LXFiIt'
+    action.gameId = 'tFZn6Q7yIaSHwcOiCyNV3NlZERj2/games/-LVymInNePcFZE5Kz6Ba'
+    action.userList = ['tFZn6Q7yIaSHwcOiCyNV3NlZERj2']
 }
 */
