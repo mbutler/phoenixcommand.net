@@ -113,14 +113,12 @@ $("#timer-character-name").on('click', '.dropdown-timer', e => {
 $('#timer-combat-action-button').click(e => {
   e.preventDefault()  
   let capi = {}
-  let action = Timer.actionTemplate()
   capi['1'] = _.toNumber($('#impulse1').html())
   capi['2'] = _.toNumber($('#impulse2').html())
   capi['3'] = _.toNumber($('#impulse3').html())
   capi['4'] = _.toNumber($('#impulse4').html())
   let msg = $('#timer-combat-action-message').val()
   let ca  = _.toNumber($('#timer-combat-actions').val())
-  let name = $('#timer-character-name a').html()
 
   let snap = Database.currentGame()
   snap.then(game => {    
@@ -132,11 +130,68 @@ $('#timer-combat-action-button').click(e => {
     action.function = ''
     action.parameters = []
     action.userList = []
-
     Timer.add(action)
-    Utils.modal('Phoenix Command', 'Timer probably set!')
+    Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
   })
 
+})
+
+$('#timer-time-button').click(e => {
+  e.preventDefault()  
+  let msg = $('#timer-time-message').val()
+  let phase = $('#timer-phase-input').val()
+  phase = _.toNumber(phase)
+  let impulse = $('#timer-impulse-input').val()
+  let snap = Database.currentGame()
+  snap.then(game => {    
+    let action = Timer.actionTemplate()
+    action.runTime = {time: {"phase": phase, "impulse": impulse}, "remainder": 0}   
+    action.setTime = game.content.time
+    action.gameId = game.metadata.gameId
+    action.message = msg
+    action.function = ''
+    action.parameters = []
+    action.userList = []
+    Timer.add(action)
+    Utils.modal('Phoenix Command', `Timer set for Phase: ${phase}, Impulse: ${impulse}`)
+  })
+})
+
+$('#timer-impulse-input').change(e => {
+  let impulse = $('#timer-impulse-input').val()
+  impulse = _.toNumber(impulse)
+  impulse = _.clamp(impulse, 1, 4)
+  $('#timer-impulse-input').val(impulse)
+})
+
+$('#timer-duration-button').click(e => {
+  e.preventDefault()  
+  let msg = $('#timer-duration-message').val()
+  let phases = $('#timer-duration-phases').val()
+  phases = _.toNumber(phases)
+  let snap = Database.currentGame()
+  snap.then(game => { 
+    let futurePhase = game.content.time.phase + phases
+    let impulse = game.content.time.impulse
+    let action = Timer.actionTemplate()
+    action.runTime = {time: {"phase": futurePhase, "impulse": impulse}, "remainder": 0}   
+    action.setTime = game.content.time
+    action.gameId = game.metadata.gameId
+    action.message = msg
+    action.function = ''
+    action.parameters = []
+    action.userList = []
+    Timer.add(action)
+    Utils.modal('Phoenix Command', `Timer set for Phase: ${futurePhase}, Impulse: ${impulse}`)
+  })
+
+})
+
+$('#timer-duration-incapacitation-time').change(e => {
+  let incapTime = $('#timer-duration-incapacitation-time').val()
+  let convertedPhases = pf.incapacitationTimeToPhases(incapTime)
+  convertedPhases = _.toNumber(convertedPhases)
+  $('#timer-duration-phases').val(convertedPhases)
 })
 
 //testing

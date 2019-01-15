@@ -27,7 +27,7 @@ export function run(gameId) {
                 let ref = Database.ref(action.characterPath)
                 ref.on('value', snapshot => {
                     let character = snapshot.val()
-                    Utils.modal(character.name, action.message)
+                    Utils.modal(`${character.name}'s Reminder:`, action.message)
                     Database.remove(path, key)
                 })                
             }

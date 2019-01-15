@@ -68,9 +68,9 @@
 
     <div class="main">
         <div class="container">
-                <div id="game-section" class="section text-center">                    
+                <div class="section game-section text-center">                    
                     <div class="row color-row">
-                        <h5><strong>Set Timer By Combat Action</strong></h5>
+                        <h5><strong>Set Timer By <em>Combat Actions</em></strong></h5>
                     </div>
                     <div id="timer-character-name" class="row">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Import Character</a>
@@ -109,6 +109,56 @@
                     <textarea class="form-control" id="timer-combat-action-message" rows="2"></textarea>
                 </div>
                 <button id="timer-combat-action-button" class="btn btn-primary btn-sm">Set Timer</button>
+                <div class="section game-section text-center">
+                    <div class="row color-row">
+                        <h5><strong>Set Timer By <em>Time</em></strong></h5>
+                    </div>
+                    <table id="timer-time-table" class="table table-condensed table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">phase</th>
+                                <th class="text-center">impulse</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" class="form-control text-center white-input" id="timer-phase-input"></td>
+                                <td><input type="number" class="form-control text-center white-input" id="timer-impulse-input"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <label for="timer-time-message">Message</label>
+                        <textarea class="form-control" id="timer-time-message" rows="2"></textarea>
+                    </div>
+                </div>
+                <button id="timer-time-button" class="btn btn-primary btn-sm">Set Timer</button>
+                <div class="section game-section text-center">
+                    <div class="row color-row">
+                        <h5><strong>Set Timer By <em>Duration</em></strong></h5>
+                    </div>
+                    <table id="timer-duration-table" class="table table-condensed table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">number of phases</th>
+                                <th class="text-center">incapacitation time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" class="form-control text-center white-input" id="timer-duration-phases"></td>
+                                <td><input type="text" class="form-control text-center white-input" id="timer-duration-incapacitation-time"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div clas="row">
+                        <div class="form-group">
+                            <label for="timer-duration-message">Message</label>
+                            <textarea class="form-control" id="timer-duration-message" rows="2"></textarea>
+                        </div>
+                    </div>                       
+                </div>
+                <button id="timer-duration-button" class="btn btn-primary btn-sm">Set Timer</button>
         </div>
     </div>
 

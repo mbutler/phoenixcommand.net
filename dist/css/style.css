@@ -27,12 +27,25 @@
 #account-section {
     margin-top: 20px;
 }
-#game-section {
+.game-section {
     margin-top: -20px;
     padding-bottom: 0px;
 }
-#game-section h5 {
+.game-section h5 {
     margin-left: 20px;
+}
+.white-input {
+    background-color: white;
+}
+#timer-time-table {
+    margin-top: 15px;
+}
+#timer-time-table thead {
+    border-color: white;
+    border: none;
+}
+#timer-duration-table {
+    margin-top: 15px;
 }
 .header-filter::before {
     background: rgba(0, 0, 0, 0);
