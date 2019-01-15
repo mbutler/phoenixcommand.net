@@ -167,8 +167,11 @@
         margin-top: 30px;
         margin-bottom: 0px;
     }
+    #timer-top {
+        margin-top: 20px;
+    }
     #timer-character-name {
-        margin-top: 30px;
+        margin-top: 10px;
         margin-bottom: 0px;
     }
     #time {
