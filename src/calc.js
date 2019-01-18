@@ -148,7 +148,20 @@ function shotgunHandler(weapon, eal, accuracy, chance) {
 }
 
 function explosiveHandler(weapon, eal, accuracy, chance) {
-
+    if (eal.range > weapon.MR) { chance = 0 }
+    $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
+    $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+    $('#fire-button').click(e => {
+        e.preventDefault()
+        eal.sab = weapon['SAB']
+        accuracy = pf.effectiveAccuracyLevel(eal)
+        chance = pf.oddsOfHitting(accuracy, eal.shotType)
+        if (eal.range > weapon.MR) { chance = 0 }
+        $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+        $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
+        $('#sab').empty().append(`-${weapon['SAB']}`)
+        fireExplosive(weapon, chance, accuracy)
+    })
 }
 
 function fireBurst(weapon, numberOfTargets, arc, chance) {
@@ -225,6 +238,36 @@ function fireShotgun(ammoType, range, weapon, chance) {
     })
 }
 
+function fireExplosive(weapon, chance, accuracy) {
+    let result = ''
+    let path = window.localStorage.getItem('firebird-command-current-character')
+    let snap = Database.currentCharacter()
+    let roll = _.random(0,99)
+    snap.then(character => {
+        let loadedAmmo = character['ammo'][weapon.Name]['loaded']
+        let ammoType = character['ammo'][weapon.Name]['type']
+        let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
+        if (loadedAmmo >= 1) {
+            Database.set(loadedAmmoPath, loadedAmmo - 1)
+            if (roll <= chance) {
+                result = pf.explosiveFire(chance)
+                displayExplostion(result, weapon, ammoType)
+            } else {
+                let requiredEAL = pf.ealToHit(roll, 'Single Shot')
+                let actualEAL = accuracy
+                let scatter = pf.shotScatter(actualEAL, requiredEAL)
+                let placement = pf.missedShotPlacement(_.random(0,9), scatter)
+                console.log('Explosive shot hit ' + scatter + ' ' + placement)
+                result = pf.explosiveFire(chance)
+                displayExplostion(result, weapon, ammoType)
+            }            
+        } else {
+            result = 'Out of ammo.'
+            alert(result)
+        }
+    })
+}
+
 function getMinimumArc(weapon, range) {
     range = pf.snapToValue(range, [10,20,40,70,100,200,300,400])
     let arc = weapon[_.toString(range)]['MA']
@@ -288,10 +331,15 @@ function displayTargets(targetList, weapon, ammoType) {
     $('.nav-tabs a[href="#hits"]').tab('show')
 }
 
+function displayExplosion(targetList, weapon, ammoType) {
+    console.log(targetList)
+}
+
 function calculateDamage(targets, weapon, ammoType) {
     let rangeVal = _.toNumber($('#range').val())
     let range = pf.snapToValue(rangeVal, [10,20,40,70,100,200,300,400])
     if (weapon.Type === 'Shotgun') {range = pf.snapToValue(rangeVal, [1,2,4,6,8,10,15,20,30,40,80])}
+    if (weapon.Type === 'Explosive') {range = pf.snapToValue(rangeVal, [0,1,2,3,5,10])}
     let pen = weapon[range][ammoType]['PEN']
     let dc = weapon[range][ammoType]['DC']
     let result = {}

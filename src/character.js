@@ -94,6 +94,15 @@ export function displayWeapons(character) {
       let ammo = character['ammo'][gun.Name]['type']
       let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
+      let optionName
+      let optionValue
+      if (gun.Type === 'Explosive') {
+        optionName = 'Maximum Range'
+        optionValue = gun.MR
+      } else {
+        optionName = 'Knockdown'
+        optionValue = gun.KD
+      }
       _.forEach(ammoTypes, ammo => {ammoDiv += `<option value="${ammo}">${ammo}</option>`})
       ammoDiv += '</select>'
       for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
@@ -138,8 +147,8 @@ export function displayWeapons(character) {
             <div id="ammo-weight" class="col-xs-4 ml-auto">${gun.AW}</div>
           </div>
           <div class="row color-row">
-            <div class="col-xs-8"><strong>Knock Down</strong></div>
-            <div id="knock-down" class="col-xs-4 ml-auto">${gun.KD}</div>
+            <div class="col-xs-8"><strong>${optionName}</strong></div>
+            <div id="knock-down" class="col-xs-4 ml-auto">${optionValue}</div>
           </div>
           <div class="row">
             <div class="col-xs-8"><strong>Sustained Auto Burst</strong></div>
