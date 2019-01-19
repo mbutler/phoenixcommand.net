@@ -1,8 +1,11 @@
 const path = require("path")
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: "./src/index.js",
+  performance: {
+    hints: process.env.NODE_ENV === 'production' ? "warning" : false
+  },
   output: {
     path: path.resolve(__dirname, "dist/js"),
     publicPath: '/dist/',

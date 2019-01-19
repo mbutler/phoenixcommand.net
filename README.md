@@ -1,5 +1,5 @@
-# skeleton
-A barebones starter project for modern javascript development
+# firebird-character
+Mobile app to manage a Phoenix Command game
 
 babel + webpack + mocha + chai + documentationjs
 

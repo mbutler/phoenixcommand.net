@@ -34,11 +34,9 @@ export function randomize() {
 
 export function toggleSignInLink(user) {
   if (user) {
-    $('#signin').hide()
-    $('#signout').show()
+    $('#login').empty().append(`<a href="#" style="color: black;" id="signout" class="nav-link"><i class="material-icons">account_circle</i> Sign Out</a>`)
   } else {
-    $('#signout').hide()
-    $('#signin').show()
+    $('#login').empty().append(`<a href="#" style="color: black;" id="signin" class="nav-link" data-toggle="modal" data-target="#signinModal"><i class="material-icons">account_circle</i> Sign In</a>`)
   }
 }
 

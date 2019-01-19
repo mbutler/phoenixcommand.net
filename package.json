@@ -1,7 +1,7 @@
 {
-  "name": "skeleton",
-  "version": "0.1.0",
-  "description": "A barebones starter project for modern javascript development",
+  "name": "firebird-character",
+  "version": "0.8.0",
+  "description": "Mobile app to manage a Phoenix Command game",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
@@ -56,6 +56,6 @@
     "firebase": "^5.8.0",
     "firebaseui": "^3.5.2",
     "lodash": "^4.17.11",
-    "phoenix-functions": "^0.9.34"
+    "phoenix-functions": "^0.9.35"
   }
 }

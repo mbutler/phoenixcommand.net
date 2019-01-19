@@ -1,4 +1,3 @@
-import * as pf from 'phoenix-functions'
 import * as Database from './database'
 import * as User from './user'
 import * as Utils from './utils'
