@@ -160,7 +160,7 @@ function explosiveHandler(weapon, eal, accuracy, chance) {
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
         $('#sab').empty().append(`-${weapon['SAB']}`)
-        fireExplosive(weapon, chance, accuracy)
+        fireExplosive(weapon, eal.range, chance, accuracy)
     })
 }
 
@@ -238,11 +238,12 @@ function fireShotgun(ammoType, range, weapon, chance) {
     })
 }
 
-function fireExplosive(weapon, chance, accuracy) {
+function fireExplosive(weapon, ammoType, chance, accuracy) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
     let snap = Database.currentCharacter()
     let roll = _.random(0,99)
+    let location = 'Explosive shot hit on target.'
     snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let ammoType = character['ammo'][weapon.Name]['type']
@@ -250,16 +251,17 @@ function fireExplosive(weapon, chance, accuracy) {
         if (loadedAmmo >= 1) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             if (roll <= chance) {
-                result = pf.explosiveFire(chance)
-                displayExplostion(result, weapon, ammoType)
+                result = pf.explosiveFire(weapon, ammoType)
+                displayExplosionTargets(result, weapon, ammoType, location)
             } else {
                 let requiredEAL = pf.ealToHit(roll, 'Single Shot')
-                let actualEAL = accuracy
-                let scatter = pf.shotScatter(actualEAL, requiredEAL)
+                let scatter = pf.shotScatter(accuracy, requiredEAL)
                 let placement = pf.missedShotPlacement(_.random(0,9), scatter)
-                console.log('Explosive shot hit ' + scatter + ' ' + placement)
-                result = pf.explosiveFire(chance)
-                displayExplostion(result, weapon, ammoType)
+                let h = 'hexes'
+                if (scatter === 1) {h = 'hex'}
+                location = `Explosive shot hit ${scatter} ${h} ${placement}`
+                result = pf.explosiveFire(weapon, ammoType)
+                displayExplosionTargets(result, weapon, ammoType, location)
             }            
         } else {
             result = 'Out of ammo.'
@@ -331,8 +333,68 @@ function displayTargets(targetList, weapon, ammoType) {
     $('.nav-tabs a[href="#hits"]').tab('show')
 }
 
-function displayExplosion(targetList, weapon, ammoType) {
-    console.log(targetList)
+function displayExplosionTargets(targetList, weapon, ammoType, location) {
+    let bullets = 0
+    let radius = ['0','1','2','3','5','10']
+    let targetRows = ''
+    _.forEach(radius, val => {
+        bullets = _.toNumber(`${targetList[`${val}`]['bullets']}`)
+        let tr = `<tr>
+            <td class="text-center">${val}</td>
+            <td id="target-${val}-bullets" class="text-center">${bullets}</td>
+        </select></td>
+            <td class="text-center"><select id="target-${val}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                <option value="Clothing">Clothing</option>
+                <option value="Light Flexible">Light Flexible</option>
+                <option value="Medium Flexible">Medium Flexible</option>
+                <option value="Heavy Flexible">Heavy Flexible</option>
+                <option value="Light Rigid">Light Rigid</option>
+                <option value="Medium Rigid">Medium Rigid</option>
+                <option value="Heavy Rigid">Heavy Rigid</option>
+            </select></td>
+            <td class="text-center"><select id="target-${val}-blast-mod" class="form-control selectpicker target-blast-mod-select" data-style="btn btn-link"">
+                <option value="In the Open">In the Open</option>    
+                <option value="Underwater">Underwater</option>
+                <option value="In Small Room (10')">In Small Room (10')</option>
+                <option value="In Open Trench">In Open Trench</option>
+                <option value="Prone">Prone</option>
+                <option value="Under Partial Cover">Under Partial Cover</option>
+                <option value="In Combat Suit">In Combat Suit</option>
+                <option value="In Power Armor">In Power Armor</option>
+                <option value="Behind Solid Cover">Behind Solid Cover</option>
+            </select></td>
+        </tr>`
+        targetRows += tr
+    })    
+    let div = `<table id="target-table" class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Hexes Away</th>
+                <th class="text-center">Hits</th>
+                <th class="text-center">Armor</th>
+                <th class="text-center">Blast Mod</th>
+            </tr>
+        </thead>
+        <tbody>${targetRows}</tbody>
+    </table>`
+    $('#hits').empty().append(`<h5><strong>${location}</strong></h5>`)
+    $('#hits').append(div)
+    $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
+    $('#damage-button').click(e => {
+        e.preventDefault()
+        let result = {}
+        let radius = ['0','1','2','3','5','10']
+        _.forEach(radius, val => {
+            let armor = 'Clothing'
+            let hits = _.toNumber($(`#target-${val}-bullets`).text())
+            armor = $(`#target-${val}-armor`).find(":selected").text()
+            let cover = $(`#target-${val}-cover`).find(":selected").text()
+            let blastMod = $(`#target-${val}-blast-mod`).find(":selected").text()
+            result[`radius ${val}`] = {"hits": hits, "cover": cover, "armor": armor, "blastMod": blastMod}
+        })
+        calculateExplosionDamage(result, weapon, ammoType)
+    })
+    $('.nav-tabs a[href="#hits"]').tab('show')
 }
 
 function calculateDamage(targets, weapon, ammoType) {
@@ -370,6 +432,40 @@ function calculateDamage(targets, weapon, ammoType) {
         result[`target ${i}`] = {"hit location": shots, "hit damage": damage}
     }    
     displayDamage(result)
+    $('.nav-tabs a[href="#damage"]').tab('show')
+}
+
+function calculateExplosionDamage(targets, weapon, ammoType) {
+    let result = {}
+    let radius = ['0','1','2','3','5','10']
+    _.forEach(radius, val => {
+        let cover = false
+        let hitLocation = ''
+        let damage = 0
+        let shots = []
+        let armor = targets[`radius ${val}`]['armor']
+        let hits = targets[`radius ${val}`]['hits']
+        let blastMod = targets[`radius ${val}`]['blastMod']
+        if (blastMod === 'Behind Solid Cover' || blastMod === 'Under Partial Cover') {
+            cover = true
+        }
+        let bm = pf.blastModifier(blastMod)
+        let bc = weapon[val][ammoType]['BC']
+        let concussionDamage = bm * bc
+        let pen = weapon[val][ammoType]['PEN']
+        let dc = weapon[val][ammoType]['DC']
+        let hitRoll
+        //0-9 roll for epf
+        let epfRoll = _.random(0,9)            
+        hitRoll = _.random(0,99)
+        let epf = pf.effectivePenetrationFactor(epfRoll, armor)
+        let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
+        damage = hits * (hitDamage + concussionDamage)
+        if (damage > 0) {hitLocation = pf.hitLocation(hitRoll, cover)}
+        shots.push(hitLocation)     
+        result[`radius ${val}`] = {"hit location": shots, "hit damage": damage}
+    })
+    displayExplosionDamage(result)
     $('.nav-tabs a[href="#damage"]').tab('show')
 }
 
@@ -418,3 +514,54 @@ function displayDamage(targets) {
         $(`#${recoveryId}`).empty().append(result)
      })
 }
+
+function displayExplosionDamage(targets) {
+    let targetRows = ''
+    let radius = ['0','1','2','3','5','10']
+    _.forEach(radius, val => {
+        let damage = targets[`radius ${val}`]['hit damage']
+        let location = targets[`radius ${val}`]['hit location']
+        location = _.uniq(location)
+        let tr = `
+        <tr>
+            <td class="text-center">${val}</td>
+            <td id="target-${val}-location" class="text-center">${location}</td>
+            <td id="target-${val}-damage" class="text-center">${damage}</td>
+            <td class="text-center"><select id="target-${val}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
+                <option value="No Aid">No Aid</option>
+                <option value="First Aid">First Aid</option>
+                <option value="Aid Station">Aid Station</option>
+                <option value="Field Hospital">Field Hospital</option>
+                <option value="Trauma Center">Trauma Center</option>
+            </select></td>
+            <td id="target-${val}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
+        </tr>
+    `
+    targetRows += tr
+    })
+    let div = `<table id="damage-table" class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Target</th>
+                <th class="text-center">Location</th>
+                <th class="text-center">Damage</th>
+                <th class="text-center">Aid</th>
+                <th class="text-center">Recovery</th>
+            </tr>
+        </thead>
+        <tbody>${targetRows}</tbody>
+    </table>`
+    $('#damage').empty().append(div)
+    $('.target-aid-select').change((e) => {
+        let id = _.split(e.target.id, '-', 2)
+        let aid = e.target.value
+        let damage = $(`#target-${id[1]}-damage`).text()
+        let result = pf.medicalAid(_.toNumber(damage), aid)
+        let recoveryId = `target-${id[1]}-recovery`
+        $(`#${recoveryId}`).empty().append(result)
+     })
+}
+
+
+
+
