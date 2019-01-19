@@ -103,7 +103,7 @@ export function displayWeapons(character) {
         optionName = 'Knockdown'
         optionValue = gun.KD
       }
-      _.forEach(ammoTypes, ammo => {ammoDiv += `<option value="${ammo}">${ammo}</option>`})
+      _.forEach(ammoTypes, ammoType => {ammoDiv += `<option value="${ammoType}">${ammoType}</option>`})
       ammoDiv += '</select>'
       for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
         let tr = `
@@ -165,6 +165,7 @@ export function displayWeapons(character) {
             <tbody id="weapon-table">${aimTime}</tbody>
           </table>`
         $('#weapons').append(div)
+        $(`#${ammoDropdown}`).val(ammo)
         $(`#${ammoDropdown}`).change(e => {
           let name = $(`#${e.target.id}`).data('gun-name')
           let path = window.localStorage.getItem('firebird-command-current-character')

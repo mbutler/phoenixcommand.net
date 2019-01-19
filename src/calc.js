@@ -26,7 +26,7 @@ export function eal() {
         let snap = Database.currentCharacter()
         snap.then(character => {
             let eal = {}
-            let sal = _.toNumber($('#sal').val())
+            let sal = _.toNumber($('#calc-sal').val())
             let range = _.toNumber($('#range').val())
             let targetSpeed = _.toNumber($('#target-speed').val())
             let shooterSpeed = _.toNumber($('#shooter-speed').val())
@@ -57,6 +57,7 @@ export function eal() {
 }
 
 function displayChanceToHit(weapon, eal) {
+    console.log(eal)
     let shotType = eal.shotType
     let accuracy = pf.effectiveAccuracyLevel(eal)
     let chance = pf.oddsOfHitting(accuracy, shotType)
