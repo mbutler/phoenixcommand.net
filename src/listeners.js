@@ -27,7 +27,7 @@ $('#operation-name-button').click(e => {
   Utils.operationName()
 })
 
-$('#signout').on('mousedown touchstart', () => {
+$('#login').on('click', '#signout', e => {
   Database.auth().signOut().then(() => {
       $('#signoutModal').modal()
       Utils.clearUserDisplay()
