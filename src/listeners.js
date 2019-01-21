@@ -79,7 +79,7 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
     _.forEach(game.content.characters, player => {                
       if (player.name === result) {
         window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
-        $('#sal').val(player.sal)
+        $('#calc-sal').val(player.sal)
         $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
         $(`#position-button .dropdown-toggle`).empty().append(player.position)
         $('#weapon-button .col .dropdown-menu').empty()
