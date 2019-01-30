@@ -1,7 +1,7 @@
 const path = require("path")
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: "./src/index.js",
   performance: {
     hints: process.env.NODE_ENV === 'production' ? "warning" : false

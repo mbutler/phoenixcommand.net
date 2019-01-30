@@ -149,6 +149,11 @@
     float: left;
 }
 
+.weapon-image img {
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin: 10px;
