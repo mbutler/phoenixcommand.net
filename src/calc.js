@@ -7,6 +7,13 @@ export function setUser(user) {
     $('.arc-rows').hide()
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
     $('#uid').val(user.uid)
+    let weaponSnap = Database.weapons()
+    weaponSnap.then(weapons => {
+        $('#weapon-button .col .dropdown-menu').empty()
+        _.forEach(weapons, gun => {
+            $('#weapon-button .col .dropdown-menu').append(`<span class="dropdown-item dropdown-eal">${gun.Name}</span>`)
+        })
+    })    
     let snap = Database.currentGame(user.uid)
     snap.then(game => {
         $('.game-title').text(game.metadata.title)
