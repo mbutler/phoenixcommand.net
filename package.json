@@ -24,8 +24,8 @@
     "chai": "^4.2.0",
     "documentation": "^8.1.2",
     "mocha": "^5.2.0",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14"
   },
   "babel": {
@@ -53,9 +53,9 @@
     ]
   },
   "dependencies": {
-    "firebase": "^5.8.1",
+    "firebase": "^5.8.2",
     "firebaseui": "^3.5.2",
     "lodash": "^4.17.11",
-    "phoenix-functions": "^0.9.35"
+    "phoenix-functions": "^0.9.38"
   }
 }
