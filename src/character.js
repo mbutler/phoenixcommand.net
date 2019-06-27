@@ -4,6 +4,8 @@ import * as Game from './game'
 import * as Database from './database'
 import * as pf from 'phoenix-functions'
 
+console.log(pf.getWeaponByName("FN Mk 1"))
+
 export function displayCharacterSheet(characterName) {
   let snap = Database.currentGame()
   snap.then(game => {
