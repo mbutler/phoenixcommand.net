@@ -58,12 +58,6 @@ export async function currentCharacter(characterPath) {
     return character[0].val()
 }
 
-export async function weapons() {
-    let weaponRef = firebase.database().ref('weapons').once('value')
-    let weapons = await Promise.all([weaponRef])
-    return weapons[0].val()
-}
-
 export function ref(path) {
     return firebase.database().ref(path)
 }

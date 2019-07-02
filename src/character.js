@@ -4,8 +4,6 @@ import * as Game from './game'
 import * as Database from './database'
 import * as pf from 'phoenix-functions'
 
-console.log(pf.getWeaponByName("FN Mk 1"))
-
 export function displayCharacterSheet(characterName) {
   let snap = Database.currentGame()
   snap.then(game => {
@@ -66,10 +64,8 @@ export function displayCharacterCreation() {
   let snap = Database.currentGame()
   snap.then(game => {
     $('.game-title').empty().append(`<a href='game.html'>${game.metadata.title}</a>`)
-  })
-
-  let weaponSnap = Database.weapons()
-  weaponSnap.then(weapons => {
+  })  
+    let weapons = pf.getAllWeapons()
     let weaponKeys = _.keys(weapons)
     _.forEach(weaponKeys, gun => {
       $('#weapon-checkboxes').append(`
@@ -82,12 +78,11 @@ export function displayCharacterCreation() {
           </label>
       </div>`)
     })
-  })
+  
 }
 
-export function displayWeapons(character) {
-  let snap = Database.weapons()
-  snap.then(databaseWeapons => {
+export function displayWeapons(character) {  
+    let databaseWeapons = pf.getAllWeapons()
     _.forEach(character.weapons, weapon => {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
       let ammoDropdown = _.kebabCase(gun.Name)
@@ -177,7 +172,7 @@ export function displayWeapons(character) {
           Database.set(ammoPath, result)
         })
     })
-  })
+  
 }
 
 export function submitCharacter() {
