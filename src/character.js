@@ -102,16 +102,19 @@ export function displayWeapons(character) {
       }
       _.forEach(ammoTypes, ammoType => {ammoDiv += `<option value="${ammoType}">${ammoType}</option>`})
       ammoDiv += '</select>'
-      for (let i = 1; i <= gun['Aim Time'].length-1; i++) {
+      let gunKeys = _.keys(gun['Aim Time'])
+      _.forEach(gunKeys, aim => {
+        console.log(gun['Aim Time'][aim])
         let tr = `
             <tr>
-                <td class="text-center">${i}</td>
-                <td id="aim-time-mod-${i}" class="text-center">${gun['Aim Time'][i]}</td>
-                <td id="shot-accuracy-${i}" class="text-center">${gun['Aim Time'][i] + character.sal}</td>
+                <td class="text-center">${aim}</td>
+                <td id="aim-time-mod-${aim}" class="text-center">${gun['Aim Time'][aim]}</td>
+                <td id="shot-accuracy-${aim}" class="text-center">${gun['Aim Time'][aim] + character.sal}</td>
             </tr>
         `
           aimTime += tr
-      }
+      })
+
       let div = `<div class="row">
         <div id="weapon-name"class="col-xs-8"><h4><strong>${gun.Name}</strong></h4></div>
           </div>
