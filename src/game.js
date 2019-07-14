@@ -11,7 +11,6 @@ export function displayGame(user) {
     let gameRef = Database.ref('users/' + gameId)
     gameRef.on('value', data => {
       let game = data.val()
-      Timer.run(game.metadata.gameId)
       let userReady = game.metadata.readyPlayers[user.uid]
       toggleUserReady(userReady)
       checkReadyPlayers(game.metadata)
@@ -58,6 +57,10 @@ export function nextImpulse() {
     })   
     let next = pf.nextImpulse(time)
     Database.set('users/' + path + '/content/time', next)
+    let ref = Database.ref('users/' + path + '/content/time')
+    ref.once('value', snapshot => {
+      Timer.run(path)
+    })
     //Utils.modal('Phoenix Command', 'Next Impulse!')
   })
 }

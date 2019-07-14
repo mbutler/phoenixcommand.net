@@ -71,7 +71,6 @@ export function push(path, value) {
 }
 
 export function remove(path, key) {
-    console.log(path)
     let ref = firebase.database().ref(path + key)
     ref.remove()
 }

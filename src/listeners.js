@@ -143,6 +143,7 @@ $('#timer-time-button').click(e => {
   let phase = $('#timer-phase-input').val()
   phase = _.toNumber(phase)
   let impulse = $('#timer-impulse-input').val()
+  impulse = _.toNumber(impulse)
   let snap = Database.currentGame()
   snap.then(game => {    
     let action = Timer.actionTemplate()

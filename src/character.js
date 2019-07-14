@@ -104,7 +104,7 @@ export function displayWeapons(character) {
       ammoDiv += '</select>'
       let gunKeys = _.keys(gun['Aim Time'])
       _.forEach(gunKeys, aim => {
-        console.log(gun['Aim Time'][aim])
+
         let tr = `
             <tr>
                 <td class="text-center">${aim}</td>
