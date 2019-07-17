@@ -59,6 +59,9 @@
 .navbar {
     background: rgba(0, 0, 0, 0.5) 
 }
+.nav-section {
+    padding-left: 10px;
+}
 .card .card-header {
     padding: 0px;
 }

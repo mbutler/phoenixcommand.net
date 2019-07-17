@@ -81,8 +81,10 @@ export function navList(user) {
   let adminRef = Database.ref('users/' + user.uid + '/adminOf')
   let memberRef = Database.ref('users/' + user.uid + '/memberOf').orderByKey()
   
+  $('#game-dropdown').empty()
+  
   adminRef.once('value').then(snapshot => {
-    $('#game-dropdown').empty()
+    $('#game-dropdown').append('<div class="nav-section"><strong>Admin of:</strong></div>')   
     snapshot.forEach(childSnapshot => {
       let game = childSnapshot.val()
       $('#game-dropdown').append(`<a class="dropdown-item" data-uid="${user.uid}" data-gameid="${game.gameId}" href="#">${game.name}</a>`)
@@ -91,8 +93,8 @@ export function navList(user) {
 
   memberRef.once('value').then(snapshot => {
     if (snapshot.val()) {
-      $('#game-dropdown').empty()
       $('#game-dropdown').append(`<div class="dropdown-divider"></div>`)
+      $('#game-dropdown').append('<div class="nav-section"><strong>Member of:</strong></div>')
       snapshot.forEach(childSnapshot => {
         let gameId = childSnapshot.key
         let game = childSnapshot.val()
