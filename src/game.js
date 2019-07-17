@@ -112,8 +112,8 @@ export function addPlayers(user, gameId, players, gameName) {
       if (person === '') {person = 'blank'}
       if (snapshot.hasChild(person) === true) {
         Database.set('users/' + user.uid + '/games/' + gameId + '/users/' + person, users[person])
-        Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + person, false).set(false)
-        Database.push('users/' + person + '/memberOf/', {gameId: user.uid + '/games/' + gameId, name: gameName})
+        Database.set('users/' + user.uid + '/games/' + gameId + '/metadata/readyPlayers/' + person, false)
+        Database.set('users/' + person + '/memberOf/', {gameId: user.uid + '/games/' + gameId, name: gameName})
       } else {
         //alert('players intentionally left ' + person)
       }
