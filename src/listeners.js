@@ -186,7 +186,6 @@ $('#timer-duration-button').click(e => {
     Timer.add(action)
     Utils.modal('Phoenix Command', `Timer set for Phase: ${futurePhase}, Impulse: ${impulse}`)
   })
-
 })
 
 $('#timer-duration-incapacitation-time').change(e => {

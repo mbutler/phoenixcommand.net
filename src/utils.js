@@ -1,5 +1,6 @@
 import {codenames} from './codenames'
 import {mission} from './operations'
+import * as Database from './database'
 
 export function selectedCheckboxes(boxes) {
   let selected = []
@@ -99,7 +100,7 @@ export function getGamePath() {
   return gamePath
 }
 
-export function modal(title, msg, buttons) {
+export function modal(title, msg) {
   $('.modal').modal('hide')
   let rand = Math.random().toString(36).substring(7)
   let div = `<div class="modal fade" id="${rand}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -123,4 +124,35 @@ export function modal(title, msg, buttons) {
   
   $('#modal-holder').append(div)
   $(`#${rand}`).modal()
+}
+
+export function deleteModal(title, msg, path, key) {
+  $('.modal').modal('hide')
+  let rand = Math.random().toString(36).substring(7)
+  let div = `<div class="modal fade" id="${rand}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">${title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="" class="modal-body">
+                <h3>${msg}</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+  </div>`
+  
+  $('#modal-holder').append(div)
+  $(`#${rand}`).modal()
+
+  $('.btn-primary').click(e => {
+    Database.remove(path, key)
+  })
 }

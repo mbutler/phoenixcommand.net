@@ -19,13 +19,23 @@ export function displayGame(user) {
       $('.game-title').text(game.metadata.title)      
       $('#user-table tbody').empty()
       _.forEach(User.getUserCharacters(game), player => {
-        let link = ''                  
-        if (user.uid === player.userId) {
+        let link = ''
+        let trash = ''               
+        if (user.uid === player.userId && player.characterId !== '') {
           link = `<a href='character.html?c=${player.characterName}'>${player.characterName}</a>`
+          trash = `<i id="0${player.characterId}" class="fa fa-trash" data-uid="${user.uid}" data-gameid="${gameId}" data-characterid="${player.characterId}" aria-hidden="true"></i>`
         } else {
           link = `${player.characterName}`
+          trash = ''
         }
-        $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td></tr>`)
+        $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td><td>${trash}</td></tr>`)
+        $(`#0${player.characterId}`).click(e => {
+          e.preventDefault()
+          let characterId = $(e.target).data('characterid')
+          let gameId = $(e.target).data('gameid')
+          let characterPath = `users/${gameId}/content/characters/`
+          Utils.deleteModal('Phoenix Command', 'Delete Character?', characterPath, characterId)
+        })
       })
       $('.timestamp').empty().append('created: '+moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))               
     })
