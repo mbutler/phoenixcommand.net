@@ -1,6 +1,7 @@
 .material-icons {
     margin-right: 5px;
 }
+
 #nav-logo {
     color: black;
 }
@@ -19,6 +20,10 @@
     margin: 0.5rem 0;
     overflow: hidden;
     border-top: 1px solid black;
+}
+
+.table-group {
+    padding-top: 120px;
 }
 
 .responsive {
