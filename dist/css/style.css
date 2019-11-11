@@ -22,8 +22,26 @@
 }
 
 .responsive {
-    width: 100%;
-  height: auto;
+    width: 80%;
+    height: auto;
+    margin-top: 100px;
+}
+
+h2.title {
+    margin: 0px;
+}
+
+h6.subtitle {
+    margin: 0px;
+}
+
+figcaption {
+    font-size: 10px;
+    margin-bottom: 20px;;
+}
+
+#example {
+    padding-top: 75px;
 }
 
 #game-dropdown {
