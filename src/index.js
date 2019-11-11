@@ -6,6 +6,7 @@ import * as User from './user'
 import * as Character from './character'
 import * as Calc from './calc'
 import * as Timer from './timer'
+import * as pf from 'phoenix-functions'
 import './listeners'
 
 Database.auth().onAuthStateChanged(user => {
@@ -52,3 +53,5 @@ function route(user) {
     Timer.setUser(user)
   }
 }
+
+window.pfTables = pf.getAllTables()
