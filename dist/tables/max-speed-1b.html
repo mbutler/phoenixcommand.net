@@ -63,34 +63,24 @@
       <div class="main">
          <div class="container">
             <div class="table-group">
-               <h2>Base Speed / 1A</h2>
+               <h2>Max Speed / 1B</h2>
                <h6 class="subtitle"><a href="index.html">List of Tables</a></h6>
-               <table id="base-speed-1a" class="display compact">
+               <table id="max-speed-1b" class="display compact">
                   <thead>
                      <tr>
-                        <th colspan="1">Strength</th>
-                        <th colspan="18">Encumbrance</th>
+                        <th colspan="1">Agility</th>
+                        <th colspan="8">Base Speed</th>
                      </tr>
                      <tr>
-                        <th>STR</th>
-                        <th>10</th>
-                        <th>15</th>
-                        <th>20</th>
-                        <th>25</th>
-                        <th>30</th>
-                        <th>35</th>
-                        <th>40</th>
-                        <th>45</th>
-                        <th>50</th>
-                        <th>55</th>
-                        <th>60</th>
-                        <th>70</th>
-                        <th>80</th>
-                        <th>90</th>
-                        <th>100</th>
-                        <th>125</th>
-                        <th>150</th>
-                        <th>200</th>
+                        <th>AGI</th>
+                        <th>1</th>
+                        <th>1.5</th>
+                        <th>2</th>
+                        <th>2.5</th>
+                        <th>3</th>
+                        <th>3.5</th>
+                        <th>4</th>
+                        <th>4.5</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -160,31 +150,33 @@
       <script src="../js/material-kit.js?v=2.0.5" type="text/javascript"></script>
       <script src="../js/bundle.js" type="text/javascript"></script>
       <script>
-         let data = window.pfTables.baseSpeed_1A
-         $('#base-speed-1a').DataTable( {
+         let data = window.pfTables.maxSpeed_1B
+         console.log(data)
+         $('#max-speed-1b').DataTable( {
          "order": [[ 0, "desc" ]],
          paging: false,
          data: data,
          columns: [
-          { data: 'STR' },
-          { data: '10' },
-          { data: '15' },
-          { data: '20' },
-          { data: '25' },
-          { data: '30' },
-          { data: '35' },
-          { data: '40' },
-          { data: '45' },
-          { data: '50' },
-          { data: '55' },
-          { data: '60' },
-          { data: '70' },
-          { data: '80' },
-          { data: '90' },
-          { data: '100' },
-          { data: '125' },
-          { data: '150' },
-          { data: '200' },
+          { data: 'AGI' },
+          { data: 1 },
+          { data: 1.5 },
+          { data: 2 },
+          { data: 2.5 },
+          { data: 3 },
+          { data: 3.5 },
+          { data: 4 },
+          { data: 4.5 }
+         ],
+         "columnDefs": [
+            { "width": "11%", "targets": 0 },
+            { "width": "11%", "targets": 1 },
+            { "width": "11%", "targets": 2 },
+            { "width": "11%", "targets": 3 },
+            { "width": "11%", "targets": 4 },
+            { "width": "11%", "targets": 5 },
+            { "width": "11%", "targets": 6 },
+            { "width": "11%", "targets": 7 },
+            { "width": "11%", "targets": 8 },
          ]
          } )
       </script>
