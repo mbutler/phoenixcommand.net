@@ -61,6 +61,12 @@ export function setShotType(gunType) {
     $('#explosive-eal').hide()      
   }
 
+  if (gunType === 'Machine Gun') {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
+    $('#shotgun-eal').hide()
+    $('#explosive-eal').hide()      
+  }
+
   if (gunType === 'Shotgun') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Shotgun')
     $('#single-shot-eal').hide()
