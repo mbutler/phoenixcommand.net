@@ -1,0 +1,235 @@
+.material-icons {
+    margin-right: 5px;
+}
+
+#nav-logo {
+    color: black;
+}
+.label {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.form-label {
+    color: #6d6d6d;
+    text-align: left;
+    margin-left: -300px;
+    font-size: 14px;
+}
+.dropdown-divider {
+    height: 0;
+    margin: 0.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid black;
+}
+
+.table-group {
+    padding-top: 120px;
+}
+
+.responsive {
+    width: 80%;
+    height: auto;
+    margin-top: 100px;
+}
+
+.container img {
+    width: 100%;
+}
+
+h2.title {
+    margin: 0px;
+}
+
+h6.subtitle {
+    margin: 0px;
+}
+
+figcaption {
+    font-size: 10px;
+    margin-bottom: 20px;;
+}
+
+#example {
+    padding-top: 75px;
+}
+
+#game-dropdown {
+   height: auto;
+   padding-bottom: 0px;
+}
+#account-section {
+    margin-top: 20px;
+}
+.game-section {
+    margin-top: -20px;
+    padding-bottom: 0px;
+}
+.game-section h5 {
+    margin-left: 20px;
+}
+.white-input {
+    background-color: white;
+}
+#timer-time-table {
+    margin-top: 15px;
+}
+#timer-time-table thead {
+    border-color: white;
+    border: none;
+}
+#timer-duration-table {
+    margin-top: 15px;
+}
+.header-filter::before {
+    background: rgba(0, 0, 0, 0);
+}
+.navbar {
+    background: rgba(0, 0, 0, 0.5) 
+}
+.nav-section {
+    padding-left: 10px;
+}
+.card .card-header {
+    padding: 0px;
+}
+.card-header {
+    padding: 0px;
+}
+.color-row {
+    background-color: aliceblue;
+}
+
+#damage-table td {
+    display:table-cell;
+    vertical-align:middle;
+}
+
+#weapon-name h4 {
+    margin: 0px;
+}
+
+#disabling-injuries {
+    padding: 1px;
+    margin-left: 20px;
+    margin-bottom: 2px;
+    background-color: #9c27b0;
+    color: white;
+}
+
+.drop-sm {
+    padding: 1px !important;
+    background-color: transparent !important;
+    color: black !important;
+    text-transform: none !important;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    font-weight: 300 !important;
+    line-height: 1.5em !important;
+    font-size: 14px !important;
+}
+
+.dropdown-item-charactersheet {
+    padding: 1px !important;
+}
+
+.dropleft {
+    margin: 0px;
+}
+
+#skill-level h6 {
+    margin: 0px;
+}
+
+#new-character-button {
+    margin-top: 30px;
+}
+#character-name h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#fire-button {
+    margin-top: 40px;
+}
+
+.target-armor-select {
+    margin-left: 20%;
+    background: none !important;
+    border: none !important;
+}
+
+.selectpicker {
+    padding: 0px !important;
+    margin: 0px !important;
+    border: none !important;
+    height: 100% !important;
+    box-shadow: 0px !important;
+}
+
+#physical-damage {
+    background-color: aliceblue;
+    height: 100%;
+    padding: 0px;
+}
+
+#next-impulse-button {
+    margin: 10%;
+}
+
+#ammo-type {
+    width: 60%;
+    float: right;
+}
+
+#calc-sal {
+    width: 30%;
+    float: left;
+}
+
+.weapon-image img {
+    width: 100%;
+    height: 100%;
+}
+
+.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+.videoWrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100% important!;
+	height: 100% important!;
+}
+
+@media (max-width: 991px) {
+    #new-character-button {
+        margin: 10px;
+    }
+}
+
+@media (min-width: 992px) {
+    #new-character-button {
+        margin: 10px;
+    }
+    #character-name h3 {
+        margin-top: 30px;
+        margin-bottom: 0px;
+    }
+    #calc-character-name {
+        margin-top: 30px;
+        margin-bottom: 0px;
+    }
+    #timer-top {
+        margin-top: 20px;
+    }
+    #timer-character-name {
+        margin-top: 10px;
+        margin-bottom: 0px;
+    }
+    #time {
+        margin-top: 20px;
+    }
+}

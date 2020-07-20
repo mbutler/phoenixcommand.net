@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Phoenix Command</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <!-- Material Kit CSS -->
+    <link href="css/material-kit.css?v=2.0.5" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="main">
+        <div class="container">
+            <div class="section">
+                <h4 class="game-title text-center"></h4>
+                <form id="gun-form" class="submission-form">
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="type">Type</label>
+                            <select class="form-control selectpicker" data-style="btn btn-link" id="armor">
+                                <option value="Assault Rifle">Assault Rifle</option>
+                                <option value="Sub-Machinegun">Sub-Machinegun</option>
+                                <option value="Machine Gun">Machine Gun</option>
+                                <option value="Pistol">Pistol</option>
+                                <option value="Shotgun">Shotgun</option>
+                                <option value="Explosive">Explosive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="description">Description</label>
+                            <input type="text" class="form-control" id="description">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="length">L</label>
+                            <input type="text" class="form-control" id="length">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="weight">W</label>
+                            <input type="number" class="form-control" id="weight">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="reload-time">RT</label>
+                            <input type="number" class="form-control" id="reload-time">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="rate-of-fire">ROF</label>
+                            <input type="number" class="form-control" id="rate-of-fire">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="cap">Cap</label>
+                            <input type="number" class="form-control" id="cap">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="ammo-weight">AW</label>
+                            <input type="text" class="form-control" id="ammo-weight">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="knockdown">KD</label>
+                            <input type="number" class="form-control" id="knockdown">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="sustained-auto-burst">SAB</label>
+                            <input type="number" class="form-control" id="sustained-auto-burst">
+                        </div>
+                    </div>
+                    <h3>Aim Time</h3>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="aim-1">1</label>
+                            <input type="number" class="form-control" id="aim-1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-2">2</label>
+                            <input type="number" class="form-control" id="aim-2">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-3">3</label>
+                            <input type="number" class="form-control" id="aim-3">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-4">4</label>
+                            <input type="number" class="form-control" id="aim-4">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-5">5</label>
+                            <input type="number" class="form-control" id="aim-5">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-6">6</label>
+                            <input type="number" class="form-control" id="aim-6">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-7">7</label>
+                            <input type="number" class="form-control" id="aim-7">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-8">8</label>
+                            <input type="number" class="form-control" id="aim-8">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-9">9</label>
+                            <input type="number" class="form-control" id="aim-9">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-10">10</label>
+                            <input type="number" class="form-control" id="aim-10">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-11">11</label>
+                            <input type="number" class="form-control" id="aim-11">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-12">12</label>
+                            <input type="number" class="form-control" id="aim-12">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-13">13</label>
+                            <input type="number" class="form-control" id="aim-13">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-14">14</label>
+                            <input type="number" class="form-control" id="aim-14">
+                        </div>
+                    </div>
+                    <h3>Ballistics Data</h3>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>Range:</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>10</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>20</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>40</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>70</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>100</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>200</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>300</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <span>400</span>
+                        </div>                        
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>FMJ PEN</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-10"></label>
+                            <input type="number" class="form-control" id="fmj-pen-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-20"></label>
+                            <input type="number" class="form-control" id="fmj-pen-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-40"></label>
+                            <input type="number" class="form-control" id="fmj-pen-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-70"></label>
+                            <input type="number" class="form-control" id="fmj-pen-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-100"></label>
+                            <input type="number" class="form-control" id="fmj-pen-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-200"></label>
+                            <input type="number" class="form-control" id="fmj-pen-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-300"></label>
+                            <input type="number" class="form-control" id="fmj-pen-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-pen-400"></label>
+                            <input type="number" class="form-control" id="fmj-pen-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>DC</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-10"></label>
+                            <input type="number" class="form-control" id="fmj-dc-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-20"></label>
+                            <input type="number" class="form-control" id="fmj-dc-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-40"></label>
+                            <input type="number" class="form-control" id="fmj-dc-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-70"></label>
+                            <input type="number" class="form-control" id="fmj-dc-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-100"></label>
+                            <input type="number" class="form-control" id="fmj-dc-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-200"></label>
+                            <input type="number" class="form-control" id="fmj-dc-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-300"></label>
+                            <input type="number" class="form-control" id="fmj-dc-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="fmj-dc-400"></label>
+                            <input type="number" class="form-control" id="fmj-dc-400">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>JHP PEN</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-10"></label>
+                            <input type="number" class="form-control" id="jhp-pen-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-20"></label>
+                            <input type="number" class="form-control" id="jhp-pen-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-40"></label>
+                            <input type="number" class="form-control" id="jhp-pen-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-70"></label>
+                            <input type="number" class="form-control" id="jhp-pen-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-100"></label>
+                            <input type="number" class="form-control" id="jhp-pen-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-200"></label>
+                            <input type="number" class="form-control" id="jhp-pen-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-300"></label>
+                            <input type="number" class="form-control" id="jhp-pen-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-pen-400"></label>
+                            <input type="number" class="form-control" id="jhp-pen-400">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>DC</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-10"></label>
+                            <input type="number" class="form-control" id="jhp-dc-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-20"></label>
+                            <input type="number" class="form-control" id="jhp-dc-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-40"></label>
+                            <input type="number" class="form-control" id="jhp-dc-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-70"></label>
+                            <input type="number" class="form-control" id="jhp-dc-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-100"></label>
+                            <input type="number" class="form-control" id="jhp-dc-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-200"></label>
+                            <input type="number" class="form-control" id="jhp-dc-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-300"></label>
+                            <input type="number" class="form-control" id="jhp-dc-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="jhp-dc-400"></label>
+                            <input type="number" class="form-control" id="jhp-dc-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>AP PEN</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-10"></label>
+                            <input type="number" class="form-control" id="ap-pen-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-20"></label>
+                            <input type="number" class="form-control" id="ap-pen-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-40"></label>
+                            <input type="number" class="form-control" id="ap-pen-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-70"></label>
+                            <input type="number" class="form-control" id="ap-pen-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-100"></label>
+                            <input type="number" class="form-control" id="ap-pen-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-200"></label>
+                            <input type="number" class="form-control" id="ap-pen-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-300"></label>
+                            <input type="number" class="form-control" id="ap-pen-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-pen-400"></label>
+                            <input type="number" class="form-control" id="ap-pen-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>DC</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-10"></label>
+                            <input type="number" class="form-control" id="ap-dc-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-20"></label>
+                            <input type="number" class="form-control" id="ap-dc-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-40"></label>
+                            <input type="number" class="form-control" id="ap-dc-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-70"></label>
+                            <input type="number" class="form-control" id="ap-dc-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-100"></label>
+                            <input type="number" class="form-control" id="ap-dc-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-200"></label>
+                            <input type="number" class="form-control" id="ap-dc-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-300"></label>
+                            <input type="number" class="form-control" id="ap-dc-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ap-dc-400"></label>
+                            <input type="number" class="form-control" id="ap-dc-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>MA</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-10"></label>
+                            <input type="number" class="form-control" id="ma-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-20"></label>
+                            <input type="number" class="form-control" id="ma-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-40"></label>
+                            <input type="number" class="form-control" id="ma-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-70"></label>
+                            <input type="number" class="form-control" id="ma-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-100"></label>
+                            <input type="number" class="form-control" id="ma-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-200"></label>
+                            <input type="number" class="form-control" id="ma-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-300"></label>
+                            <input type="number" class="form-control" id="ma-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ma-400"></label>
+                            <input type="number" class="form-control" id="ma-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>BA</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-10"></label>
+                            <input type="number" class="form-control" id="ba-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-20"></label>
+                            <input type="number" class="form-control" id="ba-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-40"></label>
+                            <input type="number" class="form-control" id="ba-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-70"></label>
+                            <input type="number" class="form-control" id="ba-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-100"></label>
+                            <input type="number" class="form-control" id="ba-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-200"></label>
+                            <input type="number" class="form-control" id="ba-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-300"></label>
+                            <input type="number" class="form-control" id="ba-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="ba-400"></label>
+                            <input type="number" class="form-control" id="ba-400">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <span>TOF</span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-10"></label>
+                            <input type="number" class="form-control" id="tof-10">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-20"></label>
+                            <input type="number" class="form-control" id="tof-20">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-40"></label>
+                            <input type="number" class="form-control" id="tof-40">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-70"></label>
+                            <input type="number" class="form-control" id="tof-70">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-100"></label>
+                            <input type="number" class="form-control" id="tof-100">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-200"></label>
+                            <input type="number" class="form-control" id="tof-200">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-300"></label>
+                            <input type="number" class="form-control" id="tof-300">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="tof-400"></label>
+                            <input type="number" class="form-control" id="tof-400">
+                        </div>
+                    </div>
+                   
+                    <button id="gun-submit-button" type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="js/core/popper.min.js" type="text/javascript"></script>
+    <script src="js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/BrowserFS/2.0.0/browserfs.js" integrity="sha512-3n3LJuXN2CDTF/87biXx288uEtlZpSCnhw9UGWwU1fReJCqM8vqzbMHHptgh6CCAZg+KSYVciVkivW5twgqpfA==" crossorigin="anonymous"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+    <script src="js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+</body>
+
+</html>
