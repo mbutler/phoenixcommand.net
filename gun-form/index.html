@@ -32,7 +32,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-2">
                             <label for="type">Type</label>
-                            <select class="form-control selectpicker" data-style="btn btn-link" id="armor">
+                            <select class="form-control selectpicker" data-style="btn btn-link" id="type">
                                 <option value="Assault Rifle">Assault Rifle</option>
                                 <option value="Sub-Machinegun">Sub-Machinegun</option>
                                 <option value="Machine Gun">Machine Gun</option>
@@ -143,6 +143,14 @@
                         <div class="form-group col-md-2">
                             <label for="aim-14">14</label>
                             <input type="number" class="form-control" id="aim-14">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-15">15</label>
+                            <input type="number" class="form-control" id="aim-15">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="aim-16">16</label>
+                            <input type="number" class="form-control" id="aim-16">
                         </div>
                     </div>
                     <h3>Ballistics Data</h3>
@@ -514,6 +522,12 @@
                    
                     <button id="gun-submit-button" type="submit" class="btn btn-primary">Create</button>
                 </form>
+                <div class="form-row">
+                    <div class="form-group col-md-12 purple-border">
+                        <label for="output">Output</label>
+                        <textarea class="form-control" id="output" rows="10"></textarea>
+                      </div>
+                </div>
             </div>
         </div>
     </div>

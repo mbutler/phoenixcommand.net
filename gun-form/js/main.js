@@ -157,12 +157,14 @@ function createGun() {
 
     gun["Aim Time"] = aimTime()
 
+    $("#output").val(JSON.stringify(gun))
+
     console.log(JSON.stringify(gun));
 }
 
 function aimTime() {
     let aimTime = {}
-    for (let i = 1; i <= 14; i++) {
+    for (let i = 1; i <= 16; i++) {
         let item = "#aim-" + i
         let current = $(`${item}`).val()
         if (current !== "") {
