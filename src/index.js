@@ -55,3 +55,4 @@ function route(user) {
 }
 
 window.pfTables = pf.getAllTables()
+window.pfWeapons = pf.getAllWeapons()

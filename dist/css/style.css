@@ -204,6 +204,14 @@ figcaption {
 	height: 100% important!;
 }
 
+.guns-list {
+    margin-top: 100px;
+}
+
+.guns-list img {
+    width: 40%;
+}
+
 @media (max-width: 991px) {
     #new-character-button {
         margin: 10px;
@@ -231,5 +239,8 @@ figcaption {
     }
     #time {
         margin-top: 20px;
+    }
+    #.uns-list {
+        margin-top: 50px;
     }
 }
