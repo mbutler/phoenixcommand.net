@@ -166,7 +166,7 @@ function aimTime() {
         let item = "#aim-" + i
         let current = $(`${item}`).val()
         if (current !== "") {
-            aimTime[i] = current
+            aimTime[i] = Number(current)
         }
     }
 
