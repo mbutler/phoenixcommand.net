@@ -219,6 +219,7 @@ function fireSingleShot(weapon, chance) {
 function fireShotgun(ammoType, range, weapon, chance) {
     let result = ''
     let bphc
+    let rof = weapon['ROF']
     if (ammoType === 'Shot') {
         bphc = weapon[range][ammoType]['BPHC']
     }

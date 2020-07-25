@@ -87,7 +87,7 @@ export function displayWeapons(character) {
       let gun = _.find(databaseWeapons, o => {return o.Name === weapon})
       let ammoDropdown = _.kebabCase(gun.Name)
       let ammoTypes = pf.getAmmoTypes(gun.Name)
-      let ammoDiv = `<select dir="rtl" id="${ammoDropdown}" data-gun-name="${gun.Name}" class="form-control selectpicker ammo-picker" data-style="btn btn-link">`
+      let ammoDiv = `<select dir="rtl" id="${ammoDropdown}" class="form-control selectpicker ammo-picker" data-style="btn btn-link">`
       let ammo = character['ammo'][gun.Name]['type']
       let rounds = character['ammo'][gun.Name]['loaded']
       let aimTime = ''
@@ -121,7 +121,7 @@ export function displayWeapons(character) {
           <div class="row weapon-image"><image src="${gun.Image}"></div>
           <div class="row color-row">
             <div class="col-xs-8"><strong>Rounds Loaded</strong></div>
-            <div id="reload-time" class="col-xs-4 ml-auto">${rounds}</div>
+            <div id="rounds-loaded-${ammoDropdown}" class="col-xs-4 ml-auto">${rounds}</div>
           </div>
           <div class="row">
               <div class="col-xs-7"><strong>Ammo Type</strong></div>
@@ -134,6 +134,10 @@ export function displayWeapons(character) {
           <div class="row color-row">
             <div class="col-xs-8"><strong>Reload Time</strong></div>
             <div id="reload-time" class="col-xs-4 ml-auto">${gun.RT}</div>
+          </div>
+          <div class="row color-row">
+            <div class="col-xs-8"></div>
+            <div class="col-xs-4 ml-auto"><button id="reload-${ammoDropdown}" class="btn btn-primary btn-sm">Reload Now</button></div>
           </div>
           <div class="row">
             <div class="col-xs-8"><strong>Rate of Fire</strong></div>
@@ -168,11 +172,19 @@ export function displayWeapons(character) {
         $('#weapons').append(div)
         $(`#${ammoDropdown}`).val(ammo)
         $(`#${ammoDropdown}`).change(e => {
-          let name = $(`#${e.target.id}`).data('gun-name')
+          let name = gun.Name
           let path = window.localStorage.getItem('firebird-command-current-character')
           let result = e.target.value
           let ammoPath = path + '/ammo/' + name + '/type/'
           Database.set(ammoPath, result)
+        })
+        $(`#reload-${ammoDropdown}`).click(e => {
+          let cap = gun.Cap
+          let name = gun.Name
+          let path = window.localStorage.getItem('firebird-command-current-character')
+          let ammoPath = path + '/ammo/' + name + '/loaded/'
+          Database.set(ammoPath, cap)
+          $(`#rounds-loaded-${ammoDropdown}`).html(cap)
         })
     })
   
