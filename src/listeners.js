@@ -112,29 +112,32 @@ $("#timer-character-name").on('click', '.dropdown-timer', e => {
 })
 
 $('#timer-combat-action-button').click(e => {
-  e.preventDefault()  
-  let capi = {}
-  capi['1'] = _.toNumber($('#impulse1').html())
-  capi['2'] = _.toNumber($('#impulse2').html())
-  capi['3'] = _.toNumber($('#impulse3').html())
-  capi['4'] = _.toNumber($('#impulse4').html())
-  let msg = $('#timer-combat-action-message').val()
-  let ca  = _.toNumber($('#timer-combat-actions').val())
-
-  let snap = Database.currentGame()
-  snap.then(game => {    
-    let action = Timer.actionTemplate()
-    action.runTime = pf.calculateActionTime(ca, capi, game.content.time, 0)   
-    action.setTime = game.content.time
-    action.gameId = game.metadata.gameId
-    action.message = msg
-    action.function = ''
-    action.parameters = []
-    action.userList = []
-    Timer.add(action)
-    Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
-  })
-
+  if ($('#timer-character-name .dropdown-toggle').html() !== "Import Character") {
+    e.preventDefault()  
+    let capi = {}
+    capi['1'] = _.toNumber($('#impulse1').html())
+    capi['2'] = _.toNumber($('#impulse2').html())
+    capi['3'] = _.toNumber($('#impulse3').html())
+    capi['4'] = _.toNumber($('#impulse4').html())
+    let msg = $('#timer-combat-action-message').val()
+    let ca  = _.toNumber($('#timer-combat-actions').val())
+  
+    let snap = Database.currentGame()
+    snap.then(game => {    
+      let action = Timer.actionTemplate()
+      action.runTime = pf.calculateActionTime(ca, capi, game.content.time, 0)   
+      action.setTime = game.content.time
+      action.gameId = game.metadata.gameId
+      action.message = msg
+      action.function = ''
+      action.parameters = []
+      action.userList = []
+      Timer.add(action)
+      Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
+    })
+  } else {
+    Utils.modal("Phoenix Command", "Please Import a character")
+  }
 })
 
 $('#timer-time-button').click(e => {

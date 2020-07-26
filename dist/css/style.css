@@ -259,6 +259,16 @@ figcaption {
 }
 
 @media (min-width: 320px) and (max-width: 991px) {
+    .card-text {
+        margin-left: 20px;
+    }
+    #timer-character-name {
+        margin-top: 10px;
+        margin-bottom: 0px;
+    }
+    #timer-character-name a {
+        color: white;
+    }
     .timer-container {
         padding-top: 120px;
     }
