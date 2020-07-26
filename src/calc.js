@@ -28,7 +28,7 @@ export function setUser(user) {
 
 export function eal() {
     if ($('#range').val() === '' || $('#aim-time').val() === '' || $(`#weapon-button .dropdown-toggle`).html() === 'Weapon') {
-        alert("Weapon, Range, and Aim Time are required values.")
+        Utils.modal("Phoenix Command", "Weapon, Range, and Aim Time are required values.")
     } else {
         let snap = Database.currentCharacter()
         snap.then(character => {
@@ -108,7 +108,7 @@ function burstHandler(weapon, eal, accuracy, chance) {
         if (targets > 0 && arc > 0) {
             fireBurst(weapon, targets, arc, chance)                
         } else {
-            alert('Arc and number of targets required.')
+            Utils.modal("Phoenix Command", 'Arc and number of targets required.')
         }     
     })    
 }
@@ -188,11 +188,11 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
-                alert(result)
+                Utils.modal("Phoenix Command", result)
             }
         } else {
             result = 'Not enough ammo loaded for burst mode.'
-            alert(result)
+            Utils.modal("Phoenix Command", result)
         }
     })    
 }
@@ -211,7 +211,7 @@ function fireSingleShot(weapon, chance) {
             displayTargets(result, weapon, ammoType)
         } else {
             result = 'Out of ammo.'
-            alert(result)
+            Utils.modal("Phoenix Command", result)
         }
     })
 }
@@ -237,11 +237,11 @@ function fireShotgun(ammoType, range, weapon, chance) {
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Shotgun blast missed.'
-                alert(result)
+                Utils.modal("Phoenix Command", result)
             }            
         } else {
             result = 'Out of ammo.'
-            alert(result)
+            Utils.modal("Phoenix Command", result)
         }
     })
 }
@@ -273,7 +273,7 @@ function fireExplosive(weapon, ammoType, chance, accuracy) {
             }            
         } else {
             result = 'Out of ammo.'
-            alert(result)
+            Utils.modal("Phoenix Command", result)
         }
     })
 }

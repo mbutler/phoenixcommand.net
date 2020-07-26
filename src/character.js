@@ -54,7 +54,7 @@ export function displayCharacterSheet(characterName) {
         $('#status').empty().append('Incapacitated')
         let statusPath = `users/${game.metadata.gameId}/content/characters/${characterId}/status`
         Database.set(statusPath, 'Incapacitated')
-        alert(`${characterName} incapacitated for ${time}`)
+        Utils.modal("Phoenix Command", `${characterName} incapacitated for ${time}`)
       }
     })
   })
