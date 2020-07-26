@@ -1,211 +1,224 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-    <title>Phoenix Command</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-    <!-- Material Kit CSS -->
-    <link href="css/material-kit.css?v=2.0.5" rel="stylesheet" />
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
-    <link href="css/style.css" rel="stylesheet" />
-</head>
-
-<body>
-    <nav class="navbar fixed-top navbar-expand-lg" color-on-scroll="100">
-        <div class="container">
+   <head>
+      <title>Phoenix Command</title>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <!--     Fonts and icons     -->
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+      <!-- Material Kit CSS -->
+      <link href="css/material-kit.css?v=2.0.5" rel="stylesheet" />
+      <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
+      <link href="css/style.css" rel="stylesheet" />
+   </head>
+   <body>
+      <nav class="navbar fixed-top navbar-expand-lg" color-on-scroll="100">
+         <div class="container">
             <div class="navbar-translate">
-                    <a style="color: black;" class="game-title" class="navbar-brand" href="game.html"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="navbar-toggler-icon"></span>
-                    <span class="navbar-toggler-icon"></span>
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+               <a style="color: black;" class="game-title" class="navbar-brand" href="game.html"></a>
+               <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="navbar-toggler-icon"></span>
+               <span class="navbar-toggler-icon"></span>
+               <span class="navbar-toggler-icon"></span>
+               </button>
             </div>
-
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ml-auto">
-                    <li id="login" class="nav-item">
-                    </li>
-                    <li class="nav-item">
-                        <a href="account.html" class="nav-link" style="color: black;">
-                            <i class="material-icons">new_releases</i> New Game
+               <ul class="navbar-nav ml-auto">
+                  <li id="login" class="nav-item">
+                  </li>
+                  <li class="nav-item">
+                     <a href="account.html" class="nav-link" style="color: black;">
+                     <i class="material-icons">new_releases</i> New Game
+                     </a>
+                  </li>
+                  <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
+                     <div id="game-dropdown" class="dropdown-menu">
+                     </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
+                     <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
+                        <a class="dropdown-item" href="calculator.html">
+                           <svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
+                              <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
+                           </svg>
+                           Calculators
                         </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
-                        <div id="game-dropdown" class="dropdown-menu">
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#0"><i class="material-icons">alarm_add</i> Set Timer</a>
-                            <a class="dropdown-item" href="calculator.html">
-                                <svg class="material-icons" style="width:24px;height:24px" viewBox="0 0 24 24">
-                                    <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
-                                </svg> Calculators</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Log</a>
-                        </div>
-                    </li>
-                </ul>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Log</a>
+                     </div>
+                  </li>
+               </ul>
             </div>
-        </div>
-    </nav>
-
-    <div class="main">
-        <div class="container">
-                <div class="section game-section text-center">                    
-                    <div id="timer-top" class="row color-row">
-                        <h5><strong>Set Timer By <em>Combat Actions</em></strong></h5>
-                    </div>
-                    <div id="timer-character-name" class="row">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Import Character</a>
-                        <div class="dropdown-menu">
+         </div>
+      </nav>
+      <div class="main">
+         <div class="container">
+            <div class="col-md-12 timer-card">
+               <div class="card">
+                  <div class="card-header card-header-text card-header-primary">
+                     <div class="card-text">
+                        <h5 class="card-title"><strong>Set Timer By <em>Combat Actions</em></strong></h5>
+                        <div id="timer-character-name" class="row">
+                           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Import Character</a>
+                           <div class="dropdown-menu">
+                           </div>
                         </div>
-                    </div>
-                </div>
-                <table class="table table-condensed table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>impulse</th>
-                            <th class="text-center">1</th>
-                            <th class="text-center">2</th>
-                            <th class="text-center">3</th>
-                            <th class="text-center">4</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-success">
-                            <td>actions</td>
-                            <td id="impulse1" class="text-center"></td>
-                            <td id="impulse2" class="text-center"></td>
-                            <td id="impulse3" class="text-center"></td>
-                            <td id="impulse4" class="text-center"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="combat-actions">Combat Actions</label>
-                        <input type="number" class="form-control" id="timer-combat-actions">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="timer-combat-action-message">Message</label>
-                    <textarea class="form-control" id="timer-combat-action-message" rows="2"></textarea>
-                </div>
-                <button id="timer-combat-action-button" class="btn btn-primary btn-sm">Set Timer</button>
-                <div class="section game-section text-center">
-                    <div class="row color-row">
-                        <h5><strong>Set Timer By <em>Time</em></strong></h5>
-                    </div>
-                    <table id="timer-time-table" class="table table-condensed table-bordered table-striped">
+                     </div>
+                  </div>
+                  <div class="card-body">
+                     <table class="table table-condensed table-bordered table-striped">
                         <thead>
-                            <tr>
-                                <th class="text-center">phase</th>
-                                <th class="text-center">impulse</th>
-                            </tr>
+                           <tr>
+                              <th>impulse</th>
+                              <th class="text-center">1</th>
+                              <th class="text-center">2</th>
+                              <th class="text-center">3</th>
+                              <th class="text-center">4</th>
+                           </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="number" class="form-control text-center white-input" id="timer-phase-input"></td>
-                                <td><input type="number" class="form-control text-center white-input" id="timer-impulse-input"></td>
-                            </tr>
+                           <tr class="table-success">
+                              <td>actions</td>
+                              <td id="impulse1" class="text-center"></td>
+                              <td id="impulse2" class="text-center"></td>
+                              <td id="impulse3" class="text-center"></td>
+                              <td id="impulse4" class="text-center"></td>
+                           </tr>
                         </tbody>
-                    </table>
-                    <div class="form-group">
-                        <label for="timer-time-message">Message</label>
-                        <textarea class="form-control" id="timer-time-message" rows="2"></textarea>
-                    </div>
-                </div>
-                <button id="timer-time-button" class="btn btn-primary btn-sm">Set Timer</button>
-                <div class="section game-section text-center">
-                    <div class="row color-row">
-                        <h5><strong>Set Timer By <em>Duration</em></strong></h5>
-                    </div>
-                    <table id="timer-duration-table" class="table table-condensed table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th class="text-center">number of phases</th>
-                                <th class="text-center">incapacitation time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="number" class="form-control text-center white-input" id="timer-duration-phases"></td>
-                                <td><input type="text" class="form-control text-center white-input" id="timer-duration-incapacitation-time"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div clas="row">
+                     </table>
+                     <div class="form-row">
+                        <div class="form-group col-md-4">
+                           <label for="combat-actions">Combat Actions</label>
+                           <input type="number" class="form-control" id="timer-combat-actions">
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label for="timer-combat-action-message">Message</label>
+                        <textarea class="form-control" id="timer-combat-action-message" rows="2"></textarea>
+                     </div>
+                     <button id="timer-combat-action-button" class="btn btn-primary btn-sm">Set Timer</button>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-12 timer-card">
+               <div class="card">
+                  <div class="card-header card-header-text card-header-primary">
+                     <div class="card-text">
+                        <h5 class="card-title"><strong>Set Timer By <em>Time</em></strong></h5>
+                     </div>
+                  </div>
+                  <div class="card-body">
+                     <div class="section game-section text-center">
+                        <table id="timer-time-table" class="table table-condensed table-bordered table-striped">
+                           <thead>
+                              <tr>
+                                 <th class="text-center">phase</th>
+                                 <th class="text-center">impulse</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td><input type="number" class="form-control text-center white-input" id="timer-phase-input"></td>
+                                 <td><input type="number" class="form-control text-center white-input" id="timer-impulse-input"></td>
+                              </tr>
+                           </tbody>
+                        </table>
                         <div class="form-group">
-                            <label for="timer-duration-message">Message</label>
-                            <textarea class="form-control" id="timer-duration-message" rows="2"></textarea>
+                           <label for="timer-time-message">Message</label>
+                           <textarea class="form-control" id="timer-time-message" rows="2"></textarea>
                         </div>
-                    </div>                       
-                </div>
-                <button id="timer-duration-button" class="btn btn-primary btn-sm">Set Timer</button>
-        </div>
-    </div>
-
-    <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="signinModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="firebaseui-auth-container"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                     </div>
+                     <button id="timer-time-button" class="btn btn-primary btn-sm">Set Timer</button>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="signoutModal" tabindex="-1" role="dialog" aria-labelledby="signoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="signoutModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div id="login-modal-body" class="modal-body">
-                    <h3>You have been signed out.</h3>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+            <div class="col-md-12 timer-card">
+               <div class="card">
+                  <div class="card-header card-header-text card-header-primary">
+                     <div class="card-text">
+                        <h5 class="card-title"><strong>Set Timer By <em>Duration</em></strong></h5>
+                     </div>
+                  </div>
+                  <div class="card-body">
+                     <table id="timer-duration-table" class="table table-condensed table-bordered table-striped">
+                        <thead>
+                           <tr>
+                              <th class="text-center">number of phases</th>
+                              <th class="text-center">incapacitation time</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td><input type="number" class="form-control text-center white-input" id="timer-duration-phases"></td>
+                              <td><input type="text" class="form-control text-center white-input" id="timer-duration-incapacitation-time"></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                     <div clas="row">
+                        <div class="form-group">
+                           <label for="timer-duration-message">Message</label>
+                           <textarea class="form-control" id="timer-duration-message" rows="2"></textarea>
+                        </div>
+                     </div>
+                     <button id="timer-duration-button" class="btn btn-primary btn-sm">Set Timer</button>
+                  </div>                  
+               </div>
             </div>
-        </div>
-    </div>
-
-    <div id="modal-holder"></div>
-
-    <!--   Core JS Files   -->
-    <script src="js/core/jquery.min.js" type="text/javascript"></script>
-    <script src="js/core/popper.min.js" type="text/javascript"></script>
-    <script src="js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
-    <script src="js/plugins/moment.min.js"></script>
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
-    <script src="js/material-kit.js?v=2.0.5" type="text/javascript"></script>
-    <script src="js/bundle.js" type="text/javascript"></script>
-</body>
-
+         </div>
+      </div>
+      <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="signinModalLabel"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div id="firebaseui-auth-container"></div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="modal fade" id="signoutModal" tabindex="-1" role="dialog" aria-labelledby="signoutModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="signoutModalLabel"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div id="login-modal-body" class="modal-body">
+                  <h3>You have been signed out.</h3>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="modal-holder"></div>
+      <!--   Core JS Files   -->
+      <script src="js/core/jquery.min.js" type="text/javascript"></script>
+      <script src="js/core/popper.min.js" type="text/javascript"></script>
+      <script src="js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+      <script src="js/plugins/moment.min.js"></script>
+      <!-- Place this tag in your head or just before your close body tag. -->
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+      <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+      <script src="js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+      <script src="js/bundle.js" type="text/javascript"></script>
+   </body>
 </html>

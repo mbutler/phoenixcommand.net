@@ -237,10 +237,19 @@ figcaption {
         margin-top: 10px;
         margin-bottom: 0px;
     }
+    #timer-character-name a {
+        color: white;
+    }
+    .card-text {
+        margin-left: 20px;
+    }
+    .timer-card {
+        padding-top: 100px;
+    }
     #time {
         margin-top: 20px;
     }
-    #.uns-list {
+    #guns-list {
         margin-top: 50px;
     }
 }
