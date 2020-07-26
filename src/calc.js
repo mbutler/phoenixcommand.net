@@ -468,7 +468,7 @@ function calculateExplosionDamage(targets, weapon, ammoType) {
         hitRoll = _.random(0,99)
         let epf = pf.effectivePenetrationFactor(epfRoll, armor)
         let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
-        damage = hits * (hitDamage + concussionDamage)
+        damage = (hits * hitDamage) + concussionDamage
         if (damage > 0) {hitLocation = pf.hitLocation(hitRoll, cover)}
         shots.push(hitLocation)     
         result[`radius ${val}`] = {"hit location": shots, "hit damage": damage}
