@@ -252,4 +252,20 @@ figcaption {
     #guns-list {
         margin-top: 50px;
     }
+
+    .timer-container {
+        padding-top: 30px;
+    }
 }
+
+@media (min-width: 320px) and (max-width: 991px) {
+    .timer-container {
+        padding-top: 120px;
+    }
+    #time {
+        margin-top: 60px;
+    }
+    #character-name {
+        margin-top: 60px;
+    }
+  }
