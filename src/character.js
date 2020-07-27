@@ -33,6 +33,7 @@ export function displayCharacterSheet(characterName) {
     $('#disabling-injuries').attr('data-content', character.injuries)
     $("#stance").val(character.stance).find(`option[value="${character.stance}"]`).attr('selected', true)
     displayWeapons(character)
+    displayGear(character)
     $('.sheet-picker').change(e => {
       let id = e.target.id
       let val = e.target.value
@@ -79,6 +80,15 @@ export function displayCharacterCreation() {
       </div>`)
     })
   
+}
+
+export function displayGear(character) {
+  let list = `<ul>`
+  _.forEach(character.equipment, gear => {
+    list += `<li>${gear}</li>`
+  })
+  list += `</ul>`
+  $('#gear').append(list)
 }
 
 export function displayWeapons(character) {  

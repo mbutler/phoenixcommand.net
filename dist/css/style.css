@@ -108,6 +108,10 @@ figcaption {
     margin: 0px;
 }
 
+#gear ul {
+    list-style-type:none;
+}
+
 #disabling-injuries {
     padding: 1px;
     margin-left: 20px;
