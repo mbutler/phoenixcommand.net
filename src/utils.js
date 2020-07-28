@@ -160,5 +160,51 @@ export function deleteModal(title, msg, path, key) {
 
   $('.btn-primary').click(e => {
     Database.remove(path, key)
+    $(`#${key}-row`).remove()
+  })
+}
+
+export function deleteGameModal(title, msg, path, key) {
+  $('.modal').modal('hide')
+  let userPath = _.split(path, '/')
+  let gamePath = userPath[1] + '/games/' + key
+  //let userRef = Database.ref(userPath[0] + '/' + userPath[1])
+  let adminRef = Database.ref('users/' + userPath[1] + '/adminOf')
+  let rand = Math.random().toString(36).substring(7)
+  let div = `<div class="modal fade" id="${rand}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">${title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="" class="modal-body">
+                <h3>${msg}</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+  </div>`
+  
+  $('#modal-holder').append(div)
+  $(`#${rand}`).modal()
+
+  $('.btn-primary').click(e => {
+    Database.set('users/' + userPath[1] + '/currentGame/', "none") 
+    adminRef.once('value').then(snapshot => { 
+      snapshot.forEach(childSnapshot => {
+        let game = childSnapshot.val()
+        if (gamePath === game.gameId) {
+          Database.remove('users/' + userPath[1] + '/adminOf/', childSnapshot.key)
+        }
+      })
+    })
+    Database.remove('users/' + userPath[1] + '/games/', key) 
+    window.location = "http://phoenixcommand.net/account.html"  
   })
 }
