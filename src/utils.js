@@ -201,10 +201,10 @@ export function deleteGameModal(title, msg, path, key) {
         let game = childSnapshot.val()
         if (gamePath === game.gameId) {
           Database.remove('users/' + userPath[1] + '/adminOf/', childSnapshot.key)
+          Database.remove('users/' + userPath[1] + '/games/', key) 
+          window.location = "http://phoenixcommand.net/account.html"
         }
       })
-    })
-    Database.remove('users/' + userPath[1] + '/games/', key) 
-    window.location = "http://phoenixcommand.net/account.html"  
+    })      
   })
 }

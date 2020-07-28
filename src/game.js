@@ -37,15 +37,25 @@ export function displayGame(user) {
                     Utils.deleteModal('Phoenix Command', 'Delete Character?', characterPath, characterId)
                 })
             })
-            $('.delete-game').append(`<button id="delete-game" class="btn btn-danger btn-sm">Delete Game</button>`)
+            let adminRef = Database.ref('users/' + user.uid + '/adminOf')
+            adminRef.once('value').then(snapshot => { 
+                snapshot.forEach(childSnapshot => {
+                  let admin = childSnapshot.val()
+                  let gamePath = 'users/' + user.uid + '/games/' + gameId
+                  if (game.metadata.gameId === admin.gameId) {
+                    $("#button-area").append('<button id="delete-game" class="btn btn-danger btn-sm">Delete Game</button>')
+                    $("#delete-game").click(e => {
+                        e.preventDefault()
+                        let split = _.split(gameId, '/')
+                        let path = `users/${user.uid}/games/`
+                        Utils.deleteGameModal('Phoenix Command', 'Delete Game?', path, split[2])
+                        //window.location.href('index.html')
+                    })
+                  }
+                })
+              }) 
             $('.timestamp').empty().append('created: ' + moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
-            $("#delete-game").click(e => {
-                e.preventDefault()
-                let split = _.split(gameId, '/')
-                let path = `users/${user.uid}/games/`
-                Utils.deleteGameModal('Phoenix Command', 'Delete Game?', path, split[2])
-                //window.location.href('index.html')
-            })
+            
         })
         $('#next-impulse-button').click(e => {
             let path = `users/${gameId}/metadata/readyPlayers/${user.uid}`
