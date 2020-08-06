@@ -183,8 +183,10 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
         let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
         if (loadedAmmo >= rof) {
             Database.set(loadedAmmoPath, loadedAmmo - rof)
+            console.log(`roll: ${roll}, chance: ${chance}`)
             if (roll <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
+                console.log(`burst fire result: ${JSON.stringify(result)}`)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
@@ -424,17 +426,20 @@ function calculateDamage(targets, weapon, ammoType) {
         for (let j = 1; j <= hits; j++) {
             //0-9 roll for epf
             let epfRoll = _.random(0,9)
+            console.log(`epf roll: ${epfRoll}`)
             if (j > 1 && ammoType === 'Shot') {
                 let salm = weapon[range]['Shot']['SALM']
                 hitRoll = hitRoll + pf.shotgunMultipleHit(salm)
                 hitRoll = _.clamp(hitRoll, 0, 99)
             } else {
                 hitRoll = _.random(0,99)
+                console.log(`hit roll: ${hitRoll}`)
             }
             let epf = pf.effectivePenetrationFactor(epfRoll, armor)
             let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
             let hitLocation = pf.hitLocation(hitRoll, cover)
             damage += hitDamage
+            console.log(`range: ${range}, hitDamage: ${hitDamage}, damage: ${damage}, epf: ${epf}, dc: ${dc}`)
             shots.push(hitLocation)
         }        
         result[`target ${i}`] = {"hit location": shots, "hit damage": damage}
