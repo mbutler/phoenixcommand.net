@@ -41,44 +41,51 @@ export function toggleSignInLink(user) {
   }
 }
 
-export function setShotType(gunType) {
-  if (gunType === 'Pistol') {
+export function setShotType(gun) {
+  if (gun.Type === 'Pistol') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
     $('#burst-eal').hide()
     $('#shotgun-eal').hide()
     $('#explosive-eal').hide()      
   }
 
-  if (gunType === 'Sub-Machinegun') {
+  if (gun.Type === 'Sub-Machinegun') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
     $('#shotgun-eal').hide()
     $('#explosive-eal').hide()      
   }
 
-  if (gunType === 'Assault Rifle') {
+  if (gun.Type === 'Assault Rifle') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
     $('#shotgun-eal').hide()
     $('#explosive-eal').hide()      
   }
 
-  if (gunType === 'Machine Gun') {
+  if (gun.Type === 'Machine Gun') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Burst')
     $('#shotgun-eal').hide()
     $('#explosive-eal').hide()      
   }
 
-  if (gunType === 'Shotgun') {
+  if (gun.Type === 'Shotgun') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Shotgun')
     $('#single-shot-eal').hide()
     $('#explosive-eal').hide()
     $('#burst-eal').hide()     
   }
 
-  if (gunType === 'Explosive') {
+  if (gun.Type === 'Explosive') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Explosive')
     $('#single-shot-eal').hide()
     $('#burst-eal').hide()
     $('#shotgun-eal').hide()    
+  }
+
+  if (gun.Type !== 'Explosive' && gun.ROF === 1) {
+    $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
+    $('#burst-eal').hide()
+    $('#shotgun-eal').hide()
+    $('#explosive-eal').hide()      
   }
 }
 

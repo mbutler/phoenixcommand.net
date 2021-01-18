@@ -52,9 +52,9 @@ $('#weapon-button').on('click', '.dropdown-eal', e => {
   $('#weapon-button .dropdown-toggle').empty()
   e.preventDefault()
   let result = e.target.innerText
-  let weaponType = pf.getWeaponByName(result).Type
-  if (weaponType === 'Explosive') { $('#target-size').val(6)}
-  Utils.setShotType(weaponType)
+  let weapon= pf.getWeaponByName(result)
+  if (weapon.Type === 'Explosive') { $('#target-size').val(6)}
+  Utils.setShotType(weapon)
   $(`#weapon-button .dropdown-toggle`).empty().append(result)
   let snap = Database.currentCharacter()
   snap.then(character => {
