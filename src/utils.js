@@ -81,7 +81,7 @@ export function setShotType(gun) {
     $('#shotgun-eal').hide()    
   }
 
-  if (gun.Type !== 'Explosive' && gun.ROF === 1) {
+  if (gun.Type === 'Assault Rifle' && gun.ROF === 1) {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
     $('#burst-eal').hide()
     $('#shotgun-eal').hide()
