@@ -198,6 +198,38 @@ $('#timer-duration-incapacitation-time').change(e => {
   $('#timer-duration-phases').val(convertedPhases)
 })
 
+$('.actions-set-timer').click(e => {
+  e.preventDefault()
+  let msg = $(e.currentTarget).parent().parent().children().eq(1).html()
+  let ca = _.toNumber(e.currentTarget.innerText)
+  let path = window.localStorage.getItem('firebird-command-current-character')
+  let ref = Database.currentCharacter(path)
+  ref.then(character => {
+    let capi = {}
+    capi['1'] = _.toNumber(character.capi[1])
+    capi['2'] = _.toNumber(character.capi[2])
+    capi['3'] = _.toNumber(character.capi[3])
+    capi['4'] = _.toNumber(character.capi[4])
+
+    let snap = Database.currentGame()
+    snap.then(game => {    
+      let action = Timer.actionTemplate()
+      action.runTime = pf.calculateActionTime(ca, capi, game.content.time, 0)   
+      action.setTime = game.content.time
+      action.gameId = game.metadata.gameId
+      action.message = msg
+      action.function = ''
+      action.parameters = []
+      action.userList = []
+      Timer.add(action)
+      if (ca > capi[game.content.time.impulse]) {
+        Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
+      }      
+      Timer.run(game.metadata.gameId)
+    })
+  })
+})
+
 //testing
 $(window).keypress((e) => {
   if (e.which === 13) {
