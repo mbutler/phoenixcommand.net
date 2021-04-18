@@ -11,9 +11,7 @@ export function displayGame(user) {
         let gameRef = Database.ref('users/' + gameId)
         gameRef.once('value', data => {
             let game = data.val()
-            let userReady = game.metadata.readyPlayers[user.uid]
-            toggleUserReady(userReady)
-            checkReadyPlayers(game.metadata)
+            addNextImpulseButton(user, game)
             $('#phase').empty().append(`<h4>Phase: <strong>${game.content.time.phase}</strong></h4>`)
             $('#impulse').empty().append(`<h4>Impulse: <strong>${game.content.time.impulse}</strong></h4>`)
             $('.game-title').text(game.metadata.title)
@@ -38,41 +36,24 @@ export function displayGame(user) {
                 })
             })
             let adminRef = Database.ref('users/' + user.uid + '/adminOf')
-            adminRef.once('value').then(snapshot => { 
+            adminRef.once('value').then(snapshot => {
                 snapshot.forEach(childSnapshot => {
-                  let admin = childSnapshot.val()
-                  let gamePath = 'users/' + user.uid + '/games/' + gameId
-                  if (game.metadata.gameId === admin.gameId) {
-                    $("#button-area").append('<button id="delete-game" class="btn btn-danger btn-sm">Delete Game</button>')
-                    $("#delete-game").click(e => {
-                        e.preventDefault()
-                        let split = _.split(gameId, '/')
-                        let path = `users/${user.uid}/games/`
-                        Utils.deleteGameModal('Phoenix Command', 'Delete Game?', path, split[2])
-                        //window.location.href('index.html')
-                    })
-                  }
+                    let admin = childSnapshot.val()
+                    if (game.metadata.gameId === admin.gameId) {
+                        $("#button-area").append('<button id="delete-game" class="btn btn-danger btn-sm">Delete Game</button>')
+                        $("#delete-game").click(e => {
+                            e.preventDefault()
+                            let split = _.split(gameId, '/')
+                            let path = `users/${user.uid}/games/`
+                            Utils.deleteGameModal('Phoenix Command', 'Delete Game?', path, split[2])
+                        })
+                    }
                 })
-              }) 
+            })
             $('.timestamp').empty().append('created: ' + moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
-            
-        })
-        $('#next-impulse-button').click(e => {
-            let path = `users/${gameId}/metadata/readyPlayers/${user.uid}`
-            if ($('#next-impulse-button').hasClass('btn-default')) {
-                Database.set(path, true)
-            } else if ($('#next-impulse-button').hasClass('btn-danger')) {
-                Database.set(path, false)
-            }
-        })
 
+        })
     })
-}
-
-export function checkReadyPlayers(metadata) {
-    if (_.every(metadata.readyPlayers)) {
-        nextImpulse()
-    }
 }
 
 export function nextImpulse() {
@@ -80,32 +61,32 @@ export function nextImpulse() {
     snap.then(game => {
         let path = game.metadata.gameId
         let time = game.content.time
-        let keys = _.keys(game.metadata.readyPlayers)
-        _.forEach(keys, key => {
-            Database.set('users/' + path + '/metadata/readyPlayers/' + key, false)
-        })
         let next = pf.nextImpulse(time)
         Database.set('users/' + path + '/content/time', next)
         let ref = Database.ref('users/' + path + '/content/time')
         ref.once('value', snapshot => {
+            let time = snapshot.val()
+            $('#phase').empty().append(`<h4>Phase: <strong>${time.phase}</strong></h4>`)
+            $('#impulse').empty().append(`<h4>Impulse: <strong>${time.impulse}</strong></h4>`)
             Timer.run(path)
         })
-        //Utils.modal('Phoenix Command', 'Next Impulse!')
     })
 }
 
-export function toggleUserReady(userReady) {
-    if (userReady === undefined) {
-        userReady = false
-    }
-    if (userReady === false) {
-        $('#next-impulse-button').removeClass('btn-danger')
-        $('#next-impulse-button').addClass('btn-default')
-    }
-    if (userReady === true) {
-        $('#next-impulse-button').removeClass('btn-default')
-        $('#next-impulse-button').addClass('btn-danger')
-    }
+export function addNextImpulseButton(user, game) {
+    let adminRef = Database.ref('users/' + user.uid + '/adminOf')
+    adminRef.once('value').then(snapshot => {
+        snapshot.forEach(childSnapshot => {
+            let admin = childSnapshot.val()
+            if (game.metadata.gameId === admin.gameId) {
+                $('#time').append('<button id="next-impulse" class="btn btn-info btn-link">Next Impulse -></button>')
+                $("#next-impulse").click(e => {
+                    e.preventDefault()
+                    nextImpulse()
+                })
+            }
+        })
+    })
 }
 
 export function navList(user) {
@@ -153,7 +134,7 @@ export function addPlayers(user, gameId, players, gameName) {
                     name: gameName
                 })
             } else {
-                //alert('players intentionally left ' + person)
+                alert('players intentionally left ' + person)
             }
         })
         Utils.modal('Phoenix Command', 'Game Created Successfully!')
