@@ -195,6 +195,7 @@ export function displayWeapons(character) {
           let ammoPath = path + '/ammo/' + name + '/loaded/'
           Database.set(ammoPath, cap)
           $(`#rounds-loaded-${ammoDropdown}`).html(cap)
+          Utils.modal("Phoenix Command", `${cap} rounds loaded in ${name}`)
         })
     })
   
