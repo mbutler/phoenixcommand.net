@@ -253,6 +253,9 @@ figcaption {
     #time {
         margin-top: 20px;
     }
+    #time h4 {
+        font-size: 0.9rem;
+    }
     #guns-list {
         margin-top: 50px;
     }
@@ -278,6 +281,9 @@ figcaption {
     }
     #time {
         margin-top: 60px;
+    }
+    #time h4 {
+        font-size: 0.9rem;
     }
     #character-name {
         margin-top: 60px;
