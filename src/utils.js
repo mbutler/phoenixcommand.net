@@ -16,6 +16,13 @@ function threeD6() {
   return _.random(1, 6) + _.random(1, 6) + _.random(1, 6)
 }
 
+export function addLog(entry) {
+  let snap = Database.currentGame()
+  snap.then(game => {
+      Database.push('users/' + game.metadata.gameId + '/metadata/log/', entry)
+  })
+}
+
 export function randomize() {
   let name = _.sample(codenames)
   let skill = _.random(1, 6)

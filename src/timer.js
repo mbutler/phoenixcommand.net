@@ -23,6 +23,7 @@ export function run(gameId) {
         _.forEach(keys, key => {
             let action = actions.list[key]
             if (_.isEqual(action.runTime.time, actions.time)) {
+                Utils.addLog(action)
                 let ref = Database.ref(action.characterPath)
                 ref.on('value', snapshot => {
                     let character = snapshot.val()
