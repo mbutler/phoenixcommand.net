@@ -98,15 +98,13 @@ function burstHandler(weapon, eal, accuracy, chance) {
     $('#fire-button').click(e => {
         e.preventDefault()
         eal.sab = weapon['SAB']
-        accuracy = pf.effectiveAccuracyLevel(eal)
-        chance = pf.oddsOfHitting(accuracy, eal.shotType)
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
         $('#sab').empty().append(`-${weapon['SAB']}`)
         let targets = _.toNumber($('#number-of-targets').val())
         let arc = _.toNumber($('#arc').val())            
         if (targets > 0 && arc > 0) {
-            fireBurst(weapon, targets, arc, chance)                
+            fireBurst(weapon, targets, arc, chance, eal.range)                
         } else {
             Utils.modal("Phoenix Command", 'Arc and number of targets required.')
         }     
@@ -119,12 +117,10 @@ function singleShotHandler(weapon, eal, accuracy, chance) {
     $('#fire-button').click(e => {
         e.preventDefault()
         eal.sab = weapon['SAB']
-        accuracy = pf.effectiveAccuracyLevel(eal)
-        chance = pf.oddsOfHitting(accuracy, eal.shotType)
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
         $('#sab').empty().append(`-${weapon['SAB']}`)
-        fireSingleShot(weapon, chance)
+        fireSingleShot(weapon, chance, eal.range)
     }) 
 }
 
@@ -143,7 +139,6 @@ function shotgunHandler(weapon, eal, accuracy, chance) {
     $('#fire-button').click(e => {
         e.preventDefault()
         eal.sab = weapon['SAB']       
-        accuracy = pf.effectiveAccuracyLevel(eal)
         accuracy = accuracy + salm
         chance = pf.oddsOfHitting(accuracy, eal.shotType)
         $('#eal').empty().append(accuracy)
@@ -161,8 +156,6 @@ function explosiveHandler(weapon, eal, accuracy, chance) {
     $('#fire-button').click(e => {
         e.preventDefault()
         eal.sab = weapon['SAB']
-        accuracy = pf.effectiveAccuracyLevel(eal)
-        chance = pf.oddsOfHitting(accuracy, eal.shotType)
         if (eal.range > weapon.MR) { chance = 0 }
         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
@@ -171,11 +164,12 @@ function explosiveHandler(weapon, eal, accuracy, chance) {
     })
 }
 
-function fireBurst(weapon, numberOfTargets, arc, chance) {
+function fireBurst(weapon, numberOfTargets, arc, chance, range) {
     let result = ''
     let rof = weapon['ROF']
     let roll = _.random(0,99)
     let path = window.localStorage.getItem('firebird-command-current-character')
+    let note = $('#optional-note').val()
     let snap = Database.currentCharacter()
     snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
@@ -187,21 +181,25 @@ function fireBurst(weapon, numberOfTargets, arc, chance) {
             if (roll <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
                 console.log(`burst fire result: ${JSON.stringify(result)}`)
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and hit with a ${chance}% of hitting. The burst fire result was ${JSON.stringify(result)} [${note}]`)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
                 Utils.modal("Phoenix Command", result)
             }
         } else {
             result = 'Not enough ammo loaded for burst mode.'
+            Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
             Utils.modal("Phoenix Command", result)
         }
     })    
 }
 
-function fireSingleShot(weapon, chance) {
+function fireSingleShot(weapon, chance, range) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
+    let note = $('#optional-note').val()
     let snap = Database.currentCharacter()
     snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
@@ -210,9 +208,15 @@ function fireSingleShot(weapon, chance) {
         if (loadedAmmo >= 1) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             result = pf.singleShotFire(chance)
+            if (result['target 1']['hit'] ===  true) {
+                Utils.log(`${character.name} fired a ${weapon.Name} and hit with a ${chance}% of hitting. The single shot result was ${JSON.stringify(result)} [${note}]`)
+            } else {
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
+            }
             displayTargets(result, weapon, ammoType)
         } else {
             result = 'Out of ammo.'
+            Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
             Utils.modal("Phoenix Command", result)
         }
     })
@@ -227,6 +231,7 @@ function fireShotgun(ammoType, range, weapon, chance) {
     }
     let roll = _.random(0,99)
     let path = window.localStorage.getItem('firebird-command-current-character')
+    let note = $('#optional-note').val()
     let snap = Database.currentCharacter()
     snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
@@ -236,24 +241,28 @@ function fireShotgun(ammoType, range, weapon, chance) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             if (roll <= chance) {
                 result = pf.shotgunFire(ammoType, range, bphc)
+                Utils.log(`${character.name} fired a ${weapon.Name} and hit with a ${chance}% of hitting. The result was ${JSON.stringify(result)} [${note}]`)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Shotgun blast missed.'
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
                 Utils.modal("Phoenix Command", result)
             }            
         } else {
             result = 'Out of ammo.'
+            Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
             Utils.modal("Phoenix Command", result)
         }
     })
 }
 
-function fireExplosive(weapon, ammoType, chance, accuracy) {
+function fireExplosive(weapon, range, chance, accuracy) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
     let snap = Database.currentCharacter()
     let roll = _.random(0,99)
     let location = 'Explosive shot hit on target.'
+    let note = $('#optional-note').val()
     snap.then(character => {
         let loadedAmmo = character['ammo'][weapon.Name]['loaded']
         let ammoType = character['ammo'][weapon.Name]['type']
@@ -262,6 +271,7 @@ function fireExplosive(weapon, ammoType, chance, accuracy) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             if (roll <= chance) {
                 result = pf.explosiveFire(weapon, ammoType)
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% chance of hitting. ${location} [${note}]`)
                 displayExplosionTargets(result, weapon, ammoType, location)
             } else {
                 let requiredEAL = pf.ealToHit(roll, 'Single Shot')
@@ -270,11 +280,13 @@ function fireExplosive(weapon, ammoType, chance, accuracy) {
                 let h = 'hexes'
                 if (scatter === 1) {h = 'hex'}
                 location = `Explosive shot hit ${scatter} ${h} ${placement}`
+                Utils.log(`${character.name} fired a ${weapon.Name} ${range} hexes away with a ${chance}% chance. ${location} [${note}]`)
                 result = pf.explosiveFire(weapon, ammoType)
                 displayExplosionTargets(result, weapon, ammoType, location)
             }            
         } else {
             result = 'Out of ammo.'
+            Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
             Utils.modal("Phoenix Command", result)
         }
     })

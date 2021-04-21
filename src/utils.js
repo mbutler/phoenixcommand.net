@@ -16,9 +16,12 @@ function threeD6() {
   return _.random(1, 6) + _.random(1, 6) + _.random(1, 6)
 }
 
-export function addLog(entry) {
+export function log(msg) {
   let snap = Database.currentGame()
   snap.then(game => {
+    let entry = {}
+    entry.time = game.content.time
+    entry.message = msg
       Database.push('users/' + game.metadata.gameId + '/metadata/log/', entry)
   })
 }

@@ -23,10 +23,10 @@ export function run(gameId) {
         _.forEach(keys, key => {
             let action = actions.list[key]
             if (_.isEqual(action.runTime.time, actions.time)) {
-                Utils.addLog(action)
                 let ref = Database.ref(action.characterPath)
                 ref.on('value', snapshot => {
                     let character = snapshot.val()
+                    Utils.log(`${character.name}: ${action.message}`)
                     Utils.modal(`${character.name}'s Reminder:`, action.message)
                     Database.remove(path, key)
                 })                
