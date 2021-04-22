@@ -2,6 +2,7 @@ import * as Utils from './utils'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Database from './database'
+import _ from 'lodash'
 
 export function setUser(user) {
     $('.arc-rows').hide()
@@ -181,7 +182,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance, range) {
             if (roll <= chance) {
                 result = pf.burstFire(arc, rof, numberOfTargets)
                 console.log(`burst fire result: ${JSON.stringify(result)}`)
-                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and hit with a ${chance}% of hitting. The burst fire result was ${JSON.stringify(result)} [${note}]`)
+                Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Burst fire at wrong elevation. All targets missed.'
@@ -209,7 +210,7 @@ function fireSingleShot(weapon, chance, range) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             result = pf.singleShotFire(chance)
             if (result['target 1']['hit'] ===  true) {
-                Utils.log(`${character.name} fired a ${weapon.Name} and hit with a ${chance}% of hitting. The single shot result was ${JSON.stringify(result)} [${note}]`)
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
             } else {
                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
             }
@@ -241,7 +242,7 @@ function fireShotgun(ammoType, range, weapon, chance) {
             Database.set(loadedAmmoPath, loadedAmmo - 1)
             if (roll <= chance) {
                 result = pf.shotgunFire(ammoType, range, bphc)
-                Utils.log(`${character.name} fired a ${weapon.Name} and hit with a ${chance}% of hitting. The result was ${JSON.stringify(result)} [${note}]`)
+                Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
                 displayTargets(result, weapon, ammoType)
             } else {
                 result = 'Shotgun blast missed.'

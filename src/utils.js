@@ -39,6 +39,18 @@ export async function displayLog(user) {
   })
 }
 
+export function parseHitResult(result) {
+  let response = ""
+  _.forOwn(result, (value, key) => {
+      if (value.hit === true) {
+          response += `${key} hit ${value.bullets} time(s). `
+      } else {
+          response += `Missed ${key}`
+      }        
+  })
+  return response
+}
+
 export function randomize() {
   let name = _.sample(codenames)
   let skill = _.random(1, 6)
