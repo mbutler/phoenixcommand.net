@@ -2,6 +2,7 @@ import * as User from './user'
 import * as Utils from './utils'
 import * as Game from './game'
 import * as Database from './database'
+import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 
 export function displayCharacterSheet(characterName) {
@@ -22,7 +23,7 @@ export function displayCharacterSheet(characterName) {
     $('#sal').empty().append(character.sal)
     $('#physical-damage').val(character.pd)
     $('#total-damage').empty().append(character.dt)
-    $('#status').empty().append(character.status)
+    $("#status").val(character.status)
     $("#cover").val(character.cover).find(`option[value="${character.cover}"]`).attr('selected', true)
     $("#position").val(character.position).find(`option[value="${character.position}"]`).attr('selected', true)
     $('#impulse1').empty().append(character.capi['1'])
@@ -52,9 +53,16 @@ export function displayCharacterSheet(characterName) {
       if (_.random(0,99) <= chance) {
         let roll = _.random(0,9)
         let time = pf.incapacitationTime(roll, pd)
-        $('#status').empty().append('Incapacitated')
-        let statusPath = `users/${game.metadata.gameId}/content/characters/${characterId}/status`
-        Database.set(statusPath, 'Incapacitated')
+        let phases = pf.incapacitationTimeToPhases(time)
+        let futureTime = pf.phasesToTime(phases, game.content.time)
+        $("#status").val('Incapacitated')
+        Utils.log(`${characterName} is incapacitated`)
+        let action = Timer.actionTemplate()
+        action.runTime.time = futureTime   
+        action.setTime = game.content.time
+        action.gameId = game.metadata.gameId
+        action.message = `No longer incapacitated.`
+        Timer.add(action)
         Utils.modal("Phoenix Command", `${characterName} incapacitated for ${time}`)
       }
     })
