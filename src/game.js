@@ -51,7 +51,6 @@ export function displayGame(user) {
                 })
             })
             $('.timestamp').empty().append('created: ' + moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
-
         })
     })
 }
@@ -165,8 +164,7 @@ export function createNew(user, gameName, players) {
             time: {
                 phase: 1,
                 impulse: 1
-            },
-            messages: {}
+            }
         }
     }
     newRef = ref.push(newGame)

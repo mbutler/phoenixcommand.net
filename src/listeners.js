@@ -157,9 +157,6 @@ $('#timer-time-button').click(e => {
     action.setTime = game.content.time
     action.gameId = game.metadata.gameId
     action.message = msg
-    action.function = ''
-    action.parameters = []
-    action.userList = []
     Timer.add(action)
     Utils.modal('Phoenix Command', `Timer set for Phase: ${phase}, Impulse: ${impulse}`)
     Timer.run(game.metadata.gameId)
@@ -187,9 +184,6 @@ $('#timer-duration-button').click(e => {
     action.setTime = game.content.time
     action.gameId = game.metadata.gameId
     action.message = msg
-    action.function = ''
-    action.parameters = []
-    action.userList = []
     Timer.add(action)
     Utils.modal('Phoenix Command', `Timer set for Phase: ${futurePhase}, Impulse: ${impulse}`)
   })
@@ -222,9 +216,6 @@ $('.actions-set-timer').click(e => {
       action.setTime = game.content.time
       action.gameId = game.metadata.gameId
       action.message = msg
-      action.function = ''
-      action.parameters = []
-      action.userList = []
       Timer.add(action)
       if (ca > capi[game.content.time.impulse]) {
         Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
