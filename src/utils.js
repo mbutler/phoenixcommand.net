@@ -32,7 +32,7 @@ export async function displayLog(user) {
   snapshot.then(game => {
     $('.game-title').text(game.metadata.title)
     let log = game.metadata.log
-    _.forOwn(log, (value, key) => {
+    _.forOwnRight(log, (value, key) => {
       let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td>`
       $('#log-table tbody').append(div)
     })

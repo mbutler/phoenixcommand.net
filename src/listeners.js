@@ -133,7 +133,10 @@ $('#timer-combat-action-button').click(e => {
       action.parameters = []
       action.userList = []
       Timer.add(action)
-      Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
+      if (ca > capi[game.content.time.impulse]) {
+        Utils.modal('Phoenix Command', `Timer set for Phase: ${action.runTime.time.phase}, Impulse: ${action.runTime.time.impulse}`)
+      }      
+      Timer.run(game.metadata.gameId)
     })
   } else {
     Utils.modal("Phoenix Command", "Please Import a character")
@@ -159,6 +162,7 @@ $('#timer-time-button').click(e => {
     action.userList = []
     Timer.add(action)
     Utils.modal('Phoenix Command', `Timer set for Phase: ${phase}, Impulse: ${impulse}`)
+    Timer.run(game.metadata.gameId)
   })
 })
 
