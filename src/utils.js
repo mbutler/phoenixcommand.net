@@ -1,6 +1,7 @@
 import {codenames} from './codenames'
 import {mission} from './operations'
 import * as Database from './database'
+import _ from 'lodash'
 
 export function selectedCheckboxes(boxes) {
   let selected = []
@@ -23,6 +24,18 @@ export function log(msg) {
     entry.time = game.content.time
     entry.message = msg
       Database.push('users/' + game.metadata.gameId + '/metadata/log/', entry)
+  })
+}
+
+export async function displayLog(user) {
+  let snapshot = Database.currentGame(user.uid)
+  snapshot.then(game => {
+    $('.game-title').text(game.metadata.title)
+    let log = game.metadata.log
+    _.forOwn(log, (value, key) => {
+      let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td>`
+      $('#log-table tbody').append(div)
+    })
   })
 }
 

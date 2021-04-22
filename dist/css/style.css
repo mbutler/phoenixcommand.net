@@ -73,6 +73,9 @@ figcaption {
 #timer-time-table {
     margin-top: 15px;
 }
+#log-table {
+    margin-top: 75px;
+}
 #timer-time-table thead {
     border-color: white;
     border: none;
@@ -220,9 +223,15 @@ figcaption {
     #new-character-button {
         margin: 10px;
     }
+    #log-table {
+        margin-top: 110px;
+    }
 }
 
 @media (min-width: 992px) {
+    #log-table {
+        margin-top: 75px;
+    }
     #new-character-button {
         margin: 10px;
     }
@@ -266,6 +275,9 @@ figcaption {
 }
 
 @media (min-width: 320px) and (max-width: 991px) {
+    #log-table {
+        margin-top: 110px;
+    }
     .card-text {
         margin-left: 20px;
     }

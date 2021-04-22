@@ -20,8 +20,8 @@
     <nav class="navbar fixed-top navbar-expand-lg" color-on-scroll="100">
         <div class="container">
             <div class="navbar-translate">
-            <a style="color: black;" class="navbar-brand" href="">Account / Creation</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <a style="color: black;" class="game-title title" class="navbar-brand" href="game.html"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="navbar-toggler-icon"></span>
                     <span class="navbar-toggler-icon"></span>
@@ -33,9 +33,16 @@
                 <ul class="navbar-nav ml-auto">
                     <li id="login" class="nav-item">
                     </li>
-                     <li class="nav-item dropdown">
+                    <li class="nav-item">
+                        <a href="account.html" class="nav-link" style="color: black;">
+                            <i class="material-icons">new_releases</i> New Game
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Games</a>
-                        <div id="game-dropdown" class="dropdown-menu"></div>
+                        <div id="game-dropdown" class="dropdown-menu">
+                            
+                        </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#0" role="button" aria-haspopup="true" aria-expanded="false" style="color: black;">Tools</a>
@@ -46,7 +53,7 @@
                                     <path fill="#000000" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" />
                                 </svg> Calculators</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="log.html"><i class="material-icons">assignment</i> Log</a>
+                            <a class="dropdown-item" href="#0"><i class="material-icons">assignment</i> Log</a>
                         </div>
                     </li>
                 </ul>
@@ -56,55 +63,18 @@
 
     <div class="main">
         <div class="container">
-            <div id="account-section" class="section text-center">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 id="account-name" class="card-title"></h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <strong>ID:&nbsp</strong>
-                                    <div id="account-id"></div>
-                                </div>
-                                <div class="row">
-                                    <strong>Email:&nbsp</strong>
-                                    <div id="account-email"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <table id="log-table" class="table table-condensed table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center">Phase</th>
+                        <th class="text-center">Impulse</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                    <div class="col-md-6">
-                        <div id="newgame-card" class="card">
-                            <div class="card-header card-header-primary">
-                                <h4 class="card-title">Create New Game</h4>
-                                <p class="category">
-                                    <button id="operation-name-button" class="btn btn-info btn-sm">generate name</button>
-                                </p>
-                            </div>
-                            <div class="card-body">
-                                <form id="character-form" class="submission-form">
-                                    <div class="form-row">
-                                        <div id="random-button" class="form-group col-md-12">
-                                            <label for="gamename">Game Name</label>
-                                            <input type="text" class="form-control" id="gamename">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <label for="invite-players">Invite Players (IDs separated by commas)</label>
-                                            <input type="text" class="form-control" id="invite-players">
-                                        </div>
-                                    </div>
-                                    <button id="new-game-submit-button" type="submit" class="btn btn-primary">Create!</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -147,7 +117,7 @@
     </div>
 
     <div id="modal-holder"></div>
-    
+
     <!--   Core JS Files   -->
     <script src="js/core/jquery.min.js" type="text/javascript"></script>
     <script src="js/core/popper.min.js" type="text/javascript"></script>

@@ -52,6 +52,10 @@ function route(user) {
   if (file === 'timer.html') {
     Timer.setUser(user)
   }
+
+  if (file === 'log.html') {
+    Utils.displayLog(user)
+  }
 }
 
 window.pfTables = pf.getAllTables()
