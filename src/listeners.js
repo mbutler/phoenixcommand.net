@@ -1,3 +1,9 @@
+/**
+ * This module handles jQuery and Firebase event listeners
+ * @module Listeners
+ * @namespace
+ */
+
 import * as Utils from './utils'
 import * as User from './user'
 import * as Character from './character'
@@ -7,6 +13,12 @@ import * as Database from './database'
 import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 
+/**
+ * Listens for timer update in database then changes time display
+ *
+ * @memberof Listeners
+ * @alias time
+ */
 let snap = Database.currentGame()
 snap.then(game => {
     let path = game.metadata.gameId
@@ -19,26 +31,62 @@ snap.then(game => {
     })
 })
 
+/**
+ * Listens for randomize-character button click then runs Utils.randomize
+ *
+ * @memberof Listeners
+ * @alias randomize-character
+ */
 $('#randomize-character').click(e => {
     Utils.randomize()
 })
 
+/**
+ * Listens for submission-form submit
+ *
+ * @memberof Listeners
+ * @alias submission-form
+ */
 $('.submission-form').on('submit', e => {
     e.preventDefault()
 })
 
+/**
+ * Listens for character-submit-button button click then runs Character.submitCharacter
+ *
+ * @memberof Listeners
+ * @alias character-submit-button
+ */
 $('#character-submit-button').click(e => {
     Character.submitCharacter()
 })
 
+/**
+ * Listens for new-game-submit-button button click then runs Game.newGameSubmit
+ *
+ * @memberof Listeners
+ * @alias new-game-submit-button
+ */
 $('#new-game-submit-button').click(e => {
     Game.newGameSubmit()
 })
 
+/**
+ * Listens for operation-name-button button click then runs Utils.operationName
+ *
+ * @memberof Listeners
+ * @alias operation-name-button
+ */
 $('#operation-name-button').click(e => {
     Utils.operationName()
 })
 
+/**
+ * Listens for signout button click then runs Database.auth.signOut and Utils.clearUserDisplay
+ *
+ * @memberof Listeners
+ * @alias signout
+ */
 $('#login').on('click', '#signout', e => {
     Database.auth().signOut().then(() => {
         $('#signoutModal').modal()
@@ -48,11 +96,23 @@ $('#login').on('click', '#signout', e => {
     })
 })
 
+/**
+ * Listens for eal-button button click then runs Calc.eal
+ *
+ * @memberof Listeners
+ * @alias eal-button
+ */
 $('#eal-button').click(e => {
     e.preventDefault()
     Calc.eal()
 })
 
+/**
+ * Listens for dropdown-eal click then adds result to dropdown
+ *
+ * @memberof Listeners
+ * @alias dropdown-eal
+ */
 $('.dropdown-eal').click(e => {
     e.preventDefault()
     let targetId = $(e.target.parentElement.parentElement).attr('id')
@@ -60,6 +120,12 @@ $('.dropdown-eal').click(e => {
     $(`#${targetId} .dropdown-toggle`).empty().append(result)
 })
 
+/**
+ * Listens for weapon-button button click then runs Utils.setShotType and updates ammo-type
+ *
+ * @memberof Listeners
+ * @alias weapon-button
+ */
 $('#weapon-button').on('click', '.dropdown-eal', e => {
     $('#weapon-button .dropdown-toggle').empty()
     e.preventDefault()
@@ -76,12 +142,24 @@ $('#weapon-button').on('click', '.dropdown-eal', e => {
     })
 })
 
+/**
+ * Listens for game-dropdown click then runs Game.select
+ *
+ * @memberof Listeners
+ * @alias game-dropdown
+ */
 $('#game-dropdown').on('click', '.dropdown-item', e => {
     let uid = $(e.target).data('uid')
     let gameId = $(e.target).data('gameid')
     Game.select(uid, gameId)
 })
 
+/**
+ * Listens for calc-character-name click then updates character sheet
+ *
+ * @memberof Listeners
+ * @alias calc-character-name
+ */
 $("#calc-character-name").on('click', '.dropdown-eal', e => {
     $('#calc-character-name .dropdown-toggle').empty()
     e.preventDefault()
@@ -105,6 +183,12 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
     })
 })
 
+/**
+ * Listens for timer-character-name click then updates capi on timer page
+ *
+ * @memberof Listeners
+ * @alias timer-character-name
+ */
 $("#timer-character-name").on('click', '.dropdown-timer', e => {
     $('#timer-character-name .dropdown-toggle').empty()
     e.preventDefault()
@@ -125,6 +209,12 @@ $("#timer-character-name").on('click', '.dropdown-timer', e => {
     })
 })
 
+/**
+ * Listens for timer-combat-action-button button click then submits action to database and runs Timer.run
+ *
+ * @memberof Listeners
+ * @alias timer-combat-action-button
+ */
 $('#timer-combat-action-button').click(e => {
     if ($('#timer-character-name .dropdown-toggle').html() !== "Import Character") {
         e.preventDefault()
@@ -157,6 +247,12 @@ $('#timer-combat-action-button').click(e => {
     }
 })
 
+/**
+ * Listens for timer-time-button click then submits action to database
+ *
+ * @memberof Listeners
+ * @alias timer-time-button
+ */
 $('#timer-time-button').click(e => {
     e.preventDefault()
     let msg = $('#timer-time-message').val()

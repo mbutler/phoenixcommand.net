@@ -1,7 +1,21 @@
+
+/**
+ * This module handles timer functionality
+ * @module Timer
+ * @namespace
+ */
+
 import * as Database from './database'
 import * as User from './user'
 import * as Utils from './utils'
 
+/**
+ * Sets the User's characters in Timer dropdowns
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Timer
+ * @return {undefined} - Modifies the DOM
+ */
 export function setUser(user) {
     let snap = Database.currentGame(user.uid)
     snap.then(game => {
@@ -15,6 +29,13 @@ export function setUser(user) {
     })    
 }
 
+/**
+ * Runs any action in the actionList for the current game time
+ *
+ * @param {string} gameId - A game id in the format "{user.uid}/games/{games object id}"
+ * @memberof Timer
+ * @return {undefined} - Modifies the database
+ */
 export function run(gameId) {
     let path = 'users/' + gameId + '/content/actionList/'
     let snap = Database.actionList(gameId)
@@ -38,11 +59,24 @@ export function run(gameId) {
     })
 }
 
+/**
+ * Adds an action object to a game's actionList
+ *
+ * @param {object} action - A Phoenix Command action object
+ * @memberof Timer
+ * @return {undefined} - Modifies the database
+ */
 export function add(action) {
     let path = 'users/' + action.gameId + '/content/actionList'
     Database.push(path, action)
 }
 
+/**
+ * An action object template with pre-filled values for userId and currentCharacter * 
+ *
+ * @memberof Timer
+ * @return {object} - An empty Phoenix Command action object
+ */
 export function actionTemplate() {
     let currentCharacter = window.localStorage.getItem('firebird-command-current-character')
     let userId = window.localStorage.getItem('firebird-command-user-id')

@@ -1,5 +1,18 @@
+/**
+ * This module handles user functionality
+ * @module User
+ * @namespace
+ */
+
 import * as Database from './database'
 
+/**
+ * Adds a mew user to the database and sets localStorage 'firebird-command-user-id'
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof User
+ * @return {undefined} - Modifies the database and localstorage
+ */
 export function addNew(user) {
   let date = new Date()
   let ref = Database.ref('userIds')
@@ -16,6 +29,13 @@ export function addNew(user) {
   })
 }
 
+/**
+ * Gets a list of all character objects belonging to a user
+ *
+ * @param {object} game - An entire game object
+ * @memberof User
+ * @return {array} - A list of user's characters
+ */
 export function getUserCharacters(game) {
   let list = []
   let users = game.users
@@ -48,14 +68,31 @@ export function getUserCharacters(game) {
   return list
 }
 
+/**
+ * Gets a character object by name
+ *
+ * @param {object} game - An entire game object
+ * @param {string} characterName - The character's game name
+ * @memberof User
+ * @return {object} - A character object
+ */
 export function getCharacterSheet(game, characterName) {
   let userCharacters = getUserCharacters(game)
   let character = _.find(userCharacters, player => {return player.name === characterName})
   return character
 }
 
+/**
+ * Gets a character object ID
+ *
+ * @param {object} game - An entire game object
+ * @param {string} characterName - The character's game name
+ * @memberof User
+ * @return {string} - ID for a character object
+ */
 export function getCharacterId(game, characterName) {
   let userCharacters = getUserCharacters(game)
   let character = _.find(userCharacters, player => {return player.name === characterName})
+  console.log(character)
   return character.characterId
 }

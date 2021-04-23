@@ -1,8 +1,21 @@
+/**
+ * This module handles various utility functionality
+ * @module Utils
+ * @namespace
+ */
+
 import {codenames} from './codenames'
 import {mission} from './operations'
 import * as Database from './database'
 import _ from 'lodash'
 
+/**
+ * Finds all selected checkboxes
+ *
+ * @param {array} boxes - A list of input checkboxes
+ * @memberof Utils
+ * @return {array} - List of all checkboxes that are selected
+ */
 export function selectedCheckboxes(boxes) {
   let selected = []
   for (let i = 0; i < boxes.length; i++) {
@@ -13,10 +26,23 @@ export function selectedCheckboxes(boxes) {
   return selected
 }
 
+/**
+ * Rolls 3d6
+ *
+ * @memberof Utils
+ * @return {number} - The result of rolling 3d6
+ */
 function threeD6() {
   return _.random(1, 6) + _.random(1, 6) + _.random(1, 6)
 }
 
+/**
+ * Adds a message to the game's log
+ *
+ * @param {string} msg - A text message to be logged
+ * @memberof Utils
+ * @return {undefined} - Modifies the database
+ */
 export function log(msg) {
   let snap = Database.currentGame()
   snap.then(game => {
@@ -27,6 +53,13 @@ export function log(msg) {
   })
 }
 
+/**
+ * Displays the contents of a game's log
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export async function displayLog(user) {
   let snapshot = Database.currentGame(user.uid)
   snapshot.then(game => {
@@ -39,6 +72,13 @@ export async function displayLog(user) {
   })
 }
 
+/**
+ * Creates display text for a phoenix-functions hit result object
+ *
+ * @param {object} result - A phoenix-functions hit result object
+ * @memberof Utils
+ * @return {string} - Properly parsed and formatted text for hit result
+ */
 export function parseHitResult(result) {
   let response = ""
   _.forOwn(result, (value, key) => {
@@ -51,6 +91,12 @@ export function parseHitResult(result) {
   return response
 }
 
+/**
+ * Generates random attributes for a character
+ *
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function randomize() {
   let name = _.sample(codenames)
   let skill = _.random(1, 6)
@@ -68,6 +114,13 @@ export function randomize() {
   $('#agility').val(agi)
 }
 
+/**
+ * Toggles sign out/sign in display based on auth state of user
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function toggleSignInLink(user) {
   if (user) {
     $('#login').empty().append(`<a href="#" style="color: black;" id="signout" class="nav-link"><i class="material-icons">account_circle</i> Sign Out</a>`)
@@ -76,6 +129,13 @@ export function toggleSignInLink(user) {
   }
 }
 
+/**
+ * Changes the shot type dropdown based on the weapon
+ *
+ * @param {object} gun - A phoenix-functions gun object
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function setShotType(gun) {
   if (gun.Type === 'Pistol') {
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
@@ -124,16 +184,35 @@ export function setShotType(gun) {
   }
 }
 
+/**
+ * Displays the generated mission name for the game
+ *
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function operationName() {
   $('#gamename').val(mission())
 }
 
+/**
+ * Displays a user's account information
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function displayAccount(user) {
   $('#account-name').text(user.displayName)
   $('#account-id').text(user.uid)
   $('#account-email').text(user.email)
 }
 
+/**
+ * Displays default text for empty user
+ *
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function clearUserDisplay() {
   $('#game-dropdown').empty()
   $('#account-name').text('Account Name')
@@ -141,6 +220,12 @@ export function clearUserDisplay() {
   $('#account-email').empty()
 }
 
+/**
+ * Gets the game path from localstorage in the format of "users/{user.uid}/games/{games object id}
+ *
+ * @memberof Utils
+ * @return {string} - The game path
+ */
 export function getGamePath() {
   let path = window.localStorage.getItem('firebird-command-current-character')
   let pathArr = _.split(path, '/', 4)
@@ -148,6 +233,14 @@ export function getGamePath() {
   return gamePath
 }
 
+/**
+ * Displays a modal with custom title and message
+ *
+ * @param {string} title - Text for the title area
+ * @param {string} msg - Text for the content
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM
+ */
 export function modal(title, msg) {
   $('.modal').modal('hide')
   let rand = Math.random().toString(36).substring(7)
@@ -174,6 +267,16 @@ export function modal(title, msg) {
   $(`#${rand}`).modal()
 }
 
+/**
+ * Displays a confirmation modal for database deletion
+ *
+ * @param {string} title - Text for the title area
+ * @param {string} msg - Text for the content
+ * @param {string} path - Path to the database resource
+ * @param {string} key - ID of object to delete
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM and database
+ */
 export function deleteModal(title, msg, path, key) {
   $('.modal').modal('hide')
   let rand = Math.random().toString(36).substring(7)
@@ -206,6 +309,16 @@ export function deleteModal(title, msg, path, key) {
   })
 }
 
+/**
+ * Displays a confirmation modal for game object and nav reference deletion
+ *
+ * @param {string} title - Text for the title area
+ * @param {string} msg - Text for the content
+ * @param {string} path - Path to the database resource
+ * @param {string} key - ID of object to delete
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM and database
+ */
 export function deleteGameModal(title, msg, path, key) {
   $('.modal').modal('hide')
   let userPath = _.split(path, '/')
