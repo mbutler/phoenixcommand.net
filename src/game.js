@@ -12,8 +12,6 @@ export function displayGame(user) {
         gameRef.once('value', data => {
             let game = data.val()
             addNextImpulseButton(user, game)
-            $('#phase').empty().append(`<h4>Phase: <strong>${game.content.time.phase}</strong></h4>`)
-            $('#impulse').empty().append(`<h4>Impulse: <strong>${game.content.time.impulse}</strong></h4>`)
             $('.game-title').text(game.metadata.title)
             $('#user-table tbody').empty()
             _.forEach(User.getUserCharacters(game), player => {
@@ -51,6 +49,7 @@ export function displayGame(user) {
                 })
             })
             $('.timestamp').empty().append('created: ' + moment.unix(game.metadata.created / 1000).format("MMMM Do, YYYY h:mm a"))
+
         })
     })
 }
@@ -62,13 +61,6 @@ export function nextImpulse() {
         let time = game.content.time
         let next = pf.nextImpulse(time)
         Database.set('users/' + path + '/content/time', next)
-        let ref = Database.ref('users/' + path + '/content/time')
-        ref.once('value', snapshot => {
-            let time = snapshot.val()
-            $('#phase').empty().append(`<h4>Phase: <strong>${time.phase}</strong></h4>`)
-            $('#impulse').empty().append(`<h4>Impulse: <strong>${time.impulse}</strong></h4>`)
-            Timer.run(path)
-        })
     })
 }
 
@@ -164,7 +156,8 @@ export function createNew(user, gameName, players) {
             time: {
                 phase: 1,
                 impulse: 1
-            }
+            },
+            messages: {}
         }
     }
     newRef = ref.push(newGame)

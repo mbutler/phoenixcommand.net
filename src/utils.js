@@ -27,7 +27,7 @@ export function log(msg) {
   })
 }
 
-export function displayLog(user) {
+export async function displayLog(user) {
   let snapshot = Database.currentGame(user.uid)
   snapshot.then(game => {
     $('.game-title').text(game.metadata.title)
@@ -45,7 +45,7 @@ export function parseHitResult(result) {
       if (value.hit === true) {
           response += `${key} hit ${value.bullets} time(s). `
       } else {
-          response += `Missed ${key} `
+          response += `Missed ${key}`
       }        
   })
   return response
