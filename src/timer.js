@@ -25,9 +25,12 @@ export function run(gameId) {
             if (_.isEqual(action.runTime.time, actions.time)) {
                 let ref = Database.ref(action.characterPath)
                 ref.on('value', snapshot => {
+                    let userId = window.localStorage.getItem('firebird-command-user-id')
                     let character = snapshot.val()
                     Utils.log(`${character.name}: ${action.message}`)
-                    Utils.modal(`${character.name}'s Reminder:`, action.message)
+                    if (action.setBy == userId) {
+                        Utils.modal(`${character.name}'s Reminder:`, action.message)
+                    }                    
                     Database.remove(path, key)
                 })                
             }
