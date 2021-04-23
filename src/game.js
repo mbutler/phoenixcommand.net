@@ -99,9 +99,11 @@ export function navList(user) {
             $('#game-dropdown').append(`<div class="dropdown-divider"></div>`)
             $('#game-dropdown').append('<div class="nav-section"><strong>Joined:</strong></div>')
             snapshot.forEach(childSnapshot => {
-                let gameId = childSnapshot.key
                 let game = childSnapshot.val()
-                $('#game-dropdown').append(`<a class="dropdown-item" data-uid="${user.uid}" data-gameid="${game.gameId}" href="#">${game.name}</a>`)
+                let memberGameRef = Database.ref('users/' + game.gameId)
+                memberGameRef.once('value', snapshot => {
+                    $('#game-dropdown').append(`<a class="dropdown-item" data-uid="${user.uid}" data-gameid="${game.gameId}" href="#">${game.name}</a>`)     
+                })
             })
         }
     })
@@ -124,8 +126,6 @@ export function addPlayers(user, gameId, players, gameName) {
                     gameId: user.uid + '/games/' + gameId,
                     name: gameName
                 })
-            } else {
-                alert('players intentionally left ' + person)
             }
         })
         Utils.modal('Phoenix Command', 'Game Created Successfully!')

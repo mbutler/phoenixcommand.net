@@ -247,6 +247,6 @@ export function deleteGameModal(title, msg, path, key) {
           window.location = "http://phoenixcommand.net/account.html"
         }
       })
-    })      
+    })
   })
 }
