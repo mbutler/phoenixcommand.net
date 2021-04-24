@@ -1,7 +1,9 @@
-# firebird-character
-Mobile app to manage a Phoenix Command game
+# phoenixcommand.net
+Online, mobile-friendly tool to manage a Phoenix Command game.
 
-babel + webpack + mocha + chai + documentationjs
+https://mbutler.github.io/phoenixcommand.net/
+
+Build on [Skeleton](https://github.com/mbutler/skeleton)
 
 `npm start` - compile source and run dev server
 
