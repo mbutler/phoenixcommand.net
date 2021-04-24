@@ -1,3 +1,9 @@
+/**
+ * This module is the application entry point
+ * @module Index
+ * @namespace
+ */
+
 import * as Database from './database'
 import * as _ from 'lodash'
 import * as Utils from './utils'
@@ -23,6 +29,13 @@ Database.auth().onAuthStateChanged(user => {
   Utils.toggleSignInLink(user)
 })
 
+/**
+ * Runs the entry point function based on html file
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Index
+ * @return {undefined} - Runs the appropriate function
+ */
 function route(user) {
   let page = location.href.split('/').slice(-1)
   page = _.split(page, '?c=')

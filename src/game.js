@@ -1,9 +1,22 @@
+/**
+ * This module handles main game logic
+ * @module Game
+ * @namespace
+ */
+
 import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Timer from './timer'
 import * as Database from './database'
 import * as Utils from './utils'
 
+/**
+ * Displays the game interface
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Game
+ * @return {undefined} - Modifies the DOM
+ */
 export function displayGame(user) {
     let ref = Database.ref('users/' + user.uid + '/currentGame')
     ref.once('value', snapshot => {
@@ -54,6 +67,12 @@ export function displayGame(user) {
     })
 }
 
+/**
+ * Advances the game time by one impuse
+ *
+ * @memberof Game
+ * @return {undefined} - Modifies the database
+ */
 export function nextImpulse() {
     let snap = Database.currentGame()
     snap.then(game => {
@@ -64,6 +83,14 @@ export function nextImpulse() {
     })
 }
 
+/**
+ * Adds the next impulse button if user is admin
+ *
+ * @param {object} user - A Firebase auth user
+ * @param {object} game - A game object
+ * @memberof Game
+ * @return {undefined} - Modifies the DOM
+ */
 export function addNextImpulseButton(user, game) {
     let adminRef = Database.ref('users/' + user.uid + '/adminOf')
     adminRef.once('value').then(snapshot => {
@@ -80,6 +107,13 @@ export function addNextImpulseButton(user, game) {
     })
 }
 
+/**
+ * Builds a user's game navigation
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Game
+ * @return {undefined} - Modifies the DOM
+ */
 export function navList(user) {
     let adminRef = Database.ref('users/' + user.uid + '/adminOf')
     let memberRef = Database.ref('users/' + user.uid + '/memberOf').orderByKey()
@@ -109,6 +143,16 @@ export function navList(user) {
     })
 }
 
+/**
+ * Joins other players to a game
+ *
+ * @param {object} user - A Firebase auth user who owns the game
+ * @param {string} gameId - A game object id
+ * @param {array} players - A list of user ids to add as players
+ * @param {string} gameName - A game object's name property
+ * @memberof Game
+ * @return {undefined} - Modifies the database
+ */
 export function addPlayers(user, gameId, players, gameName) {
     let playerList = _.split(players, ',')
     let ref = Database.ref('userIds')
@@ -132,6 +176,13 @@ export function addPlayers(user, gameId, players, gameName) {
     })
 }
 
+/**
+ * Adds a character to the current game
+ *
+ * @param {object} character - A game's character object
+ * @memberof Game
+ * @return {undefined} - Modifies the database
+ */
 export function addCharacter(character) {
     let snap = Database.currentGame()
     snap.then(game => {
@@ -140,6 +191,15 @@ export function addCharacter(character) {
     })
 }
 
+/**
+ * Creates a new game in the database
+ *
+ * @param {object} user - A Firebase auth user who owns the game
+ * @param {string} gameName - A game object's name property
+ * @param {array} players - A list of user ids to add as players
+ * @memberof Game
+ * @return {undefined} - Modifies the database
+ */
 export function createNew(user, gameName, players) {
     let date = new Date()
     let ref = Database.ref('users/' + user.uid + '/games')
@@ -174,15 +234,37 @@ export function createNew(user, gameName, players) {
     navList(user)
 }
 
+/**
+ * Makes a game the current game
+ *
+ * @param {string} uid - A Firebase id of a user
+ * @param {string} gameId - A Firebase id of a game
+ * @memberof Game
+ * @return {undefined} - Modifies the database
+ */
 export function setCurrent(uid, gameId) {
     Database.set('users/' + uid + '/currentGame/', gameId)
 }
 
+/**
+ * Selects a game
+ *
+ * @param {string} uid - A Firebase id of a user
+ * @param {string} gameId - A Firebase id of a game
+ * @memberof Game
+ * @return {undefined} - Modifies the window location and runs setCurrent
+ */
 export function select(uid, gameId) {
     setCurrent(uid, gameId)
     window.location.href = 'game.html'
 }
 
+/**
+ * Handler for new game submit
+ *
+ * @memberof Game
+ * @return {undefined} - runs createNew
+ */
 export function newGameSubmit() {
     let name = $('#gamename').val()
     let players = $('#invite-players').val()

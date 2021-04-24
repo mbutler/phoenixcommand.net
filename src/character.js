@@ -1,3 +1,9 @@
+/**
+ * This module handles character functionality
+ * @module Character
+ * @namespace
+ */
+
 import * as User from './user'
 import * as Utils from './utils'
 import * as Game from './game'
@@ -5,6 +11,13 @@ import * as Database from './database'
 import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 
+/**
+ * Displays all properties of a character
+ *
+ * @param {string} characterName - A character's name property
+ * @memberof Character
+ * @return {undefined} - Modifies the DOM and database
+ */
 export function displayCharacterSheet(characterName) {
   let snap = Database.currentGame()
   snap.then(game => {
@@ -69,6 +82,12 @@ export function displayCharacterSheet(characterName) {
   })
 }
 
+/**
+ * Displays equipment and weapon checkboxes
+ *
+ * @memberof Character
+ * @return {undefined} - Modifies the DOM
+ */
 export function displayCharacterCreation() {
   let snap = Database.currentGame()
   snap.then(game => {
@@ -86,10 +105,16 @@ export function displayCharacterCreation() {
               </span>
           </label>
       </div>`)
-    })
-  
+    })  
 }
 
+/**
+ * Displays all equipment for a character
+ *
+ * @param {object} character - A character
+ * @memberof Character
+ * @return {undefined} - Modifies the DOM and database
+ */
 export function displayGear(character) {
   let list = `<ul>`
   _.forEach(character.equipment, gear => {
@@ -99,6 +124,13 @@ export function displayGear(character) {
   $('#gear').append(list)
 }
 
+/**
+ * Displays all weapons for a character
+ *
+ * @param {object} character - A character
+ * @memberof Character
+ * @return {undefined} - Modifies the DOM and database
+ */
 export function displayWeapons(character) {  
     let databaseWeapons = pf.getAllWeapons()
     _.forEach(character.weapons, weapon => {
@@ -210,6 +242,12 @@ export function displayWeapons(character) {
   
 }
 
+/**
+ * Collects data from character creation form and runs Game.addCharacter
+ *
+ * @memberof Character
+ * @return {undefined} - runs Game.addCharacter
+ */
 export function submitCharacter() {
   let c = {}
   let name = $('#codename').val()

@@ -1,9 +1,22 @@
+/**
+ * This module handles calculator functionality
+ * @module Calc
+ * @namespace
+ */
+
 import * as Utils from './utils'
 import * as User from './user'
 import * as pf from 'phoenix-functions'
 import * as Database from './database'
 import _ from 'lodash'
 
+/**
+ * Sets the User's characters in Calculator dropdown and fields
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 export function setUser(user) {
     $('.arc-rows').hide()
     $(`#shot-type-button .dropdown-toggle`).empty().append('Single Shot')
@@ -27,6 +40,12 @@ export function setUser(user) {
     })    
 }
 
+/**
+ * Calculates and displays the Effective Accuracy Level
+ *
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 export function eal() {
     if ($('#range').val() === '' || $('#aim-time').val() === '' || $(`#weapon-button .dropdown-toggle`).html() === 'Weapon') {
         Utils.modal("Phoenix Command", "Weapon, Range, and Aim Time are required values.")
@@ -64,6 +83,14 @@ export function eal() {
     }       
 }
 
+/**
+ * Displays the correct chance-to-hit
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {object} eal - Effective Accuracy Level
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function displayChanceToHit(weapon, eal) {
     let shotType = eal.shotType
     let accuracy = pf.effectiveAccuracyLevel(eal)
@@ -91,6 +118,16 @@ function displayChanceToHit(weapon, eal) {
     $('.nav-tabs a[href="#odds"]').tab('show')    
 }
 
+/**
+ * Handles gathering info for the fireBurst function
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {object} eal - Effective Accuracy Level
+ * @param {number} accuracy - Unused parameter
+ * @param {number} chance - Percent chance of hitting
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function burstHandler(weapon, eal, accuracy, chance) {
     $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, eal.range)}:</strong>`)
     $('.arc-rows').show()
@@ -112,6 +149,16 @@ function burstHandler(weapon, eal, accuracy, chance) {
     })    
 }
 
+/**
+ * Handles gathering info for the fireSingleShot function
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {object} eal - Effective Accuracy Level
+ * @param {number} accuracy - Unused parameter
+ * @param {number} chance - Percent chance of hitting
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function singleShotHandler(weapon, eal, accuracy, chance) {
     $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
     $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
@@ -125,6 +172,16 @@ function singleShotHandler(weapon, eal, accuracy, chance) {
     }) 
 }
 
+/**
+ * Handles gathering info for the fireShotgun function
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {object} eal - Effective Accuracy Level
+ * @param {number} accuracy - Effective Accuracy Level result
+ * @param {number} chance - Percent chance of hitting
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function shotgunHandler(weapon, eal, accuracy, chance) {
     let range = pf.snapToValue(eal.range, [1,2,4,6,8,10,15,20,30,40,80])
     let salm = 0
@@ -150,6 +207,16 @@ function shotgunHandler(weapon, eal, accuracy, chance) {
     })     
 }
 
+/**
+ * Handles gathering info for the fireExplosive function
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {object} eal - Effective Accuracy Level
+ * @param {number} accuracy - Effective Accuracy Level result
+ * @param {number} chance - Percent chance of hitting
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function explosiveHandler(weapon, eal, accuracy, chance) {
     if (eal.range > weapon.MR) { chance = 0 }
     $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
@@ -165,6 +232,17 @@ function explosiveHandler(weapon, eal, accuracy, chance) {
     })
 }
 
+/**
+ * Fires a burst weapon at targets
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {number} numberOfTargets - Number of targets being fired at
+ * @param {number} arc - Arc of weapon sweep
+ * @param {number} chance - Percent chance of hitting
+ * @param {number} range - Number of hexes away from the target
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM and database
+ */
 function fireBurst(weapon, numberOfTargets, arc, chance, range) {
     let result = ''
     let rof = weapon['ROF']
@@ -197,6 +275,15 @@ function fireBurst(weapon, numberOfTargets, arc, chance, range) {
     })    
 }
 
+/**
+ * Fires a single shot weapon at a target
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {number} chance - Percent chance of hitting
+ * @param {number} range - Number of hexes away from the target
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM and database
+ */
 function fireSingleShot(weapon, chance, range) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
@@ -223,6 +310,17 @@ function fireSingleShot(weapon, chance, range) {
     })
 }
 
+/**
+ * Fires a shotgun weapon at targets
+ *
+ * @param {string} ammoType - Type of ammo
+ * @param {number} range - Number of hexes away from the target
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {number} chance - Percent chance of hitting
+ * 
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM and database
+ */
 function fireShotgun(ammoType, range, weapon, chance) {
     let result = ''
     let bphc
@@ -257,6 +355,17 @@ function fireShotgun(ammoType, range, weapon, chance) {
     })
 }
 
+/**
+ * Fires a burst weapon at targets
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {number} range - Number of hexes away from the target
+ * @param {number} chance - Percent chance of hitting
+ * @param {number} accuracy - Shot accuracy for shot scatter
+ * 
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM and database
+ */
 function fireExplosive(weapon, range, chance, accuracy) {
     let result = ''
     let path = window.localStorage.getItem('firebird-command-current-character')
@@ -293,12 +402,29 @@ function fireExplosive(weapon, range, chance, accuracy) {
     })
 }
 
+/**
+ * Gets the minimum arc for a wapon at range
+ *
+ * @param {object} weapon - A phoenix-functions weapon object
+ * @param {number} range - Number of hexes away from target
+ * @memberof Calc
+ * @return {number} - The weapon's minimum arc
+ */
 function getMinimumArc(weapon, range) {
     range = pf.snapToValue(range, [10,20,40,70,100,200,300,400])
     let arc = weapon[_.toString(range)]['MA']
     return arc
 }
 
+/**
+ * Displays target hit results and damage calculation button
+ *
+ * @param {array} targetList - A list of target results
+ * @param {weapon} weapon - A phoenix-command weapon object
+ * @param {string} ammoType - Type of ammo used
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function displayTargets(targetList, weapon, ammoType) {
     let bullets = 0
     let targetRows = ''
@@ -356,6 +482,16 @@ function displayTargets(targetList, weapon, ammoType) {
     $('.nav-tabs a[href="#hits"]').tab('show')
 }
 
+/**
+ * Displays explostion target hit results and damage calculation button
+ *
+ * @param {array} targetList - A list of target results
+ * @param {weapon} weapon - A phoenix-command weapon object
+ * @param {string} ammoType - Type of ammo used
+ * @param {string} location - Location of the hit
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function displayExplosionTargets(targetList, weapon, ammoType, location) {
     let bullets = 0
     let radius = ['0','1','2','3','5','10']
@@ -420,6 +556,15 @@ function displayExplosionTargets(targetList, weapon, ammoType, location) {
     $('.nav-tabs a[href="#hits"]').tab('show')
 }
 
+/**
+ * Calculates total damage for hits on target
+ *
+ * @param {object} targets - A hit results object
+ * @param {weapon} weapon - A phoenix-command weapon object
+ * @param {string} ammoType - Type of ammo used
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function calculateDamage(targets, weapon, ammoType) {
     let rangeVal = _.toNumber($('#range').val())
     let range = pf.snapToValue(rangeVal, [10,20,40,70,100,200,300,400])
@@ -461,6 +606,15 @@ function calculateDamage(targets, weapon, ammoType) {
     $('.nav-tabs a[href="#damage"]').tab('show')
 }
 
+/**
+ * Calculates total explosion damage for hits on target
+ *
+ * @param {object} targets - A hit results object
+ * @param {weapon} weapon - A phoenix-command weapon object
+ * @param {string} ammoType - Type of ammo used
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function calculateExplosionDamage(targets, weapon, ammoType) {
     let result = {}
     let radius = ['0','1','2','3','5','10']
@@ -495,6 +649,13 @@ function calculateExplosionDamage(targets, weapon, ammoType) {
     $('.nav-tabs a[href="#damage"]').tab('show')
 }
 
+/**
+ * Displays damage calculation
+ *
+ * @param {object} targets - A hit results object
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function displayDamage(targets) {
     let targetRows = ''
     for (let i = 1; i <= _.size(targets); i++) {
@@ -541,6 +702,13 @@ function displayDamage(targets) {
      })
 }
 
+/**
+ * Displays explosion damage calculation
+ *
+ * @param {object} targets - A hit results object
+ * @memberof Calc
+ * @return {undefined} - Modifies the DOM
+ */
 function displayExplosionDamage(targets) {
     let targetRows = ''
     let radius = ['0','1','2','3','5','10']

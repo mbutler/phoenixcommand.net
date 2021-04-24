@@ -282,6 +282,12 @@ $('#timer-time-button').click(e => {
     })
 })
 
+/**
+ * Listens for timer-impulse-input change then formats it to correct number
+ *
+ * @memberof Listeners
+ * @alias timer-impulse-input
+ */
 $('#timer-impulse-input').change(e => {
     let impulse = $('#timer-impulse-input').val()
     impulse = _.toNumber(impulse)
@@ -289,6 +295,12 @@ $('#timer-impulse-input').change(e => {
     $('#timer-impulse-input').val(impulse)
 })
 
+/**
+ * Listens for timer-duration-button button click then submits action to database
+ *
+ * @memberof Listeners
+ * @alias timer-duration-button
+ */
 $('#timer-duration-button').click(e => {
     e.preventDefault()
     let msg = $('#timer-duration-message').val()
@@ -317,6 +329,12 @@ $('#timer-duration-button').click(e => {
     })
 })
 
+/**
+ * Listens for timer-duration-incapacitation-time change then diplays converted time
+ *
+ * @memberof Listeners
+ * @alias timer-duration-incapacitation-time
+ */
 $('#timer-duration-incapacitation-time').change(e => {
     let incapTime = $('#timer-duration-incapacitation-time').val()
     let convertedPhases = pf.incapacitationTimeToPhases(incapTime)
@@ -324,6 +342,12 @@ $('#timer-duration-incapacitation-time').change(e => {
     $('#timer-duration-phases').val(convertedPhases)
 })
 
+/**
+ * Listens for actions-set-timer button click then submits action to database
+ *
+ * @memberof Listeners
+ * @alias timer-time-button
+ */
 $('.actions-set-timer').click(e => {
     e.preventDefault()
     let msg = $(e.currentTarget).parent().parent().children().eq(1).html()
