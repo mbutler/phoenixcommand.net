@@ -60,14 +60,46 @@ export function log(msg) {
  * @memberof Utils
  * @return {undefined} - Modifies the DOM
  */
-export async function displayLog(user) {
+export function displayLog(user) {
   let snapshot = Database.currentGame(user.uid)
   snapshot.then(game => {
     $('.game-title').text(game.metadata.title)
     let log = game.metadata.log
-    _.forOwnRight(log, (value, key) => {
-      let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td>`
+    _.forOwnRight(log, value => {
+      let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td></tr>`
       $('#log-table tbody').append(div)
+    })
+  })
+}
+
+/**
+ * Displays the action list
+ *
+ * @param {object} user - A Firebase auth user
+ * @memberof Utils
+ * @return {undefined} - Modifies the DOM and database
+ */
+export function displaySetActions(user) {
+  let snapshot = Database.currentGame(user.uid)
+  snapshot.then(game => {
+    $('.game-title').text(game.metadata.title)
+    let actionList = game.content.actionList
+    _.forOwnRight(actionList, (value, key) => {
+      let ref = Database.ref(value.characterPath)
+      ref.once('value', data => {
+        let character = data.val()
+        let trash = ''
+        if (user.uid === value.setBy) {
+          trash = `<i id="0${key}" class="fa fa-trash" data-actionpath="users/${value.gameId}/content/actionList/" data-actionid="${key}" aria-hidden="true"></i>`
+        }
+        let div = `<tr><td>${value.runTime.time.phase}</td><td>${value.runTime.time.impulse}</td><td>${character.name}: ${value.message}</td><td>${trash}</td></tr>`
+        $('#actions-table tbody').append(div)
+        $(`#0${key}`).click(e => {
+          let actionPath = $(e.target).data('actionpath')
+          let actionKey = $(e.target).data('actionid')
+          deleteModal('Delete Action', "Delete this action?", actionPath, actionKey)
+        })
+      })      
     })
   })
 }
@@ -305,7 +337,7 @@ export function deleteModal(title, msg, path, key) {
 
   $('.btn-primary').click(e => {
     Database.remove(path, key)
-    $(`#${key}-row`).remove()
+    $(`#0${key}`).parent().parent().remove()
   })
 }
 

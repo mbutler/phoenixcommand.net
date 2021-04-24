@@ -37,7 +37,7 @@ export function displayGame(user) {
                     link = `${player.characterName}`
                     trash = ''
                 }
-                $('#user-table tbody').append(`<tr id="${player.characterId}-row"><td>${link}</td><td>${player.userName}</td><td>${trash}</td></tr>`)
+                $('#user-table tbody').append(`<tr><td>${link}</td><td>${player.userName}</td><td>${trash}</td></tr>`)
                 $(`#0${player.characterId}`).click(e => {
                     e.preventDefault()
                     let characterId = $(e.target).data('characterid')

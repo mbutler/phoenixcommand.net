@@ -69,6 +69,10 @@ function route(user) {
   if (file === 'log.html') {
     Utils.displayLog(user)
   }
+
+  if (file === 'actions.html') {
+    Utils.displaySetActions(user)
+  }
 }
 
 window.pfTables = pf.getAllTables()
