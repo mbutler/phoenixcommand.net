@@ -69,6 +69,9 @@ export function displayLog(user) {
       let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td></tr>`
       $('#log-table tbody').append(div)
     })
+    if (log === undefined) {
+      $('#log-table tbody').append(`<tr><td></td><td></td><td>No log entries found.</td></tr>`)
+    }
   })
 }
 
@@ -101,6 +104,9 @@ export function displaySetActions(user) {
         })
       })      
     })
+    if (actionList === undefined) {
+      $('#actions-table tbody').append(`<tr><td></td><td></td><td>No action entries found.</td></tr>`)
+    }
   })
 }
 
