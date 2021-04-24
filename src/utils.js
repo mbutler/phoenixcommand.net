@@ -87,7 +87,7 @@ export function displaySetActions(user) {
   snapshot.then(game => {
     $('.game-title').text(game.metadata.title)
     let actionList = game.content.actionList
-    _.forOwnRight(actionList, (value, key) => {
+    _.forOwn(actionList, (value, key) => {
       let ref = Database.ref(value.characterPath)
       ref.once('value', data => {
         let character = data.val()
