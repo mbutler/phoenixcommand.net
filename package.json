@@ -1,5 +1,5 @@
 {
-  "name": "firebird-character",
+  "name": "phoenixcommand.net",
   "version": "0.8.0",
   "description": "Mobile app to manage a Phoenix Command game",
   "main": "src/index.js",
@@ -56,6 +56,6 @@
     "firebase": "^8.3.1",
     "firebaseui": "^4.0.0",
     "lodash": "^4.17.21",
-    "phoenix-functions": "^0.9.57"
+    "phoenix-functions": "^0.9.58"
   }
 }
