@@ -184,6 +184,23 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
 })
 
 /**
+ * Listens for firing-stance-button click then updates from the hip checkbox
+ *
+ * @memberof Listeners
+ * @alias firing-stance-button
+ */
+$('#firing-stance-button').click(e => {
+    let firingStance = $('#firing-stance-button .dropdown-toggle').html()
+    if (firingStance === "True") {
+        $('#from-the-hip').prop('checked', false)
+    }
+
+    if (firingStance === "False") {
+        $('#from-the-hip').prop('checked', true)
+    }
+})
+
+/**
  * Listens for timer-character-name click then updates capi on timer page
  *
  * @memberof Listeners

@@ -58,8 +58,7 @@ export function eal() {
             let targetSpeed = _.toNumber($('#target-speed').val())
             let shooterSpeed = _.toNumber($('#shooter-speed').val())
             let aimTime = _.toNumber($('#aim-time').val()) - 1 //decrement to access zero-based array
-            $('#from-the-hip').prop('checked', false)
-            if (shooterSpeed > 0) {$('#from-the-hip').prop('checked', true)}
+            if (shooterSpeed > 0) {aimTime = 2}
             let weaponName = $(`#weapon-button .dropdown-toggle`).html()
             let gun = pf.getWeaponByName(weaponName)
             let ammoType = character['ammo'][weaponName]['type']   
@@ -67,7 +66,6 @@ export function eal() {
             let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)
             let shotType = $('#shot-type-button .dropdown-toggle').html()        
             let firingStance = $('#firing-stance-button .dropdown-toggle').html()
-            if (firingStance === false) {$('#from-the-hip').prop('checked', true)}
             let position = $('#position-button .dropdown-toggle').html()
             let situational = Utils.selectedCheckboxes($('[name="situational"]'))
             let visibility = Utils.selectedCheckboxes($('[name="visibility"]'))
@@ -78,6 +76,7 @@ export function eal() {
             eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0, eal.ammoType = ammoType, eal.salm = 0
             $('#fire-button').off('click')
             $('#sab').val('false')
+            console.log(eal)
             displayChanceToHit(gun, eal)            
         }) 
     }       
