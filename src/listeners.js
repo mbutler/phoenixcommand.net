@@ -304,8 +304,10 @@ $('#timer-impulse-input').change(e => {
 $('#timer-duration-button').click(e => {
     e.preventDefault()
     let msg = $('#timer-duration-message').val()
-    let phases = $('#timer-duration-phases').val()
-    phases = _.toNumber(phases)
+    let incapTime = $('#timer-duration-incapacitation-time').val()
+    let convertedPhases = pf.incapacitationTimeToPhases(incapTime)
+    let phases = _.toNumber(convertedPhases)
+    console.log(phases)
     let snap = Database.currentGame()
     snap.then(game => {
         let futurePhase = game.content.time.phase + phases
@@ -318,6 +320,7 @@ $('#timer-duration-button').click(e => {
             },
             "remainder": 0
         }
+        action.characterPath = window.localStorage.getItem('firebird-command-current-character')
         action.setTime = game.content.time
         action.gameId = game.metadata.gameId
         action.message = msg
@@ -327,19 +330,6 @@ $('#timer-duration-button').click(e => {
         Timer.add(action)
         Utils.modal('Phoenix Command', `Timer set for Phase: ${futurePhase}, Impulse: ${impulse}`)
     })
-})
-
-/**
- * Listens for timer-duration-incapacitation-time change then diplays converted time
- *
- * @memberof Listeners
- * @alias timer-duration-incapacitation-time
- */
-$('#timer-duration-incapacitation-time').change(e => {
-    let incapTime = $('#timer-duration-incapacitation-time').val()
-    let convertedPhases = pf.incapacitationTimeToPhases(incapTime)
-    convertedPhases = _.toNumber(convertedPhases)
-    $('#timer-duration-phases').val(convertedPhases)
 })
 
 /**
