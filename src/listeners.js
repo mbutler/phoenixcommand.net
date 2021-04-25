@@ -324,7 +324,6 @@ $('#timer-duration-button').click(e => {
     let incapTime = $('#timer-duration-incapacitation-time').val()
     let convertedPhases = pf.incapacitationTimeToPhases(incapTime)
     let phases = _.toNumber(convertedPhases)
-    console.log(phases)
     let snap = Database.currentGame()
     snap.then(game => {
         let futurePhase = game.content.time.phase + phases

@@ -64,6 +64,9 @@ export function displayLog(user) {
   let snapshot = Database.currentGame(user.uid)
   snapshot.then(game => {
     $('.game-title').text(game.metadata.title)
+    if (_.split(game.metadata.gameId,'/')[0] === user.uid) {
+      $('#log-table').parent().append('<button id="empty-log" class="btn btn-danger btn-sm">Empty Log</button>')
+    }    
     let log = game.metadata.log
     _.forOwnRight(log, value => {
       let div = `<tr><td>${value.time.phase}</td><td>${value.time.impulse}</td><td>${value.message}</td></tr>`
@@ -72,6 +75,13 @@ export function displayLog(user) {
     if (log === undefined) {
       $('#log-table tbody').append(`<tr><td></td><td></td><td>No log entries found.</td></tr>`)
     }
+    $('#empty-log').click(e => {
+      let path = `users/${game.metadata.gameId}/metadata/log/`
+      let ref = Database.ref(path)
+      ref.remove()
+      $('#log-table tbody').empty()
+      $('#log-table tbody').append(`<tr><td></td><td></td><td>No log entries found.</td></tr>`)
+    })
   })
 }
 
