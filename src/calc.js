@@ -438,13 +438,15 @@
      //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
      for (let i = 1; i <= _.size(targets); i++) {
          //add the cumulative hits to the latest hits
+         let hitRoll = _.random(0,99)
+         let location = pf.hitLocation(hitRoll, true)
          bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
          let tr = `
              <tr>
-                 <td class="text-center">${i}</td>
+                 <td id="target-${i}-location" data-location="${location}" data-hitRoll="${hitRoll}" class="text-center">${i}:${location}</td>
                  <td id="target-${i}-bullets" class="text-center">${bullets}</td>
                  <td id="target-${i}-cover" class="text-center">
-                    <select id="target-${i}-cover" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                    <select id="target-${i}-cover" class="form-control selectpicker target-cover-select" data-style="btn btn-link"">
                         <option value="True">True</option>
                         <option value="False">False</option>
                     </select>
@@ -476,20 +478,30 @@
      </table>`
      $('#hits').empty().append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
+     $('.target-cover-select').change(e => {
+        let id = _.split(e.target.id, '-', 2)[1]
+        let cover = e.target.value
+        cover = cover.toLowerCase() == 'true' ? true : false
+        let hitRoll = $(`#target-${id}-location`).attr('data-hitRoll')
+        let loc = pf.hitLocation(_.toNumber(hitRoll), cover)
+        $(`#target-${id}-location`).html(`${id}:${loc}`)
+     })
      $('#damage-button').click(e => {
          e.preventDefault()
          let result = {}
          for (let i = 1; i <= _.size(targets); i++) {
-             let armor = 'Clothing'
+             let hitRoll = $(`#target-${i}-location`).attr('data-hitRoll')
              let hits = _.toNumber($(`#target-${i}-bullets`).text())
-             armor = $(`#target-${i}-armor`).find(":selected").text()
+             let armor = $(`#target-${i}-armor`).find(":selected").text()
              let cover = $(`#target-${i}-cover`).find(":selected").text()
              result[`target ${i}`] = {
                  "hits": hits,
                  "cover": cover,
-                 "armor": armor
+                 "armor": armor,
+                 "hitRoll": _.toNumber(hitRoll)
              }
          }
+         console.log(result)
          calculateDamage(result, weapon, ammoType)
      })
      $('.nav-tabs a[href="#hits"]').tab('show')
@@ -604,25 +616,21 @@
          let armor = targets[`target ${i}`]['armor']
          let hits = targets[`target ${i}`]['hits']
          let cover = targets[`target ${i}`]['cover']
-         let hitRoll
+         let hitRoll = targets[`target ${i}`]['hitRoll']
          cover = cover.toLowerCase() == 'true' ? true : false
          for (let j = 1; j <= hits; j++) {
              //0-9 roll for epf
              let epfRoll = _.random(0, 9)
-             console.log(`epf roll: ${epfRoll}`)
              if (j > 1 && ammoType === 'Shot') {
                  let salm = weapon[range]['Shot']['SALM']
                  hitRoll = hitRoll + pf.shotgunMultipleHit(salm)
                  hitRoll = _.clamp(hitRoll, 0, 99)
-             } else {
-                 hitRoll = _.random(0, 99)
-                 console.log(`hit roll: ${hitRoll}`)
              }
              let epf = pf.effectivePenetrationFactor(epfRoll, armor)
              let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
              let hitLocation = pf.hitLocation(hitRoll, cover)
              damage += hitDamage
-             console.log(`range: ${range}, hitDamage: ${hitDamage}, damage: ${damage}, epf: ${epf}, dc: ${dc}`)
+             console.log(`range: ${range}, armor: ${armor}, hitDamage: ${hitDamage}, damage: ${damage}, epf: ${epf}, dc: ${dc}, loc: ${hitLocation}`)
              shots.push(hitLocation)
          }
          result[`target ${i}`] = {
