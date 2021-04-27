@@ -140,7 +140,7 @@
          $('#sab').empty().append(`-${weapon['SAB']}`)
          let targets = _.toNumber($('#number-of-targets').val())
          let arc = _.toNumber($('#arc').val())
-         if (targets > 0 && arc > 0) {
+         if (targets > 0 && arc >= 0) {
              fireBurst(weapon, targets, arc, chance, eal.range)
          } else {
              Utils.modal("Phoenix Command", 'Arc and number of targets required.')
