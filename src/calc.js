@@ -262,7 +262,6 @@
              Database.set(loadedAmmoPath, loadedAmmo - rof)
              console.log(`roll: ${roll}, chance: ${chance}`)
              if (roll <= chance) {
-                 $('#hits').append(`<div class="alert alert-success" role="alert">Hit! Rolled a ${roll}</div>`)
                  result = pf.burstFire(arc, rof, numberOfTargets)
                  console.log(`burst fire result: ${JSON.stringify(result)}`)
                  Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
@@ -475,9 +474,7 @@
          </thead>
          <tbody>${targetRows}</tbody>
      </table>`
-     $('#target-table').remove()
-     $('#damage-button').remove()
-     $('#hits').append(div)
+     $('#hits').empty().append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
      $('#damage-button').click(e => {
          e.preventDefault()
