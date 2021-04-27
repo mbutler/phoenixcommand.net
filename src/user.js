@@ -93,6 +93,5 @@ export function getCharacterSheet(game, characterName) {
 export function getCharacterId(game, characterName) {
   let userCharacters = getUserCharacters(game)
   let character = _.find(userCharacters, player => {return player.name === characterName})
-  console.log(character)
   return character.characterId
 }

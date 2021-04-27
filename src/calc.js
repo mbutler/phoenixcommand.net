@@ -264,16 +264,16 @@
              Database.set(loadedAmmoPath, loadedAmmo - rof)
              if (roll <= chance) {
                  result = pf.burstFire(arc, rof, numberOfTargets)
-                 Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
                  displayTargets(result, weapon, ammoType)
              } else {
                  result = 'Burst fire at wrong elevation. All targets missed.'
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`)
                  Utils.modal("Phoenix Command", result)
              }
          } else {
              result = 'Not enough ammo loaded for burst mode.'
-             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
+             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. ${note}`)
              Utils.modal("Phoenix Command", result)
          }
      })
@@ -301,14 +301,14 @@
              Database.set(loadedAmmoPath, loadedAmmo - 1)
              result = pf.singleShotFire(chance)
              if (result['target 1']['hit'] === true) {
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
              } else {
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`)
              }
              displayTargets(result, weapon, ammoType)
          } else {
              result = 'Out of ammo.'
-             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
+             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. ${note}`)
              Utils.modal("Phoenix Command", result)
          }
      })
@@ -344,16 +344,16 @@
              Database.set(loadedAmmoPath, loadedAmmo - 1)
              if (roll <= chance) {
                  result = pf.shotgunFire(ammoType, range, bphc)
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
                  displayTargets(result, weapon, ammoType)
              } else {
                  result = 'Shotgun blast missed.'
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`)
                  Utils.modal("Phoenix Command", result)
              }
          } else {
              result = 'Out of ammo.'
-             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
+             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. ${note}`)
              Utils.modal("Phoenix Command", result)
          }
      })
@@ -385,7 +385,7 @@
              Database.set(loadedAmmoPath, loadedAmmo - 1)
              if (roll <= chance) {
                  result = pf.explosiveFire(weapon, ammoType)
-                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% chance of hitting. ${location} [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% chance of hitting. ${location} ${note}`)
                  displayExplosionTargets(result, weapon, ammoType, location)
              } else {
                  let requiredEAL = pf.ealToHit(roll, 'Single Shot')
@@ -396,13 +396,13 @@
                      h = 'hex'
                  }
                  location = `Explosive shot hit ${scatter} ${h} ${placement}`
-                 Utils.log(`${character.name} fired a ${weapon.Name} ${range} hexes away with a ${chance}% chance. ${location} [${note}]`)
+                 Utils.log(`${character.name} fired a ${weapon.Name} ${range} hexes away with a ${chance}% chance. ${location} ${note}`)
                  result = pf.explosiveFire(weapon, ammoType)
                  displayExplosionTargets(result, weapon, ammoType, location)
              }
          } else {
              result = 'Out of ammo.'
-             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. [${note}]`)
+             Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. ${note}`)
              Utils.modal("Phoenix Command", result)
          }
      })
