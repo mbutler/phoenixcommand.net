@@ -64,8 +64,11 @@
              let gun = pf.getWeaponByName(weaponName)
              let ammoType = character['ammo'][weaponName]['type']
              let weaponAim = _.values(gun['Aim Time'])
-             let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)
              let shotType = $('#shot-type-button .dropdown-toggle').html()
+             if (shotType === "Burst") {
+                 aimTime = aimTime + 1
+             }
+             let weaponAimIndex = _.clamp(aimTime, 0, weaponAim.length - 1)
              let firingStance = $('#firing-stance-button .dropdown-toggle').html()
              let position = $('#position-button .dropdown-toggle').html()
              let situational = Utils.selectedCheckboxes($('[name="situational"]'))
