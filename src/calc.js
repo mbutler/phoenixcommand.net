@@ -437,28 +437,22 @@
      let targets = targetList
      //const targets = {"target 1":{"hit":false,"bullets":6,"chance":23},"target 2":{"hit":false,"bullets":0,"chance":23},"target 3":{"hit":false,"bullets":0,"chance":23},"target 4":{"hit":false,"bullets":0,"chance":23},"target 5":{"hit":false,"bullets":0,"chance":23},"target 6":{"hit":false,"bullets":0,"chance":23},"target 7":{"hit":false,"bullets":0,"chance":23},"target 8":{"hit":false,"bullets":0,"chance":23},"target 9":{"hit":false,"bullets":0,"chance":23},"target 10":{"hit":false,"bullets":2,"chance":23}}
      for (let i = 1; i <= _.size(targets); i++) {
+         let hitRoll = _.random(0,99)
          //add the cumulative hits to the latest hits
          bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
+         let location = ''
+         if (bullets > 0) {location = pf.hitLocation(hitRoll, true)}
          let tr = `
              <tr>
                  <td class="text-center">${i}</td>
                  <td id="target-${i}-bullets" class="text-center">${bullets}</td>
                  <td id="target-${i}-cover" class="text-center">
-                    <select id="target-${i}-cover" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                    <select id="target-${i}-cover" class="form-control selectpicker target-cover-select" data-style="btn btn-link"">
                         <option value="True">True</option>
                         <option value="False">False</option>
                     </select>
                 </td>
-                 <td class="text-center">
-                    <select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
-                        <option value="Clothing">Clothing</option>
-                        <option value="Light Flexible">Light Flexible</option>
-                        <option value="Medium Flexible">Medium Flexible</option>
-                        <option value="Heavy Flexible">Heavy Flexible</option>
-                        <option value="Light Rigid">Light Rigid</option>
-                        <option value="Medium Rigid">Medium Rigid</option>
-                        <option value="Heavy Rigid">Heavy Rigid</option>
-                    </select></td>
+                <td id="target-${i}-location" data-hitRoll="${hitRoll}" class="text-center">${location}</td>
              </tr>
          `
          targetRows += tr
@@ -469,25 +463,39 @@
                  <th class="text-center">Target</th>
                  <th class="text-center">Hits</th>
                  <th class="text-center">Cover</th>
-                 <th class="text-center">Armor</th>
+                 <th class="text-center">Location</th>
              </tr>
          </thead>
          <tbody>${targetRows}</tbody>
      </table>`
      $('#hits').empty().append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
+     $('.target-cover-select').change(e => {
+        let id = _.split(e.target.id, '-', 2)
+        let cover = _.lowerCase(e.target.value)
+        let hitRoll = $(`#target-${id[1]}-location`).attr('data-hitRoll')
+        cover = cover.toLowerCase() == 'true' ? true : false
+        let location = pf.hitLocation(hitRoll, cover)
+        let locationId = `#target-${id[1]}-location`
+        console.log(location, locationId)
+        $(locationId).html(location)
+     })
      $('#damage-button').click(e => {
          e.preventDefault()
          let result = {}
          for (let i = 1; i <= _.size(targets); i++) {
              let armor = 'Clothing'
+             let location = $(`#target-${i}-location`).html()
+             let hitRoll = $(`#target-${i}-location`).attr('data-hitRoll')
              let hits = _.toNumber($(`#target-${i}-bullets`).text())
-             armor = $(`#target-${i}-armor`).find(":selected").text()
              let cover = $(`#target-${i}-cover`).find(":selected").text()
+             cover = cover.toLowerCase() == 'true' ? true : false
              result[`target ${i}`] = {
                  "hits": hits,
                  "cover": cover,
-                 "armor": armor
+                 "armor": armor,
+                 "location": location,
+                 "hitRoll": hitRoll
              }
          }
          calculateDamage(result, weapon, ammoType)
@@ -604,8 +612,8 @@
          let armor = targets[`target ${i}`]['armor']
          let hits = targets[`target ${i}`]['hits']
          let cover = targets[`target ${i}`]['cover']
-         let hitRoll
-         cover = cover.toLowerCase() == 'true' ? true : false
+         let location = targets[`target ${i}`]['location']
+         let hitRoll = targets[`target ${i}`]['hitRoll']
          for (let j = 1; j <= hits; j++) {
              //0-9 roll for epf
              let epfRoll = _.random(0, 9)
@@ -614,13 +622,12 @@
                  let salm = weapon[range]['Shot']['SALM']
                  hitRoll = hitRoll + pf.shotgunMultipleHit(salm)
                  hitRoll = _.clamp(hitRoll, 0, 99)
-             } else {
-                 hitRoll = _.random(0, 99)
-                 console.log(`hit roll: ${hitRoll}`)
              }
+             console.log("did this come over? " + hitRoll)
              let epf = pf.effectivePenetrationFactor(epfRoll, armor)
              let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
              let hitLocation = pf.hitLocation(hitRoll, cover)
+             console.log(location, hitLocation, " better fucking match", cover)
              damage += hitDamage
              console.log(`range: ${range}, hitDamage: ${hitDamage}, damage: ${damage}, epf: ${epf}, dc: ${dc}`)
              shots.push(hitLocation)
@@ -697,9 +704,17 @@
          location = _.uniq(location)
          let tr = `
          <tr>
-             <td class="text-center">${i}</td>
-             <td id="target-${i}-location" class="text-center">${location}</td>
-             <td id="target-${i}-damage" class="text-center">${damage}</td>
+             <td id="target-${i}-location" class="text-center">${i}: ${location}</td>
+             <td class="text-center">
+                <select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                    <option value="Clothing">Clothing</option>
+                    <option value="Light Flexible">Light Flexible</option>
+                    <option value="Medium Flexible">Medium Flexible</option>
+                    <option value="Heavy Flexible">Heavy Flexible</option>
+                    <option value="Light Rigid">Light Rigid</option>
+                    <option value="Medium Rigid">Medium Rigid</option>
+                    <option value="Heavy Rigid">Heavy Rigid</option>
+                </select></td>
              <td class="text-center"><select id="target-${i}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
                  <option value="No Aid">No Aid</option>
                  <option value="First Aid">First Aid</option>
@@ -707,7 +722,7 @@
                  <option value="Field Hospital">Field Hospital</option>
                  <option value="Trauma Center">Trauma Center</option>
              </select></td>
-             <td id="target-${i}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
+             <td id="target-${i}-recovery" data-damage="${damage}" class="text-center"><strong>${damage} damage.</strong> ${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
          </tr>
      `
          targetRows += tr
@@ -716,8 +731,7 @@
          <thead>
              <tr>
                  <th class="text-center">Target</th>
-                 <th class="text-center">Location</th>
-                 <th class="text-center">Damage</th>
+                 <th class="text-center">Armor</th>
                  <th class="text-center">Aid</th>
                  <th class="text-center">Recovery</th>
              </tr>
@@ -725,13 +739,38 @@
          <tbody>${targetRows}</tbody>
      </table>`
      $('#damage').empty().append(div)
-     $('.target-aid-select').change((e) => {
+     $('.target-aid-select').change(e => {
          let id = _.split(e.target.id, '-', 2)
          let aid = e.target.value
-         let damage = $(`#target-${id[1]}-damage`).text()
+         let damage = $(`#target-${id[1]}-recovery`).attr('data-damage')
          let result = pf.medicalAid(_.toNumber(damage), aid)
          let recoveryId = `target-${id[1]}-recovery`
          $(`#${recoveryId}`).empty().append(result)
+     })
+     $('.target-armor-select').change(e => {
+        let targetNum = $('#damage-table tbody tr').length
+        let targets = {}
+        let result = {}
+        for (let i = 1; i <= targetNum; i++) {
+            let armor = $(`#target-${i}-armor`).find(":selected").text()
+             let location = $(`#target-${i}-location`).text()
+             location = _.split(location, ':', 2)
+             let hitRoll = $(`#target-${i}-location`).attr('data-hitRoll')
+             let hits = _.toNumber($(`#target-${i}-bullets`).text())
+             let cover = $(`#target-${i}-cover`).find(":selected").text()
+             cover = cover.toLowerCase() == 'true' ? true : false
+             result[`target ${i}`] = {
+                 "hits": hits,
+                 "cover": cover,
+                 "armor": armor,
+                 "location": location[1],
+                 "hitRoll": hitRoll
+             }
+        }
+        console.log(result)
+
+        let id = _.split(e.target.id, '-', 2)
+        let armor = e.target.value
      })
  }
  
