@@ -133,7 +133,7 @@ export function parseHitResult(result) {
       if (value.hit === true) {
           response += `${key} hit ${value.bullets} time(s). `
       } else {
-          response += `Missed ${key}`
+          response += `Missed ${key}. `
       }        
   })
   return response

@@ -715,10 +715,12 @@
   */
  function displayDamage(targets) {
      let targetRows = ''
+     let msg = ''
      for (let i = 1; i <= _.size(targets); i++) {
          let damage = targets[`target ${i}`]['hit damage']
          let location = targets[`target ${i}`]['hit location']
          location = _.uniq(location)
+         if (damage > 0) {msg += `hit target ${i} ${location} for ${damage} damage. `}
          let tr = `
          <tr>
              <td class="text-center">${i}</td>
@@ -749,6 +751,7 @@
          <tbody>${targetRows}</tbody>
      </table>`
      $('#damage').empty().append(div)
+     Utils.log(msg)
      $('.target-aid-select').change((e) => {
          let id = _.split(e.target.id, '-', 2)
          let aid = e.target.value
@@ -768,10 +771,12 @@
   */
  function displayExplosionDamage(targets) {
      let targetRows = ''
+     let msg = ''
      let radius = ['0', '1', '2', '3', '5', '10']
      _.forEach(radius, val => {
          let damage = targets[`radius ${val}`]['hit damage']
          let location = targets[`radius ${val}`]['hit location']
+         if (damage > 0) {msg += `hit target ${i} ${location} for ${damage} damage. `}
          location = _.uniq(location)
          let tr = `
          <tr>
@@ -803,6 +808,7 @@
          <tbody>${targetRows}</tbody>
      </table>`
      $('#damage').empty().append(div)
+     Utils.log(msg)
      $('.target-aid-select').change((e) => {
          let id = _.split(e.target.id, '-', 2)
          let aid = e.target.value
