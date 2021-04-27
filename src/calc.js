@@ -77,7 +77,6 @@
              eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0, eal.ammoType = ammoType, eal.salm = 0
              $('#fire-button').off('click')
              $('#sab').val('false')
-             console.log(eal)
              displayChanceToHit(gun, eal)
          })
      }
@@ -260,10 +259,8 @@
          let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
          if (loadedAmmo >= rof) {
              Database.set(loadedAmmoPath, loadedAmmo - rof)
-             console.log(`roll: ${roll}, chance: ${chance}`)
              if (roll <= chance) {
                  result = pf.burstFire(arc, rof, numberOfTargets)
-                 console.log(`burst fire result: ${JSON.stringify(result)}`)
                  Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} [${note}]`)
                  displayTargets(result, weapon, ammoType)
              } else {
@@ -439,11 +436,12 @@
      for (let i = 1; i <= _.size(targets); i++) {
          //add the cumulative hits to the latest hits
          let hitRoll = _.random(0,99)
-         let location = pf.hitLocation(hitRoll, true)
+         let location = ''
          bullets = _.toNumber($(`#target-${i}-bullets`).text()) + _.toNumber(`${targets[`target ${i}`]['bullets']}`)
+         if (bullets > 0) {location = ":" + pf.hitLocation(hitRoll, true)}
          let tr = `
              <tr>
-                 <td id="target-${i}-location" data-location="${location}" data-hitRoll="${hitRoll}" class="text-center">${i}:${location}</td>
+                 <td id="target-${i}-location" data-location="${location}" data-hitRoll="${hitRoll}" class="text-center">${i}${location}</td>
                  <td id="target-${i}-bullets" class="text-center">${bullets}</td>
                  <td id="target-${i}-cover" class="text-center">
                     <select id="target-${i}-cover" class="form-control selectpicker target-cover-select" data-style="btn btn-link"">
@@ -501,7 +499,6 @@
                  "hitRoll": _.toNumber(hitRoll)
              }
          }
-         console.log(result)
          calculateDamage(result, weapon, ammoType)
      })
      $('.nav-tabs a[href="#hits"]').tab('show')
@@ -522,10 +519,13 @@
      let radius = ['0', '1', '2', '3', '5', '10']
      let targetRows = ''
      _.forEach(radius, val => {
-         bullets = _.toNumber(`${targetList[`${val}`]['bullets']}`)
+        let hitRoll = _.random(0,99)
+        let location = ''
+        bullets = _.toNumber(`${targetList[`${val}`]['bullets']}`)
+        if (bullets > 0) {location = ":" + pf.hitLocation(hitRoll, false)}
          let tr = `<tr>
              <td class="text-center">${val}</td>
-             <td id="target-${val}-bullets" class="text-center">${bullets}</td>
+             <td id="target-${val}-bullets" data-hitRoll="${hitRoll}" class="text-center">${bullets}${location}</td>
              <td class="text-center">
                 <select id="target-${val}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
                     <option value="Clothing">Clothing</option>
@@ -567,21 +567,39 @@
      $('#hits').empty().append(`<h5><strong>${location}</strong></h5>`)
      $('#hits').append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
+     $('.target-blast-mod-select').change(e => {
+        let id = _.split(e.target.id, '-', 2)[1]
+        let hitRoll = $(`#target-${id}-bullets`).attr('data-hitRoll')
+        let blastMod = e.target.value
+        let cover = false
+        if (blastMod === 'Behind Solid Cover' || blastMod === 'Under Partial Cover') {
+            cover = true
+        }
+         let loc = pf.hitLocation(hitRoll, cover)
+         $(`#target-${id}-bullets`).html(`${id}:${loc}`)
+     })
      $('#damage-button').click(e => {
          e.preventDefault()
          let result = {}
          let radius = ['0', '1', '2', '3', '5', '10']
          _.forEach(radius, val => {
+             let cover = false
+             let hitRoll = $(`#target-${val}-bullets`).attr('data-hitRoll')
              let armor = 'Clothing'
-             let hits = _.toNumber($(`#target-${val}-bullets`).text())
+             let hitsVal = $(`#target-${val}-bullets`).text()
+             let hits = _.split(hitsVal, ":")[0]
              armor = $(`#target-${val}-armor`).find(":selected").text()
-             let cover = $(`#target-${val}-cover`).find(":selected").text()
              let blastMod = $(`#target-${val}-blast-mod`).find(":selected").text()
+             if (blastMod === 'Behind Solid Cover' || blastMod === 'Under Partial Cover') {
+                cover = true
+             }
+             
              result[`radius ${val}`] = {
-                 "hits": hits,
+                 "hits": _.toNumber(hits),
                  "cover": cover,
                  "armor": armor,
-                 "blastMod": blastMod
+                 "blastMod": blastMod,
+                 "hitRoll": _.toNumber(hitRoll)
              }
          })
          calculateExplosionDamage(result, weapon, ammoType)
@@ -630,7 +648,6 @@
              let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
              let hitLocation = pf.hitLocation(hitRoll, cover)
              damage += hitDamage
-             console.log(`range: ${range}, armor: ${armor}, hitDamage: ${hitDamage}, damage: ${damage}, epf: ${epf}, dc: ${dc}, loc: ${hitLocation}`)
              shots.push(hitLocation)
          }
          result[`target ${i}`] = {
@@ -665,20 +682,19 @@
          if (blastMod === 'Behind Solid Cover' || blastMod === 'Under Partial Cover') {
              cover = true
          }
-         let bm = pf.blastModifier(blastMod)
-         let bc = weapon[val][ammoType]['BC']
-         let concussionDamage = bm * bc
-         let pen = weapon[val][ammoType]['PEN']
-         let dc = weapon[val][ammoType]['DC']
-         let hitRoll
-         //0-9 roll for epf
-         let epfRoll = _.random(0, 9)
-         hitRoll = _.random(0, 99)
-         let epf = pf.effectivePenetrationFactor(epfRoll, armor)
-         let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
-         damage = (hits * hitDamage) + concussionDamage
-         if (damage > 0) {
-             hitLocation = pf.hitLocation(hitRoll, cover)
+         if (hits > 0) {
+            let bm = pf.blastModifier(blastMod)
+            let bc = weapon[val][ammoType]['BC']
+            let concussionDamage = bm * bc
+            let pen = weapon[val][ammoType]['PEN']
+            let dc = weapon[val][ammoType]['DC']
+            let hitRoll = targets[`radius ${val}`]['hitRoll']
+            //0-9 roll for epf
+            let epfRoll = _.random(0, 9)
+            let epf = pf.effectivePenetrationFactor(epfRoll, armor)
+            let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
+            damage = (hits * hitDamage) + concussionDamage
+            hitLocation = pf.hitLocation(hitRoll, cover)
          }
          shots.push(hitLocation)
          result[`radius ${val}`] = {
