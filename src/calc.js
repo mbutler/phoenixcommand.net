@@ -79,7 +79,6 @@
              eal.firingStance = firingStance, eal.position = position, eal.situational = situational, eal.visibility = visibility, eal.targetSize = targetSize
              eal.weaponAimMod = weaponAim[_.toString(weaponAimIndex)], eal.targetDiameter = targetDiameter, eal.sab = 0, eal.ammoType = ammoType, eal.salm = 0
              $('#fire-button').off('click')
-             $('#sab').val('false')
              displayChanceToHit(gun, eal)
          })
      }
@@ -94,6 +93,9 @@
   * @return {undefined} - Modifies the DOM
   */
  function displayChanceToHit(weapon, eal) {
+    $('#fire-button').attr('data-fired', 'false')
+    $('#sab-message').empty()
+    $('#sab').empty()
      let shotType = eal.shotType
      let accuracy = pf.effectiveAccuracyLevel(eal)
      let chance = pf.oddsOfHitting(accuracy, shotType)
@@ -116,7 +118,6 @@
      if (shotType === 'Explosive') {
          explosiveHandler(weapon, eal, accuracy, chance)
      }
- 
      $('.nav-tabs a[href="#odds"]').tab('show')
  }
  
@@ -137,17 +138,32 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         eal.sab = weapon['SAB']
+         let fired = $('#fire-button').attr('data-fired')
+         if (fired) {
+            eal.sab = weapon['SAB']
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         }
          $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-         $('#sab').empty().append(`-${weapon['SAB']}`)
          let targets = _.toNumber($('#number-of-targets').val())
          let arc = _.toNumber($('#arc').val())
+         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+         
          if (targets > 0 && arc >= 0) {
+             console.log("firing at ", weapon, targets, arc, chance, eal.range)
              fireBurst(weapon, targets, arc, chance, eal.range)
          } else {
              Utils.modal("Phoenix Command", 'Arc and number of targets required.')
          }
+
+         eal.sab = weapon['SAB']
+         accuracy = pf.effectiveAccuracyLevel(eal)
+         chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+         $('#eal').empty().append(accuracy)
+         $('#sab-message').empty().append('Sustained Automatic Burst')
+         $('#sab').empty().append(`-${eal.sab}`)
+         $('#fire-button').attr('data-fired', 'true')
      })
  }
  
@@ -166,11 +182,24 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         eal.sab = weapon['SAB']
+         let fired = $('#fire-button').attr('data-fired')
+         if (fired) {
+            eal.sab = weapon['SAB']
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         }
          $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-         $('#sab').empty().append(`-${weapon['SAB']}`)
+
          fireSingleShot(weapon, chance, eal.range)
+
+         eal.sab = weapon['SAB']
+         accuracy = pf.effectiveAccuracyLevel(eal)
+         chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+         $('#eal').empty().append(accuracy)
+         $('#sab-message').empty().append('Sustained Automatic Burst')
+         $('#sab').empty().append(`-${eal.sab}`)
+         $('#fire-button').attr('data-fired', 'true')
      })
  }
  
@@ -198,13 +227,19 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         eal.sab = weapon['SAB']
+         let fired = $('#fire-button').attr('data-fired')
+         if (fired) {
+            eal.sab = weapon['SAB']
+            accuracy = pf.effectiveAccuracyLevel(eal)
+            accuracy = accuracy + salm
+            chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         }
          accuracy = accuracy + salm
          chance = pf.oddsOfHitting(accuracy, eal.shotType)
          $('#eal').empty().append(accuracy)
          $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-         $('#sab').empty().append(`-${weapon['SAB']}`)
+         $('#sab-message').empty().append('Sustained Automatic Burst')
+         $('#sab').empty().append(`-${eal.sab}`)
          fireShotgun(eal.ammoType, range, weapon, chance)
      })
  }
@@ -227,13 +262,8 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         eal.sab = weapon['SAB']
-         if (eal.range > weapon.MR) {
-             chance = 0
-         }
+         if (eal.range > weapon.MR) { chance = 0 }
          $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#sab-message').empty().append('<strong>Sustained Auto Burst Penalty</strong>')
-         $('#sab').empty().append(`-${weapon['SAB']}`)
          fireExplosive(weapon, eal.range, chance, accuracy)
      })
  }
@@ -779,7 +809,7 @@
      _.forEach(radius, val => {
          let damage = targets[`radius ${val}`]['hit damage']
          let location = targets[`radius ${val}`]['hit location']
-         if (damage > 0) {msg += `hit target ${i} ${location} for ${damage} damage. `}
+         if (damage > 0) {msg += `hit ${location} from ${val} hexes away for ${damage} damage. `}
          location = _.uniq(location)
          let tr = `
          <tr>
