@@ -753,7 +753,8 @@
          let damage = targets[`target ${i}`]['hit damage']
          let location = targets[`target ${i}`]['hit location']
          location = _.uniq(location)
-         if (damage > 0) {msg += `hit target ${i} ${location} for ${damage} damage. `}
+         if (damage > 0) {msg += `Hit target ${i} ${location} for ${damage} damage. `}
+         if (damage <= 0) {msg += `Fired at target ${i} but no bullets hit. `}
          let tr = `
          <tr>
              <td class="text-center">${i}</td>
@@ -809,7 +810,7 @@
      _.forEach(radius, val => {
          let damage = targets[`radius ${val}`]['hit damage']
          let location = targets[`radius ${val}`]['hit location']
-         if (damage > 0) {msg += `hit ${location} from ${val} hexes away for ${damage} damage. `}
+         if (damage > 0) {msg += `Hit ${location} from ${val} hexes away for ${damage} damage. `}
          location = _.uniq(location)
          let tr = `
          <tr>

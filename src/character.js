@@ -59,24 +59,34 @@ export function displayCharacterSheet(characterName) {
       let dt = pf.damageTotal(pd, character.health)
       let pdPath = `users/${game.metadata.gameId}/content/characters/${characterId}/pd`
       let dtPath = `users/${game.metadata.gameId}/content/characters/${characterId}/dt`
+      let statusPath = `users/${game.metadata.gameId}/content/characters/${characterId}/status`
+      if (pd === 0) {
+        $('#total-damage').empty().append(0)
+        Database.set(pdPath, 0)
+        Database.set(dtPath, 0)
+        $("#status").val('Alive')
+        Database.set(statusPath, 'Alive')
+      }
       Database.set(pdPath, pd)
       Database.set(dtPath, dt)
       $('#total-damage').empty().append(dt)
-      let chance = pf.incapacitationChance(pd, character.kv)
-      if (_.random(0,99) <= chance) {
-        let roll = _.random(0,9)
-        let time = pf.incapacitationTime(roll, pd)
+      let roll = _.random(0,99)
+      let incapacitationEffect = pf.incapacitationEffect(pd, character.kv, roll)
+      if (incapacitationEffect.effect !== '') {
+        let timeRoll = _.clamp(_.random(0,9) + incapacitationEffect.timeRollMod, 0, 9)
+        let time = pf.incapacitationTime(timeRoll, pd)
         let phases = pf.incapacitationTimeToPhases(time)
         let futureTime = pf.phasesToTime(phases, game.content.time)
-        $("#status").val('Incapacitated')
-        Utils.log(`${characterName} is incapacitated`)
+        $("#status").val(incapacitationEffect.effect)
+        Database.set(statusPath, incapacitationEffect.effect)
+        Utils.log(`${characterName} is ${incapacitationEffect.effect}`)
         let action = Timer.actionTemplate()
         action.runTime.time = futureTime   
         action.setTime = game.content.time
         action.gameId = game.metadata.gameId
-        action.message = `No longer incapacitated.`
+        action.message = `No longer ${incapacitationEffect.effect}.`
         Timer.add(action)
-        Utils.modal("Phoenix Command", `${characterName} incapacitated for ${time}`)
+        Utils.modal("Phoenix Command", `${characterName} ${incapacitationEffect.effect} for ${time}`)
       }
     })
   })
