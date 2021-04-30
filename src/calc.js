@@ -668,6 +668,7 @@
          let hits = targets[`target ${i}`]['hits']
          let cover = targets[`target ${i}`]['cover']
          let hitRoll = targets[`target ${i}`]['hitRoll']
+         let knockedDown = pf.knockdown(hitRoll, cover, weapon)
          cover = cover.toLowerCase() == 'true' ? true : false
          for (let j = 1; j <= hits; j++) {
              //0-9 roll for epf
@@ -683,6 +684,7 @@
              damage += hitDamage
              shots.push(hitLocation)
          }
+         shots.push(knockedDown)
          result[`target ${i}`] = {
              "hit location": shots,
              "hit damage": damage
