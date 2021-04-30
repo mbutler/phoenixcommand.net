@@ -73,6 +73,10 @@ function route(user) {
   if (file === 'actions.html') {
     Utils.displaySetActions(user)
   }
+
+  if (file === 'clock.html') {
+    Timer.clock(user)
+  }
 }
 
 window.pfTables = pf.getAllTables()

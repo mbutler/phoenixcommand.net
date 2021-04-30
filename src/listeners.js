@@ -27,6 +27,8 @@ snap.then(game => {
         let time = snapshot.val()
         $('#phase').empty().append(`<h4>Phase: <strong>${time.phase}</strong></h4>`)
         $('#impulse').empty().append(`<h4>Impulse: <strong>${time.impulse}</strong></h4>`)
+        $('#clock-phase-input').empty().val(`${time.phase}`)
+        $('#clock-impulse-input').empty().val(`${time.impulse}`)
         Timer.run(path)
     })
 })

@@ -268,6 +268,9 @@ figcaption {
     .timer-card {
         padding-top: 100px;
     }
+    .clock-card {
+        padding-top: 100px;
+    }
     #time {
         margin-top: 20px;
     }
@@ -279,6 +282,9 @@ figcaption {
     }
 
     .timer-container {
+        padding-top: 30px;
+    }
+    .clock-container {
         padding-top: 30px;
     }
 }
@@ -303,6 +309,9 @@ figcaption {
     .timer-container {
         padding-top: 120px;
     }
+    .clock-container {
+        padding-top: 120px;
+    }
     #time {
         margin-top: 60px;
     }
@@ -316,7 +325,9 @@ figcaption {
     .timer-card {
         margin-top: 60px;
     }
-
+    .clock-card {
+        margin-top: 60px;
+    }
     #calc-character-name {
         margin-top: 60px;
     }
