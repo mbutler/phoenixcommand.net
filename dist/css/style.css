@@ -79,6 +79,9 @@ figcaption {
 #actions-table {
     margin-top: 75px;
 }
+#medical-table {
+    margin-top: 75px;
+}
 #timer-time-table thead {
     border-color: white;
     border: none;
@@ -232,6 +235,9 @@ figcaption {
     #actions-table {
         margin-top: 110px;
     }
+    #medical-table {
+        margin-top: 110px;
+    }
 }
 
 @media (min-width: 992px) {
@@ -239,6 +245,9 @@ figcaption {
         margin-top: 75px;
     }
     #actions-table {
+        margin-top: 75px;
+    }
+    #medical-table {
         margin-top: 75px;
     }
     #new-character-button {
@@ -294,6 +303,9 @@ figcaption {
         margin-top: 110px;
     }
     #actions-table {
+        margin-top: 110px;
+    }
+    #medical-table {
         margin-top: 110px;
     }
     .card-text {

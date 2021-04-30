@@ -12,6 +12,7 @@ import * as User from './user'
 import * as Character from './character'
 import * as Calc from './calc'
 import * as Timer from './timer'
+import * as Medical from './medical'
 import * as pf from 'phoenix-functions'
 import './listeners'
 import { time } from './listeners'
@@ -84,6 +85,10 @@ function route(user) {
 
   if (file === 'clock.html') {
     Timer.clock(user)
+  }
+
+  if (file === 'medical.html') {
+    Medical.setUser(user)
   }
 }
 
