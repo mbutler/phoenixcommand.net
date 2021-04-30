@@ -15,6 +15,11 @@ import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 import './listeners'
 
+/* probably safe to remove these in a few months */
+localStorage.removeItem('firebird-command-user-id')
+localStorage.removeItem('firebird-command-current-character')
+/* --------------------------------------------- */
+
 Database.auth().onAuthStateChanged(user => {
   if (user) {
     window.localStorage.setItem('phoenix-command-user-id', user.uid)
