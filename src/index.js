@@ -14,10 +14,11 @@ import * as Calc from './calc'
 import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
 import './listeners'
+import { time } from './listeners'
 
 /* probably safe to remove these in a few months */
-localStorage.removeItem('firebird-command-user-id')
-localStorage.removeItem('firebird-command-current-character')
+window.localStorage.removeItem('firebird-command-user-id')
+window.localStorage.removeItem('firebird-command-current-character')
 /* --------------------------------------------- */
 
 Database.auth().onAuthStateChanged(user => {
@@ -25,9 +26,11 @@ Database.auth().onAuthStateChanged(user => {
     window.localStorage.setItem('phoenix-command-user-id', user.uid)
     User.addNew(user)
     Game.navList(user)
+    time()
     route(user)
   } else {
-    window.localStorage.setItem('phoenix-command-user-id', '')
+    window.localStorage.removeItem('phoenix-command-user-id')
+    window.localStorage.removeItem('phoenix-command-current-character')
     Utils.clearUserDisplay()
   }
 

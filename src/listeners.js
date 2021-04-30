@@ -17,21 +17,23 @@ import * as pf from 'phoenix-functions'
  * Listens for timer update in database then changes time display
  *
  * @memberof Listeners
- * @alias time
+ * @return {undefined} - Modifies the DOM
  */
-let snap = Database.currentGame()
-snap.then(game => {
-    let path = game.metadata.gameId
-    let ref = Database.ref('users/' + path + '/content/time')
-    ref.on('value', snapshot => {
-        let time = snapshot.val()
-        $('#phase').empty().append(`<h4>Phase: <strong>${time.phase}</strong></h4>`)
-        $('#impulse').empty().append(`<h4>Impulse: <strong>${time.impulse}</strong></h4>`)
-        $('#clock-phase-input').empty().val(`${time.phase}`)
-        $('#clock-impulse-input').empty().val(`${time.impulse}`)
-        Timer.run(path)
+export function time() {
+    let snap = Database.currentGame()
+    snap.then(game => {
+        let path = game.metadata.gameId
+        let ref = Database.ref('users/' + path + '/content/time')
+        ref.on('value', snapshot => {
+            let time = snapshot.val()
+            $('#phase').empty().append(`<h4>Phase: <strong>${time.phase}</strong></h4>`)
+            $('#impulse').empty().append(`<h4>Impulse: <strong>${time.impulse}</strong></h4>`)
+            $('#clock-phase-input').empty().val(`${time.phase}`)
+            $('#clock-impulse-input').empty().val(`${time.impulse}`)
+            Timer.run(path)
+        })
     })
-})
+}
 
 /**
  * Listens for randomize-character button click then runs Utils.randomize
