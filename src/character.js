@@ -71,22 +71,22 @@ export function displayCharacterSheet(characterName) {
       Database.set(dtPath, dt)
       $('#total-damage').empty().append(dt)
       let roll = _.random(0,99)
-      let incapacitationEffect = pf.incapacitationEffect(pd, character.kv, roll)
-      if (incapacitationEffect.effect !== '') {
-        let timeRoll = _.clamp(_.random(0,9) + incapacitationEffect.timeRollMod, 0, 9)
+      let incapEffect = pf.incapacitationEffect(pd, character.kv, roll)
+      if (incapEffect.effect !== '') {
+        let timeRoll = _.clamp(_.random(0,9) + incapEffect.timeRollMod, 0, 9)
         let time = pf.incapacitationTime(timeRoll, pd)
         let phases = pf.incapacitationTimeToPhases(time)
         let futureTime = pf.phasesToTime(phases, game.content.time)
-        $("#status").val(incapacitationEffect.effect)
-        Database.set(statusPath, incapacitationEffect.effect)
-        Utils.log(`${characterName} is ${incapacitationEffect.effect}`)
+        $("#status").val(incapEffect.effect)
+        Database.set(statusPath, incapEffect.effect)
+        Utils.log(`${characterName} is ${incapEffect.effect}`)
         let action = Timer.actionTemplate()
         action.runTime.time = futureTime   
         action.setTime = game.content.time
         action.gameId = game.metadata.gameId
-        action.message = `No longer ${incapacitationEffect.effect}.`
+        action.message = `No longer ${incapEffect.effect}.`
         Timer.add(action)
-        Utils.modal("Phoenix Command", `${characterName} ${incapacitationEffect.effect} for ${time}`)
+        Utils.modal("Phoenix Command", `${characterName} ${incapEffect.effect} for ${time}`)
       }
     })
   })
