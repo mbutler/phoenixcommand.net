@@ -172,7 +172,7 @@ $("#calc-character-name").on('click', '.dropdown-eal', e => {
     snap.then(game => {
         _.forEach(game.content.characters, player => {
             if (player.name === result) {
-                window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+                window.localStorage.setItem('phoenix-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
                 $('#calc-sal').val(player.sal)
                 $(`#firing-stance-button .dropdown-toggle`).empty().append(player.stance)
                 $(`#position-button .dropdown-toggle`).empty().append(player.position)
@@ -218,7 +218,7 @@ $("#timer-character-name").on('click', '.dropdown-timer', e => {
     snap.then(game => {
         _.forEach(game.content.characters, player => {
             if (player.name === result) {
-                window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
+                window.localStorage.setItem('phoenix-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + User.getCharacterId(game, result))
                 $('#impulse1').html(player.capi['1'])
                 $('#impulse2').html(player.capi['2'])
                 $('#impulse3').html(player.capi['3'])
@@ -338,7 +338,7 @@ $('#timer-duration-button').click(e => {
             },
             "remainder": 0
         }
-        action.characterPath = window.localStorage.getItem('firebird-command-current-character')
+        action.characterPath = window.localStorage.getItem('phoenix-command-current-character')
         action.setTime = game.content.time
         action.gameId = game.metadata.gameId
         action.message = msg
@@ -360,7 +360,7 @@ $('.actions-set-timer').click(e => {
     e.preventDefault()
     let msg = $(e.currentTarget).parent().parent().children().eq(1).html()
     let ca = _.toNumber(e.currentTarget.innerText)
-    let path = window.localStorage.getItem('firebird-command-current-character')
+    let path = window.localStorage.getItem('phoenix-command-current-character')
     let ref = Database.currentCharacter(path)
     ref.then(character => {
         let capi = {}

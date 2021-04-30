@@ -17,12 +17,12 @@ import './listeners'
 
 Database.auth().onAuthStateChanged(user => {
   if (user) {
-    window.localStorage.setItem('firebird-command-user-id', user.uid)
+    window.localStorage.setItem('phoenix-command-user-id', user.uid)
     User.addNew(user)
     Game.navList(user)
     route(user)
   } else {
-    window.localStorage.setItem('firebird-command-user-id', '')
+    window.localStorage.setItem('phoenix-command-user-id', '')
     Utils.clearUserDisplay()
   }
 

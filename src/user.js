@@ -7,7 +7,7 @@
 import * as Database from './database'
 
 /**
- * Adds a mew user to the database and sets localStorage 'firebird-command-user-id'
+ * Adds a mew user to the database and sets localStorage 'phoenix-command-user-id'
  *
  * @param {object} user - A Firebase auth user
  * @memberof User
@@ -24,7 +24,7 @@ export function addNew(user) {
         created: date.getTime()
       })
       Database.set('userIds/' + user.uid, user.displayName)
-      window.localStorage.setItem('firebird-command-user-id', user.uid)
+      window.localStorage.setItem('phoenix-command-user-id', user.uid)
     }
   })
 }

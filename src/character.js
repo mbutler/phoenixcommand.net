@@ -22,7 +22,7 @@ export function displayCharacterSheet(characterName) {
   let snap = Database.currentGame()
   snap.then(game => {
     let characterId = User.getCharacterId(game, characterName)
-    window.localStorage.setItem('firebird-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + characterId)
+    window.localStorage.setItem('phoenix-command-current-character', 'users/' + game.metadata.gameId + '/content/characters/' + characterId)
     $('.game-title').text(game.metadata.title)        
     let character = User.getCharacterSheet(game, characterName)
     $('#character-name').empty().append(`<h3><strong>${character.characterName}</strong></h3>`)
@@ -233,7 +233,7 @@ export function displayWeapons(character) {
         $(`#${ammoDropdown}`).val(ammo)
         $(`#${ammoDropdown}`).change(e => {
           let name = gun.Name
-          let path = window.localStorage.getItem('firebird-command-current-character')
+          let path = window.localStorage.getItem('phoenix-command-current-character')
           let result = e.target.value
           let ammoPath = path + '/ammo/' + name + '/type/'
           Database.set(ammoPath, result)
@@ -241,7 +241,7 @@ export function displayWeapons(character) {
         $(`#reload-${ammoDropdown}`).click(e => {
           let cap = gun.Cap
           let name = gun.Name
-          let path = window.localStorage.getItem('firebird-command-current-character')
+          let path = window.localStorage.getItem('phoenix-command-current-character')
           let ammoPath = path + '/ammo/' + name + '/loaded/'
           Database.set(ammoPath, cap)
           $(`#rounds-loaded-${ammoDropdown}`).html(cap)
@@ -301,7 +301,7 @@ export function submitCharacter() {
   c.stance = "False"
   c.actions = {}
 
-  c.user = window.localStorage.getItem('firebird-command-user-id')
+  c.user = window.localStorage.getItem('phoenix-command-user-id')
 
   Game.addCharacter(c)
 }

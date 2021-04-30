@@ -47,7 +47,7 @@ export function run(gameId) {
             if (_.isEqual(action.runTime.time, actions.time)) {
                 let ref = Database.ref(action.characterPath)
                 ref.on('value', snapshot => {
-                    let userId = window.localStorage.getItem('firebird-command-user-id')
+                    let userId = window.localStorage.getItem('phoenix-command-user-id')
                     let character = snapshot.val()
                     Utils.log(`${character.name}: ${action.message}`)
                     if (action.setBy == userId) {
@@ -79,8 +79,8 @@ export function add(action) {
  * @return {object} - An empty Phoenix Command action object
  */
 export function actionTemplate() {
-    let currentCharacter = window.localStorage.getItem('firebird-command-current-character')
-    let userId = window.localStorage.getItem('firebird-command-user-id')
+    let currentCharacter = window.localStorage.getItem('phoenix-command-current-character')
+    let userId = window.localStorage.getItem('phoenix-command-user-id')
     let current = _.split(currentCharacter, '/')
     let action = {}
     action.runTime = {}    

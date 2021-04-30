@@ -275,7 +275,7 @@ export function clearUserDisplay() {
  * @return {string} - The game path
  */
 export function getGamePath() {
-  let path = window.localStorage.getItem('firebird-command-current-character')
+  let path = window.localStorage.getItem('phoenix-command-current-character')
   let pathArr = _.split(path, '/', 4)
   let gamePath = _.join(pathArr, '/')
   return gamePath

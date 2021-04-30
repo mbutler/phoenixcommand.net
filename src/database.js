@@ -33,7 +33,7 @@ ui.start('#firebaseui-auth-container', uiConfig)
  */
 export async function user(userId) {
     if (userId === undefined) {
-        userId = window.localStorage.getItem('firebird-command-user-id')
+        userId = window.localStorage.getItem('phoenix-command-user-id')
     }
     let userRef = firebase.database().ref('users/' + userId).once('value')
     let user = await Promise.all([userRef])
@@ -49,7 +49,7 @@ export async function user(userId) {
  */
 export async function currentGame(userId) {
     if (userId === undefined) {
-        userId = window.localStorage.getItem('firebird-command-user-id')
+        userId = window.localStorage.getItem('phoenix-command-user-id')
     }
     let userRef = firebase.database().ref('users/' + userId).once('value')
     let user = await Promise.all([userRef])
@@ -85,7 +85,7 @@ export async function actionList(gameId) {
  */
 export async function currentCharacter(characterPath) {
     if (characterPath === undefined) {
-        characterPath = window.localStorage.getItem('firebird-command-current-character')
+        characterPath = window.localStorage.getItem('phoenix-command-current-character')
     }
     let characterRef = firebase.database().ref(characterPath).once('value')
     let character = await Promise.all([characterRef])

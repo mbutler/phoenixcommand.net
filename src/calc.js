@@ -283,7 +283,7 @@
      let result = ''
      let rof = weapon['ROF']
      let roll = _.random(0, 99)
-     let path = window.localStorage.getItem('firebird-command-current-character')
+     let path = window.localStorage.getItem('phoenix-command-current-character')
      let note = $('#optional-note').val()
      let snap = Database.currentCharacter()
      snap.then(character => {
@@ -320,7 +320,7 @@
   */
  function fireSingleShot(weapon, chance, range) {
      let result = ''
-     let path = window.localStorage.getItem('firebird-command-current-character')
+     let path = window.localStorage.getItem('phoenix-command-current-character')
      let note = $('#optional-note').val()
      let snap = Database.currentCharacter()
      snap.then(character => {
@@ -363,7 +363,7 @@
          bphc = weapon[range][ammoType]['BPHC']
      }
      let roll = _.random(0, 99)
-     let path = window.localStorage.getItem('firebird-command-current-character')
+     let path = window.localStorage.getItem('phoenix-command-current-character')
      let note = $('#optional-note').val()
      let snap = Database.currentCharacter()
      snap.then(character => {
@@ -402,7 +402,7 @@
   */
  function fireExplosive(weapon, range, chance, accuracy) {
      let result = ''
-     let path = window.localStorage.getItem('firebird-command-current-character')
+     let path = window.localStorage.getItem('phoenix-command-current-character')
      let snap = Database.currentCharacter()
      let roll = _.random(0, 99)
      let location = 'Explosive shot hit on target.'
