@@ -401,7 +401,7 @@
   * @return {undefined} - Modifies the DOM and database
   */
  function fireExplosive(weapon, range, chance, accuracy) {
-     let result = ''
+     let result = {}
      let path = window.localStorage.getItem('phoenix-command-current-character')
      let snap = Database.currentCharacter()
      let roll = _.random(0, 99)
@@ -421,19 +421,15 @@
                  let requiredEAL = pf.ealToHit(roll, 'Single Shot')
                  let scatter = pf.shotScatter(accuracy, requiredEAL)
                  let placement = pf.missedShotPlacement(_.random(0, 9), scatter)
-                 let h = 'hexes'
-                 if (scatter === 1) {
-                     h = 'hex'
-                 }
-                 location = `Explosive shot hit ${scatter} ${h} ${placement}`
+                 location = `Explosive shot hit ${scatter} hex(es) ${placement}`
                  Utils.log(`${character.name} fired a ${weapon.Name} ${range} hexes away with a ${chance}% chance. ${location} ${note}`)
+                 Utils.modal('Explosion', location)
                  result = pf.explosiveFire(weapon, ammoType)
                  displayExplosionTargets(result, weapon, ammoType, location)
              }
          } else {
-             result = 'Out of ammo.'
              Utils.log(`${character.name} tried to fire a ${weapon.Name} but was out of ammo. ${note}`)
-             Utils.modal("Phoenix Command", result)
+             Utils.modal("Phoenix Command", 'Out of ammo.')
          }
      })
  }
@@ -714,24 +710,29 @@
          let armor = targets[`radius ${val}`]['armor']
          let hits = targets[`radius ${val}`]['hits']
          let blastMod = targets[`radius ${val}`]['blastMod']
+         let hitRoll = targets[`radius ${val}`]['hitRoll']
          if (blastMod === 'Behind Solid Cover' || blastMod === 'Under Partial Cover') {
              cover = true
          }
-         if (hits > 0) {
-            let bm = pf.blastModifier(blastMod)
-            let bc = weapon[val][ammoType]['BC']
-            let concussionDamage = bm * bc
-            let pen = weapon[val][ammoType]['PEN']
-            let dc = weapon[val][ammoType]['DC']
-            let hitRoll = targets[`radius ${val}`]['hitRoll']
-            //0-9 roll for epf
+         let pen = weapon[val][ammoType]['PEN']
+         let dc = weapon[val][ammoType]['DC']
+         let bm = pf.blastModifier(blastMod)
+         let bc = weapon[val][ammoType]['BC']
+         let concussionDamage = bm * bc
+         let shrapnelDamage = 0
+         let i = 0
+         while (i < _.toNumber(hits)) {
             let epfRoll = _.random(0, 9)
             let epf = pf.effectivePenetrationFactor(epfRoll, armor)
             let hitDamage = pf.hitDamage(hitRoll, cover, dc, pen, epf)
-            damage = (hits * hitDamage) + concussionDamage
-            hitLocation = pf.hitLocation(hitRoll, cover)
+            shrapnelDamage += hitDamage
+            i++
          }
+         hitLocation = pf.hitLocation(hitRoll, cover)
+         damage = shrapnelDamage + concussionDamage
+         if (bc >= 90) {shots.push('Knocked down.')}
          shots.push(hitLocation)
+         
          result[`radius ${val}`] = {
              "hit location": shots,
              "hit damage": damage
