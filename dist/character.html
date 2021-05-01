@@ -224,13 +224,14 @@
                         <div class="tab-pane" id="weapons">
                         </div>
                         <div class="tab-pane" id="gear">
-                           <div id="gear-tab-guns">
-                            <div class="form-row label">
-                                <label><strong>Weapons</strong></label>
-                             </div>
+                           <div class="form-row">
+                              <div class="form-row label">
+                                 <label><strong>Weapons</strong></label>
+                              </div>
                            </div>
+                           <div id="gear-tab-guns" class="form-row"></div>
                            <hr>
-                           <div id="gear-tab-equipment">
+                           <div id="gear-tab-equipment" class="form-row">
                               <div class="form-row label">
                                  <label><strong>Equipment</strong></label>
                               </div>
@@ -259,8 +260,6 @@
                                     </span>
                                     </label>
                                  </div>
-                              </div>
-                              <div class="form-row">
                                  <div class="form-check form-check-inline">
                                     <label class="form-check-label">
                                     <input class="form-check-input" name="equipment" type="checkbox" value="Canteen"> Canteen
@@ -285,8 +284,6 @@
                                     </span>
                                     </label>
                                  </div>
-                              </div>
-                              <div class="form-row">
                                  <div class="form-check form-check-inline">
                                     <label class="form-check-label">
                                     <input class="form-check-input" name="equipment" type="checkbox" value="Field Radio"> Field Radio
@@ -319,8 +316,6 @@
                                     </span>
                                     </label>
                                  </div>
-                              </div>
-                              <div class="form-row">
                                  <div class="form-check form-check-inline">
                                     <label class="form-check-label">
                                     <input class="form-check-input" name="equipment" type="checkbox" value="Magazine Pouch (2 Mags)"> Magazine Pouch (2 Mags)
@@ -347,20 +342,25 @@
                                  </div>
                               </div>
                               <hr>
+                           </div>
+                           <hr>
+                           <div id="gear-tab-armor" class="form-row">
                               <div class="form-row label">
                                  <label><strong>Armor</strong></label>
                               </div>
-                               <select class="form-control selectpicker" data-style="btn btn-link" id="gear-armor">
-                                   <option value="Clothing">Clothing</option>
-                                   <option value="Light Flexible">Light Flexible</option>
-                                   <option value="Medium Flexible">Medium Flexible</option>
-                                   <option value="Heavy Flexible">Heavy Flexible</option>
-                                   <option value="Light Rigid">Light Rigid</option>
-                                   <option value="Medium Rigid">Medium Rigid</option>
-                                   <option value="Heavy Rigid">Heavy Rigid</option>
-                               </select>
+                              <select class="form-control selectpicker" data-style="btn btn-link" id="gear-armor">
+                                 <option value="Clothing">Clothing</option>
+                                 <option value="Light Flexible">Light Flexible</option>
+                                 <option value="Medium Flexible">Medium Flexible</option>
+                                 <option value="Heavy Flexible">Heavy Flexible</option>
+                                 <option value="Light Rigid">Light Rigid</option>
+                                 <option value="Medium Rigid">Medium Rigid</option>
+                                 <option value="Heavy Rigid">Heavy Rigid</option>
+                              </select>
                            </div>
-                           <button type="button" id="change-gear" class="btn btn-info">Change Loadout</button>
+                           <div class="form-row">
+                              <button type="button" id="change-gear" class="btn btn-info">Change Loadout</button>
+                           </div>
                         </div>
                         <div class="tab-pane" id="actions">
                            <table class="table table-condensed table-bordered table-striped">

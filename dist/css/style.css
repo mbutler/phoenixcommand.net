@@ -224,6 +224,9 @@ figcaption {
 .guns-list img {
     width: 40%;
 }
+#change-gear {
+    margin-top: 20px;
+}
 
 @media (max-width: 991px) {
     #new-character-button {
