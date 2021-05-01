@@ -93,6 +93,7 @@
   * @return {undefined} - Modifies the DOM
   */
  function displayChanceToHit(weapon, eal) {
+     console.log(eal)
     $('#fire-button').attr('data-fired', 'false')
     $('#sab-message').empty()
     $('#sab').empty()
@@ -138,32 +139,15 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         let fired = $('#fire-button').attr('data-fired')
-         if (fired) {
-            eal.sab = weapon['SAB']
-            accuracy = pf.effectiveAccuracyLevel(eal)
-            chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         }
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
          let targets = _.toNumber($('#number-of-targets').val())
          let arc = _.toNumber($('#arc').val())
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         
+     
          if (targets > 0 && arc >= 0) {
              console.log("firing at ", weapon, targets, arc, chance, eal.range)
              fireBurst(weapon, targets, arc, chance, eal.range)
          } else {
              Utils.modal("Phoenix Command", 'Arc and number of targets required.')
          }
-
-         eal.sab = weapon['SAB']
-         accuracy = pf.effectiveAccuracyLevel(eal)
-         chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#eal').empty().append(accuracy)
-         $('#sab-message').empty().append('Sustained Automatic Burst')
-         $('#sab').empty().append(`-${eal.sab}`)
-         $('#fire-button').attr('data-fired', 'true')
      })
  }
  
@@ -182,24 +166,7 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         let fired = $('#fire-button').attr('data-fired')
-         if (fired) {
-            eal.sab = weapon['SAB']
-            accuracy = pf.effectiveAccuracyLevel(eal)
-            chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         }
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-
          fireSingleShot(weapon, chance, eal.range)
-
-         eal.sab = weapon['SAB']
-         accuracy = pf.effectiveAccuracyLevel(eal)
-         chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#eal').empty().append(accuracy)
-         $('#sab-message').empty().append('Sustained Automatic Burst')
-         $('#sab').empty().append(`-${eal.sab}`)
-         $('#fire-button').attr('data-fired', 'true')
      })
  }
  
@@ -227,19 +194,6 @@
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         let fired = $('#fire-button').attr('data-fired')
-         if (fired) {
-            eal.sab = weapon['SAB']
-            accuracy = pf.effectiveAccuracyLevel(eal)
-            accuracy = accuracy + salm
-            chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         }
-         accuracy = accuracy + salm
-         chance = pf.oddsOfHitting(accuracy, eal.shotType)
-         $('#eal').empty().append(accuracy)
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
-         $('#sab-message').empty().append('Sustained Automatic Burst')
-         $('#sab').empty().append(`-${eal.sab}`)
          fireShotgun(eal.ammoType, range, weapon, chance)
      })
  }
@@ -292,6 +246,7 @@
          let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
          if (loadedAmmo >= rof) {
              Database.set(loadedAmmoPath, loadedAmmo - rof)
+             console.log(roll,chance)
              if (roll <= chance) {
                  result = pf.burstFire(arc, rof, numberOfTargets)
                  Utils.log(`${character.name} fired a ${weapon.Name} at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
@@ -330,6 +285,7 @@
          if (loadedAmmo >= 1) {
              Database.set(loadedAmmoPath, loadedAmmo - 1)
              result = pf.singleShotFire(chance)
+             console.log(result, chance)
              if (result['target 1']['hit'] === true) {
                  Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
              } else {
@@ -372,8 +328,10 @@
          let loadedAmmoPath = path + '/ammo/' + weapon.Name + '/loaded/'
          if (loadedAmmo >= 1) {
              Database.set(loadedAmmoPath, loadedAmmo - 1)
+             console.log(roll,chance)
              if (roll <= chance) {
-                 result = pf.shotgunFire(ammoType, range, bphc)
+                 result = pf.shotgunFire(ammoType, bphc)
+                 console.log(result)
                  Utils.log(`${character.name} fired a ${weapon.Name} at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(result)} ${note}`)
                  displayTargets(result, weapon, ammoType)
              } else {
