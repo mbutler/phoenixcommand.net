@@ -207,15 +207,11 @@
   * @return {undefined} - Modifies the DOM
   */
  function explosiveHandler(weapon, eal, accuracy, chance) {
-     if (eal.range > weapon.MR) {
-         chance = 0
-     }
+     if (eal.range > weapon.MR) { chance = 0 }
      $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
-         if (eal.range > weapon.MR) { chance = 0 }
-         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
          fireExplosive(weapon, eal.range, chance, accuracy)
      })
  }
@@ -538,7 +534,7 @@
          <thead>
              <tr>
                  <th class="text-center">Hexes Away</th>
-                 <th class="text-center">Hits</th>
+                 <th class="text-center">Shrapnel</th>
                  <th class="text-center">Armor</th>
                  <th class="text-center">Blast Mod</th>
              </tr>
