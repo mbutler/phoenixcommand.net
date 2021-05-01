@@ -150,6 +150,8 @@ export function displayGear(character) {
     $('#change-gear').click(e => {
       let weapons = Utils.selectedCheckboxes($('[name="weapon"]'))
       let equipment = Utils.selectedCheckboxes($('[name="equipment"]'))
+      let armor = $('#gear-armor').val()
+      equipment.push(armor)
       let ammo = {}
       _.forEach(weapons, gun => {
         let ammoType = pf.getAmmoTypes(gun)
@@ -162,14 +164,16 @@ export function displayGear(character) {
       })
       let encumbrance = pf.encumbranceCalculator(equipment, weapons)
       let speed = pf.movementSpeed(_.toNumber(character.strength), _.toNumber(character.agility), _.toNumber(encumbrance))
-      let capi = pf.combatActionsPerImpulse(_.toNumber(character.strength), _.toNumber(character.agility), _.toNumber(character.intelligence), _.toNumber(character.skillLevel), encumbrance)
+      let capi = pf.combatActionsPerImpulse(_.toNumber(character.strength), _.toNumber(character.agility), _.toNumber(character.intelligence), _.toNumber(character.skillLevel), _.toNumber(encumbrance))
       let path = window.localStorage.getItem('phoenix-command-current-character')
       Database.set(path + '/equipment/', equipment)
       Database.set(path + '/weapons/', weapons)
       Database.set(path + '/ammo/', ammo)
       Database.set(path + '/capi/', capi)
       Database.set(path + '/encumbrance/', encumbrance)
-      Database.set(path + '/speed/', speed)      
+      Database.set(path + '/speed/', speed)
+      Database.set(path + '/armor/', armor)   
+      Utils.modal(character.name, "Loadout updated.")    
   })
 }
 
