@@ -10,6 +10,7 @@ import * as Game from './game'
 import * as Database from './database'
 import * as Timer from './timer'
 import * as pf from 'phoenix-functions'
+import _ from 'lodash'
 
 /**
  * Displays all properties of a character
@@ -126,12 +127,50 @@ export function displayCharacterCreation() {
  * @return {undefined} - Modifies the DOM and database
  */
 export function displayGear(character) {
-  let list = `<ul>`
-  _.forEach(character.equipment, gear => {
-    list += `<li>${gear}</li>`
+  let weapons = pf.getAllWeapons()
+    let weaponKeys = _.keys(weapons)
+    _.forEach(weaponKeys, gun => {
+      $('#gear-tab-guns').append(`
+        <div class="form-check form-check-inline">
+            <label class="form-check-label">
+                <input class="form-check-input" name="weapon" type="checkbox" id="${_.kebabCase(gun)}-checkbox" value="${gun}">${gun}
+                <span class="form-check-sign">
+                  <span class="check"></span>
+                </span>
+            </label>
+        </div>`)
+    })
+    _.forEach(character.weapons, weapon => {
+      let id = _.kebabCase(weapon)
+      $(`#${id}-checkbox`).prop('checked', true)
+    })
+    _.forEach(character.equipment, gear => {
+      $(`input[type=checkbox][value='${gear}']`).prop("checked",true)
+    })
+    $('#change-gear').click(e => {
+      let weapons = Utils.selectedCheckboxes($('[name="weapon"]'))
+      let equipment = Utils.selectedCheckboxes($('[name="equipment"]'))
+      let ammo = {}
+      _.forEach(weapons, gun => {
+        let ammoType = pf.getAmmoTypes(gun)
+        let weapon = pf.getWeaponByName(gun)
+        ammo[gun] = {
+            "loaded" : weapon['Cap'],
+            "total" : 99999,
+            "type" : ammoType[0]
+        }
+      })
+      let encumbrance = pf.encumbranceCalculator(equipment, weapons)
+      let speed = pf.movementSpeed(_.toNumber(character.strength), _.toNumber(character.agility), _.toNumber(encumbrance))
+      let capi = pf.combatActionsPerImpulse(_.toNumber(character.strength), _.toNumber(character.agility), _.toNumber(character.intelligence), _.toNumber(character.skillLevel), encumbrance)
+      let path = window.localStorage.getItem('phoenix-command-current-character')
+      Database.set(path + '/equipment/', equipment)
+      Database.set(path + '/weapons/', weapons)
+      Database.set(path + '/ammo/', ammo)
+      Database.set(path + '/capi/', capi)
+      Database.set(path + '/encumbrance/', encumbrance)
+      Database.set(path + '/speed/', speed)      
   })
-  list += `</ul>`
-  $('#gear').append(list)
 }
 
 /**
