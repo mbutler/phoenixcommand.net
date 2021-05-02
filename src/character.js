@@ -222,7 +222,7 @@
        let div = `<div class="row">
          <div id="weapon-name"class="col-xs-8"><h4><strong>${gun.Name}</strong></h4></div>
            </div>
-           <div class="row weapon-image"><image src="${gun.Image}"></div>
+           <div class="row weapon-image"><img src="${gun.Image}" alt="${gun.Name}">${gun.Description}</div>
            <div class="row color-row">
              <div class="col-xs-8"><strong>Rounds Loaded</strong></div>
              <div id="rounds-loaded-${ammoDropdown}" class="col-xs-4 ml-auto">${rounds}</div>
