@@ -3,7 +3,7 @@ Online, mobile-friendly tool to manage a Phoenix Command game.
 
 https://mbutler.github.io/phoenixcommand.net/
 
-Built on [Skeleton](https://github.com/mbutler/skeleton)
+Built on [Skeleton](https://github.com/mbutler/skeleton) and [Phoenix Functions](https://github.com/mbutler/phoenix-functions)
 
 `npm start` - compile source and run dev server
 
