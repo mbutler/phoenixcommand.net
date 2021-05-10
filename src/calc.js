@@ -93,9 +93,6 @@
   * @return {undefined} - Modifies the DOM
   */
  function displayChanceToHit(weapon, eal) {
-     $('#fire-button').attr('data-fired', 'false')
-     $('#sab-message').empty()
-     $('#sab').empty()
      let shotType = eal.shotType
      let accuracy = pf.effectiveAccuracyLevel(eal)
      let chance = pf.oddsOfHitting(accuracy, shotType)
@@ -132,6 +129,7 @@
   * @return {undefined} - Modifies the DOM
   */
  function burstHandler(weapon, eal, accuracy, chance) {
+     let initialAccuracy = accuracy
      $('.arc-rows h5').empty().append(`Number of Targets in <strong>Minimum Arc of ${getMinimumArc(weapon, eal.range)}:</strong>`)
      $('.arc-rows').show()
      $('#odds-label').empty().append(`<strong><h3>Burst Elevation Chance</h3></strong>`)
@@ -146,6 +144,12 @@
          } else {
              Utils.modal("Phoenix Command", 'Arc and number of targets required.')
          }
+ 
+         let accuracy = initialAccuracy - weapon['SAB']
+         chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+         $('#sab-message').empty().append('<strong>Sustained Automatic Burst</strong>')
+         $('#sab').empty().append(`-${weapon['SAB']}`)
      })
  }
  
@@ -160,11 +164,17 @@
   * @return {undefined} - Modifies the DOM
   */
  function singleShotHandler(weapon, eal, accuracy, chance) {
+     let initialAccuracy = accuracy
      $('#odds-label').empty().append(`<strong><h3>Chance of Hitting</h3></strong>`)
      $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
      $('#fire-button').click(e => {
          e.preventDefault()
          fireSingleShot(weapon, chance, eal.range)
+         let accuracy = initialAccuracy - weapon['SAB']
+         chance = pf.oddsOfHitting(accuracy, eal.shotType)
+         $('#odds-of-hitting').empty().append(`<h3>${chance}%</h3>`)
+         $('#sab-message').empty().append('<strong>Sustained Automatic Burst</strong>')
+         $('#sab').empty().append(`-${weapon['SAB']}`)
      })
  }
  
@@ -421,40 +431,40 @@
              location = ":" + pf.hitLocation(hitRoll, true)
          }
          let tr = `
-              <tr>
-                  <td id="target-${i}-location" data-location="${location}" data-hitRoll="${hitRoll}" class="text-center">${i}${location}</td>
-                  <td id="target-${i}-bullets" class="text-center">${bullets}</td>
-                  <td id="target-${i}-cover" class="text-center">
-                     <select id="target-${i}-cover" class="form-control selectpicker target-cover-select" data-style="btn btn-link"">
-                         <option value="True">True</option>
-                         <option value="False">False</option>
-                     </select>
-                 </td>
-                  <td class="text-center">
-                     <select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
-                         <option value="Clothing">Clothing</option>
-                         <option value="Light Flexible">Light Flexible</option>
-                         <option value="Medium Flexible">Medium Flexible</option>
-                         <option value="Heavy Flexible">Heavy Flexible</option>
-                         <option value="Light Rigid">Light Rigid</option>
-                         <option value="Medium Rigid">Medium Rigid</option>
-                         <option value="Heavy Rigid">Heavy Rigid</option>
-                     </select></td>
-              </tr>
-          `
+                <tr>
+                    <td id="target-${i}-location" data-location="${location}" data-hitRoll="${hitRoll}" class="text-center">${i}${location}</td>
+                    <td id="target-${i}-bullets" class="text-center">${bullets}</td>
+                    <td id="target-${i}-cover" class="text-center">
+                       <select id="target-${i}-cover" class="form-control selectpicker target-cover-select" data-style="btn btn-link"">
+                           <option value="True">True</option>
+                           <option value="False">False</option>
+                       </select>
+                   </td>
+                    <td class="text-center">
+                       <select id="target-${i}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                           <option value="Clothing">Clothing</option>
+                           <option value="Light Flexible">Light Flexible</option>
+                           <option value="Medium Flexible">Medium Flexible</option>
+                           <option value="Heavy Flexible">Heavy Flexible</option>
+                           <option value="Light Rigid">Light Rigid</option>
+                           <option value="Medium Rigid">Medium Rigid</option>
+                           <option value="Heavy Rigid">Heavy Rigid</option>
+                       </select></td>
+                </tr>
+            `
          targetRows += tr
      }
      let div = `<table id="target-table" class="table table-condensed table-bordered table-striped">
-          <thead>
-              <tr>
-                  <th class="text-center">Target</th>
-                  <th class="text-center">Hits</th>
-                  <th class="text-center">Cover</th>
-                  <th class="text-center">Armor</th>
-              </tr>
-          </thead>
-          <tbody>${targetRows}</tbody>
-      </table>`
+            <thead>
+                <tr>
+                    <th class="text-center">Target</th>
+                    <th class="text-center">Hits</th>
+                    <th class="text-center">Cover</th>
+                    <th class="text-center">Armor</th>
+                </tr>
+            </thead>
+            <tbody>${targetRows}</tbody>
+        </table>`
      $('#hits').empty().append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
      $('.target-cover-select').change(e => {
@@ -507,46 +517,46 @@
              location = ":" + pf.hitLocation(hitRoll, false)
          }
          let tr = `<tr>
-              <td class="text-center">${val}</td>
-              <td id="target-${val}-bullets" data-hitRoll="${hitRoll}" class="text-center">${bullets}${location}</td>
-              <td class="text-center">
-                 <select id="target-${val}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
-                     <option value="Clothing">Clothing</option>
-                     <option value="Light Flexible">Light Flexible</option>
-                     <option value="Medium Flexible">Medium Flexible</option>
-                     <option value="Heavy Flexible">Heavy Flexible</option>
-                     <option value="Light Rigid">Light Rigid</option>
-                     <option value="Medium Rigid">Medium Rigid</option>
-                     <option value="Heavy Rigid">Heavy Rigid</option>
-                 </select>
-              </td>
-              <td class="text-center">
-                 <select id="target-${val}-blast-mod" class="form-control selectpicker target-blast-mod-select" data-style="btn btn-link"">
-                     <option value="In the Open">In the Open</option>    
-                     <option value="Underwater">Underwater</option>
-                     <option value="In Small Room (10')">In Small Room (10')</option>
-                     <option value="In Open Trench">In Open Trench</option>
-                     <option value="Prone">Prone</option>
-                     <option value="Under Partial Cover">Under Partial Cover</option>
-                     <option value="In Combat Suit">In Combat Suit</option>
-                     <option value="In Power Armor">In Power Armor</option>
-                     <option value="Behind Solid Cover">Behind Solid Cover</option>
-                 </select>
-              </td>
-          </tr>`
+                <td class="text-center">${val}</td>
+                <td id="target-${val}-bullets" data-hitRoll="${hitRoll}" class="text-center">${bullets}${location}</td>
+                <td class="text-center">
+                   <select id="target-${val}-armor" class="form-control selectpicker target-armor-select" data-style="btn btn-link"">
+                       <option value="Clothing">Clothing</option>
+                       <option value="Light Flexible">Light Flexible</option>
+                       <option value="Medium Flexible">Medium Flexible</option>
+                       <option value="Heavy Flexible">Heavy Flexible</option>
+                       <option value="Light Rigid">Light Rigid</option>
+                       <option value="Medium Rigid">Medium Rigid</option>
+                       <option value="Heavy Rigid">Heavy Rigid</option>
+                   </select>
+                </td>
+                <td class="text-center">
+                   <select id="target-${val}-blast-mod" class="form-control selectpicker target-blast-mod-select" data-style="btn btn-link"">
+                       <option value="In the Open">In the Open</option>    
+                       <option value="Underwater">Underwater</option>
+                       <option value="In Small Room (10')">In Small Room (10')</option>
+                       <option value="In Open Trench">In Open Trench</option>
+                       <option value="Prone">Prone</option>
+                       <option value="Under Partial Cover">Under Partial Cover</option>
+                       <option value="In Combat Suit">In Combat Suit</option>
+                       <option value="In Power Armor">In Power Armor</option>
+                       <option value="Behind Solid Cover">Behind Solid Cover</option>
+                   </select>
+                </td>
+            </tr>`
          targetRows += tr
      })
      let div = `<table id="target-table" class="table table-condensed table-bordered table-striped">
-          <thead>
-              <tr>
-                  <th class="text-center">Hexes Away</th>
-                  <th class="text-center">Shrapnel</th>
-                  <th class="text-center">Armor</th>
-                  <th class="text-center">Blast Mod</th>
-              </tr>
-          </thead>
-          <tbody>${targetRows}</tbody>
-      </table>`
+            <thead>
+                <tr>
+                    <th class="text-center">Hexes Away</th>
+                    <th class="text-center">Shrapnel</th>
+                    <th class="text-center">Armor</th>
+                    <th class="text-center">Blast Mod</th>
+                </tr>
+            </thead>
+            <tbody>${targetRows}</tbody>
+        </table>`
      $('#hits').empty().append(`<h5><strong>${location}</strong></h5>`)
      $('#hits').append(div)
      $('#hits').append('<button id="damage-button" class="btn btn-primary btn-sm">Calculate Damage</button>')
@@ -719,34 +729,34 @@
              msg += `Fired at target ${i} but no bullets hit. `
          }
          let tr = `
-          <tr>
-              <td class="text-center">${i}</td>
-              <td id="target-${i}-location" class="text-center">${location}</td>
-              <td id="target-${i}-damage" class="text-center">${damage}</td>
-              <td class="text-center"><select id="target-${i}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
-                  <option value="No Aid">No Aid</option>
-                  <option value="First Aid">First Aid</option>
-                  <option value="Aid Station">Aid Station</option>
-                  <option value="Field Hospital">Field Hospital</option>
-                  <option value="Trauma Center">Trauma Center</option>
-              </select></td>
-              <td id="target-${i}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
-          </tr>
-      `
+            <tr>
+                <td class="text-center">${i}</td>
+                <td id="target-${i}-location" class="text-center">${location}</td>
+                <td id="target-${i}-damage" class="text-center">${damage}</td>
+                <td class="text-center"><select id="target-${i}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
+                    <option value="No Aid">No Aid</option>
+                    <option value="First Aid">First Aid</option>
+                    <option value="Aid Station">Aid Station</option>
+                    <option value="Field Hospital">Field Hospital</option>
+                    <option value="Trauma Center">Trauma Center</option>
+                </select></td>
+                <td id="target-${i}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
+            </tr>
+        `
          targetRows += tr
      }
      let div = `<table id="damage-table" class="table table-condensed table-bordered table-striped">
-          <thead>
-              <tr>
-                  <th class="text-center">Target</th>
-                  <th class="text-center">Location</th>
-                  <th class="text-center">Damage</th>
-                  <th class="text-center">Aid</th>
-                  <th class="text-center">Recovery</th>
-              </tr>
-          </thead>
-          <tbody>${targetRows}</tbody>
-      </table>`
+            <thead>
+                <tr>
+                    <th class="text-center">Target</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">Damage</th>
+                    <th class="text-center">Aid</th>
+                    <th class="text-center">Recovery</th>
+                </tr>
+            </thead>
+            <tbody>${targetRows}</tbody>
+        </table>`
      $('#damage').empty().append(div)
      Utils.log(msg)
      $('.target-aid-select').change((e) => {
@@ -778,34 +788,34 @@
          }
          location = _.uniq(location)
          let tr = `
-          <tr>
-              <td class="text-center">${val}</td>
-              <td id="target-${val}-location" class="text-center">${location}</td>
-              <td id="target-${val}-damage" class="text-center">${damage}</td>
-              <td class="text-center"><select id="target-${val}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
-                  <option value="No Aid">No Aid</option>
-                  <option value="First Aid">First Aid</option>
-                  <option value="Aid Station">Aid Station</option>
-                  <option value="Field Hospital">Field Hospital</option>
-                  <option value="Trauma Center">Trauma Center</option>
-              </select></td>
-              <td id="target-${val}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
-          </tr>
-      `
+            <tr>
+                <td class="text-center">${val}</td>
+                <td id="target-${val}-location" class="text-center">${location}</td>
+                <td id="target-${val}-damage" class="text-center">${damage}</td>
+                <td class="text-center"><select id="target-${val}-aid" class="form-control selectpicker target-aid-select" data-style="btn btn-link"">
+                    <option value="No Aid">No Aid</option>
+                    <option value="First Aid">First Aid</option>
+                    <option value="Aid Station">Aid Station</option>
+                    <option value="Field Hospital">Field Hospital</option>
+                    <option value="Trauma Center">Trauma Center</option>
+                </select></td>
+                <td id="target-${val}-recovery" class="text-center">${pf.medicalAid(_.toNumber(damage), 'No Aid')}</td>
+            </tr>
+        `
          targetRows += tr
      })
      let div = `<table id="damage-table" class="table table-condensed table-bordered table-striped">
-          <thead>
-              <tr>
-                  <th class="text-center">Target</th>
-                  <th class="text-center">Location</th>
-                  <th class="text-center">Damage</th>
-                  <th class="text-center">Aid</th>
-                  <th class="text-center">Recovery</th>
-              </tr>
-          </thead>
-          <tbody>${targetRows}</tbody>
-      </table>`
+            <thead>
+                <tr>
+                    <th class="text-center">Target</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">Damage</th>
+                    <th class="text-center">Aid</th>
+                    <th class="text-center">Recovery</th>
+                </tr>
+            </thead>
+            <tbody>${targetRows}</tbody>
+        </table>`
      $('#damage').empty().append(div)
      Utils.log(msg)
      $('.target-aid-select').change((e) => {
