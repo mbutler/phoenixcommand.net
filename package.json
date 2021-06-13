@@ -57,6 +57,6 @@
     "firebase": "^8.3.1",
     "firebaseui": "^4.0.0",
     "lodash": "^4.17.21",
-    "phoenix-functions": "^0.9.75"
+    "phoenix-functions": "^0.9.76"
   }
 }
