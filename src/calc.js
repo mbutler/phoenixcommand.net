@@ -310,7 +310,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance, range) {
                 Utils.log(
                     `${character.name} fired a ${
                         weapon.Name
-                    } at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(
+                    } at ${numberOfTargets} target(s) ${range} hexes away with a ${chance}% chance of hitting. ${Utils.parseHitResult(
                         result
                     )} ${note}`
                 )
@@ -318,7 +318,7 @@ function fireBurst(weapon, numberOfTargets, arc, chance, range) {
             } else {
                 result = "Burst fire at wrong elevation. All targets missed."
                 Utils.log(
-                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`
+                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% chance of hitting. ${note}`
                 )
                 Utils.modal("Phoenix Command", result)
             }
@@ -357,13 +357,13 @@ function fireSingleShot(weapon, chance, range) {
                 Utils.log(
                     `${character.name} fired a ${
                         weapon.Name
-                    } at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(
+                    } at a target ${range} hexes away with a ${chance}% chance of hitting. ${Utils.parseHitResult(
                         result
                     )} ${note}`
                 )
             } else {
                 Utils.log(
-                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`
+                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% chance of hitting. ${note}`
                 )
             }
             displayTargets(result, weapon, ammoType)
@@ -410,7 +410,7 @@ function fireShotgun(ammoType, range, weapon, chance) {
                 Utils.log(
                     `${character.name} fired a ${
                         weapon.Name
-                    } at a target ${range} hexes away with a ${chance}% of hitting. ${Utils.parseHitResult(
+                    } at a target ${range} hexes away with a ${chance}% chance of hitting. ${Utils.parseHitResult(
                         result
                     )} ${note}`
                 )
@@ -418,7 +418,7 @@ function fireShotgun(ammoType, range, weapon, chance) {
             } else {
                 result = "Shotgun blast missed."
                 Utils.log(
-                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% of hitting. ${note}`
+                    `${character.name} fired a ${weapon.Name} at a target ${range} hexes away and missed with a ${chance}% chance of hitting. ${note}`
                 )
                 Utils.modal("Phoenix Command", result)
             }
