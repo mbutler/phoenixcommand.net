@@ -7,7 +7,7 @@
 import * as Database from './database'
 
 /**
- * Adds a mew user to the database and sets localStorage 'phoenix-command-user-id'
+ * Adds a new user to the database and sets localStorage 'phoenix-command-user-id'
  *
  * @param {object} user - A Firebase auth user
  * @memberof User

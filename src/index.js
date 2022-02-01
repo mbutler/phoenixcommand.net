@@ -18,11 +18,6 @@
      time
  } from './listeners'
  
- /* probably safe to remove these in a few months */
- window.localStorage.removeItem('firebird-command-user-id')
- window.localStorage.removeItem('firebird-command-current-character')
- /* --------------------------------------------- */
- 
  Database.auth().onAuthStateChanged(user => {
      if (user) {
          window.localStorage.setItem('phoenix-command-user-id', user.uid)
