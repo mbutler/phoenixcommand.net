@@ -22,7 +22,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
-    "documentation": "^14.0.0",
+    "documentation": "^14.0.1",
     "mocha": "^10.1.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
