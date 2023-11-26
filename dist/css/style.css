@@ -346,4 +346,9 @@ figcaption {
     #calc-character-name {
         margin-top: 60px;
     }
+
+    iframe {
+        width: 100%;
+        height: auto;
+    }
   }
