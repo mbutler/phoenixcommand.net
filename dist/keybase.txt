@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/mbutler
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://phoenixcommand.net
+  * I am mbutler (https://keybase.io/mbutler) on keybase.
+  * I have a public key ASDaerTr8hAlLt_RgYPExGAC5G_AhLDTD3O7CEWoprPrLAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0101bf50fcc4285beca12dad9113ce655cb6454b2d8b0ced23f821f3b4be1b8c84ad0a",
+      "host": "keybase.io",
+      "kid": "0120da7ab4ebf210252edfd18183c4c46002e46fc084b0d30f73bb0845a8a6b3eb2c0a",
+      "uid": "3a02d8cdffa15cb2ab56769ce3e6a119",
+      "username": "mbutler"
+    },
+    "merkle_root": {
+      "ctime": 1701090060,
+      "hash": "6c062e6a2567335b3bce2b14593c8e391d2b2428b689c5fbb645a4d0e4d74401c4bbccc1fc4c063cae941b0dbaf1f688780051133ccab86b45083a61c1746e5d",
+      "hash_meta": "0fa451614018e2a4154756ac4485b701f0b56827aafbdb7c2ef26c24e4cadbc1",
+      "seqno": 25183812
+    },
+    "service": {
+      "entropy": "q17kYjA7aDmYlxpMq5U7XDF3",
+      "hostname": "phoenixcommand.net",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "6.2.4"
+  },
+  "ctime": 1701090086,
+  "expire_in": 504576000,
+  "prev": "6e409dd547ae570761fa8a583c6d7dccba566db46fa3fba7b26c04bb3b1aabd3",
+  "seqno": 65,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg2nq06/IQJS7f0YGDxMRgAuRvwISw0w9zuwhFqKaz6ywKp3BheWxvYWTESpcCQcQgbkCd1UeuVwdh+opYPG19zLpWbbRvo/unsmwEuzsaq9PEINklEag8jUPHHRUdJfxUHpL0BPCOhmB7Mi65a12PjlEYAgHCo3NpZ8RA83dHwAHgIOqecZ6OoCb1O7D9B4ekbrpDBmAn3oviWSfb2stD8Q0uS9tUT6Hq6VUtTRWLPZCSqe322GYphoekCahzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIJLq4sbUC6cvzHrWF4rt99225nEnrKrKqP4wlmda3I3Vo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/mbutler
+
+==================================================================
